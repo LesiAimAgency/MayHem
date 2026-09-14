@@ -15,7 +15,7 @@ class FinancialDatasetSeeder extends Seeder
     {
         $jsonPath = dirname(base_path()) . DIRECTORY_SEPARATOR . 'BaoCaoTaiChinh_NganHang_30ChiTieu.json';
         if (!File::exists($jsonPath)) {
-            $jsonPath = base_path('BaoCaoTaiChinh_NganHang_30ChiTieu.json');
+            $jsonPath = base_path('BaoCaoTaiChinh_NganHang_30ChiTieu1.json');
         }
 
         if (!File::exists($jsonPath)) {
