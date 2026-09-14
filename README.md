@@ -21,7 +21,7 @@ Hệ thống chuyên sâu phục vụ phân tích, đối chiếu định lượ
 
 MayHem giải quyết bài toán chuẩn hóa, đối soát và lọc dữ liệu tài chính phức tạp:
 - **Ma trận đối chiếu tài chính**: Tổng hợp hơn 30 chỉ tiêu tài chính cốt lõi xuyên suốt nhiều niên độ (2020 – 2024+) cho 29 ngân hàng thương mại Việt Nam (VCB, TCB, MBB, ACB, CTG, BID, VPB,...).
-- **Bộ lọc tiêu chí thông minh (Smart Screener)**: Cho phép chuyên viên lọc theo 15 chỉ tiêu cốt lõi (NIM, CIR, ROE, ROA, NPL, CASA, LDR,...) hoặc toàn bộ danh mục tài chính chi tiết với các phép so sánh `>`, `<`, `=`, `between`.
+- **Bộ lọc tiêu chí thông minh (Smart Screener)**: Cho phép chuyên viên lọc theo 15 chỉ tiêu cốt lõi (NIM, CIR, ROE, ROA, NPL, CASA, LDR,...) hoặc toàn bộ danh mục tài chính chi tiết với các phép so sánh `>`, `<`, `=`.
 - **Quản trị đa ngành linh hoạt (Industry Management)**: Cho phép Super Admin thêm mới các phân ngành kinh tế khác, cấu hình danh sách trường tài chính đặc thù của từng ngành.
 - **Audit Trail & Rollback**: Lưu vết lịch sử thay đổi số liệu từng ô dữ liệu với khả năng hoàn tác (Rollback) tức thì.
 - **Xuất báo cáo & Sao lưu**: Hỗ trợ xuất dữ liệu ra Excel định dạng chuẩn và Backup/Restore snapshot hệ thống.
