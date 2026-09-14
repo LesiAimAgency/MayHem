@@ -1,0 +1,5 @@
+# CODEOWNERS - MayHem Project
+# Quy định người chịu trách nhiệm và có quyền duyệt (Approve) code trước khi merge
+
+# Toàn bộ mã nguồn dự án bắt buộc phải có sự phê duyệt của Tác giả / Tổ chức chính
+* @LesiAimAgency
