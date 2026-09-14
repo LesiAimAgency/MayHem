@@ -1,0 +1,21 @@
+Offset -3: M26=Lợi nhuận sau thuế chưa phân phối (45969647), M18=Tổng nợ phải trả (1079873967), M27=Vốn hóa thị trường (216992810487350) => 2.1184765581858476e-07
+Offset -2: M26=Chỉ số P/B (1.25), M18=Tỷ lệ bao phủ nợ xấu (LLR Coverage) (0.5539213223), M27=Lợi nhuận sau thuế chưa phân phối (45969647) => 2.719185520258295e-08
+Offset -1: M26=Chỉ số P/E cơ bản (8.8), M18=Nợ xấu có khả năng mất vốn (9154889), M27=Chỉ số P/B (1.25) => 9.612348984740697e-07
+Offset  0: M26=Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác (CapEx) (-131095), M18=Nợ nghi ngờ (10879958), M27=Chỉ số P/E cơ bản (8.8) => -0.012049209561926236
+Offset  1: M26=Tỷ suất sinh lời trên Vốn CSH (ROE) (0.1487072493), M18=Lưu chuyển tiền thuần từ/(sử dụng vào) hoạt động tài chính (8650600), M27=Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác (CapEx) (-131095) => 1.6933775233596704e-08
+Offset  2: M26=Tỷ suất sinh lời trên Tổng Tài Sản (ROA) (0.0223027718), M18=Cổ tức trả cổ đông, lợi nhuận đã chia (-3968172), M27=Tỷ suất sinh lời trên Vốn CSH (ROE) (0.1487072493) => 5.620414378258714e-09
+Offset  3: M26=Vốn chủ sở hữu (180275629), M18=Lưu chuyển tiền thuần từ hoạt động kinh doanh (44532621), M27=Tỷ suất sinh lời trên Tổng Tài Sản (ROA) (0.0223027718) => 4.048170192132068
+Offset  4: M26=Hệ số an toàn vốn (CAR) (0.1435), M18=Tổng tài sản (1260149596), M27=Vốn chủ sở hữu (180275629) => 9.962335948400236e-11
+Offset  5: M26=Tổng nợ phải trả (1079873967), M18=Tỷ lệ tiền gửi không kỳ hạn (CASA) (0.1444861554), M27=Hệ số an toàn vốn (CAR) (0.1435) => 3749742641.274206
+Offset  6: M26=Tỷ lệ bao phủ nợ xấu (LLR Coverage) (0.5539213223), M18=Tỷ lệ nợ xấu (NPL) cuối năm (0.033334729), M27=Tổng nợ phải trả (1079873967) => 5.129499730619036e-10
+Offset  7: M26=Nợ xấu có khả năng mất vốn (9154889), M18=Chi phí vốn bình quân (-0.0477326439), M27=Tỷ lệ bao phủ nợ xấu (LLR Coverage) (0.5539213223) => 15216203.190384619
+Offset  8: M26=Nợ nghi ngờ (10879958), M18=Biên lãi thuần (NIM) (0.055666197), M27=Nợ xấu có khả năng mất vốn (9154889) => 1.188431441806071
+Offset  9: M26=Lưu chuyển tiền thuần từ/(sử dụng vào) hoạt động tài chính (8650600), M18=Chi Khấu hao TSCĐ (549588), M27=Nợ nghi ngờ (10879958) => 0.756862958511213
+Offset 10: M26=Cổ tức trả cổ đông, lợi nhuận đã chia (-3968172), M18=Lãi cơ bản trên cổ phiếu (EPS) (3024), M27=Lưu chuyển tiền thuần từ/(sử dụng vào) hoạt động tài chính (8650600) => -0.45855609164437927
+Offset 11: M26=Lưu chuyển tiền thuần từ hoạt động kinh doanh (44532621), M18=Lợi nhuận sau thuế của cổ đông công ty mẹ (23989930), M27=Cổ tức trả cổ đông, lợi nhuận đã chia (-3968172) => 1.5928341988308077
+Offset 12: M26=Tổng tài sản (1260149596), M18=Lợi nhuận sau thuế thu nhập doanh nghiệp (24354596), M27=Lưu chuyển tiền thuần từ hoạt động kinh doanh (44532621) => 18.2929380932895
+Offset 13: M26=Tỷ lệ tiền gửi không kỳ hạn (CASA) (0.1444861554), M18=Tổng lợi nhuận trước thuế (PBT) (30624949), M27=Tổng tài sản (1260149596) => 1.1193756179937683e-10
+Offset 14: M26=Tỷ lệ nợ xấu (NPL) cuối năm (0.033334729), M18=Chi phí dự phòng rủi ro tín dụng (-25398549), M27=Tỷ lệ tiền gửi không kỳ hạn (CASA) (0.1444861554) => 1.3124658739507855e-09
+Offset 15: M26=Chi phí vốn bình quân (-0.0477326439), M18=Lợi nhuận thuần từ hoạt động kinh doanh trước chi phí dự phòng rủi ro tín dụng (56023498), M27=Tỷ lệ nợ xấu (NPL) cuối năm (0.033334729) => -8.520111306080609e-10
+Offset 16: M26=Biên lãi thuần (NIM) (0.055666197), M18=Tỷ lệ Chi phí / Thu nhập (CIR) (-0.2495561479), M27=Chi phí vốn bình quân (-0.0477326439) => 0.1872462014560214
+Offset 17: M26=Chi Khấu hao TSCĐ (549588), M18=Tổng thu nhập hoạt động (TOI) (74653817), M27=Biên lãi thuần (NIM) (0.055666197) => 0.007361820489234937

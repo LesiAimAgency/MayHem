@@ -1,0 +1,79 @@
+name: SDLC_MultiAgent_Antigravity_Flow
+version: "2.0"
+description: "Quy trình phát triển phần mềm khép kín với phản biện đa chiều BA - Coder - Tester - Security"
+
+agents:
+  ba_agent:
+    name: "BA Agent"
+    prompt_file: "./agents/ba.md"
+    role: "Business Analyst & System Analyst"
+  
+  coder_agent:
+    name: "Coder Agent"
+    prompt_file: "./agents/coder.md"
+    role: "Senior Software Engineer"
+    
+  tester_agent:
+    name: "Tester Agent"
+    prompt_file: "./agents/tester.md"
+    role: "QA Automation & Performance Specialist"
+
+  security_agent:
+    name: "Security Agent"
+    prompt_file: "./agents/security.md"
+    role: "Chief Information Security Officer & Penetration Tester"
+
+pipeline:
+  - step: 1
+    id: "spec_generation"
+    agent: "ba_agent"
+    description: "Phân tích prompt người dùng, xuất Spec, AC (Gherkin) và 3+ góc nhìn phản biện nghiệp vụ"
+    input: "$USER_PROMPT"
+    output_variable: "BUSINESS_SPEC"
+
+  - step: 2
+    id: "code_implementation"
+    agent: "coder_agent"
+    description: "Nhận Spec từ BA, giải trình kiến trúc và viết mã nguồn đầu tiên"
+    input: "$BUSINESS_SPEC"
+    output_variable: "INITIAL_CODE"
+
+  - step: 3
+    id: "qa_functional_audit"
+    agent: "tester_agent"
+    description: "Rà soát code, tìm bug logic, kiểm tra hiệu năng (stress test) và tạo Unit/Integration Tests"
+    input:
+      spec: "$BUSINESS_SPEC"
+      code: "$INITIAL_CODE"
+    output_variable: "QA_REPORT"
+
+  - step: 4
+    id: "security_and_pentest_gate"
+    agent: "security_agent"
+    description: "Kiểm toán bảo mật khắt khe, xây dựng PoC kiểm thử xâm nhập (PenTest), quét OWASP/BOLA/XSS và đưa ra yêu cầu vá lỗi bắt buộc"
+    input:
+      spec: "$BUSINESS_SPEC"
+      code: "$INITIAL_CODE"
+      qa_report: "$QA_REPORT"
+    output_variable: "SECURITY_AUDIT_REPORT"
+
+  - step: 5
+    id: "ba_logic_review"
+    agent: "ba_agent"
+    description: "BA rà soát lại toàn bộ giải pháp dưới góc nhìn trải nghiệm người dùng và tính toàn vẹn nghiệp vụ"
+    input:
+      spec: "$BUSINESS_SPEC"
+      code: "$INITIAL_CODE"
+      security_report: "$SECURITY_AUDIT_REPORT"
+    output_variable: "BA_CRITIQUE"
+
+  - step: 6
+    id: "coder_final_refactor_and_hardening"
+    agent: "coder_agent"
+    description: "Coder tổng hợp phản biện của Tester, Security và BA để vá toàn bộ lỗ hổng bảo mật và refactor ra mã nguồn hoàn chỉnh"
+    input:
+      original_code: "$INITIAL_CODE"
+      qa_report: "$QA_REPORT"
+      security_report: "$SECURITY_AUDIT_REPORT"
+      ba_critique: "$BA_CRITIQUE"
+    output_variable: "FINAL_PRODUCTION_CODE"

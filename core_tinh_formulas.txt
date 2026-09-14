@@ -1,0 +1,3200 @@
+=== SHEET: Báo cáo từng cty ===
+Headers: ['Loại', 'VPB', 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, None, None, None, None, None, None, None, None, None, None, None, None, None]
+
+Row   1 | Loại: Loại   | Chỉ tiêu: VPB
+Row   2 | Loại: Fill   | Chỉ tiêu: Tổng thu nhập hoạt động (TOI)
+Row   3 | Loại: Tính   | Chỉ tiêu: Tăng trưởng TOI
+     D3: [Formula] =(D2-C2)/C2 => [Value] #DIV/0!
+     E3: [Formula] =(E2-D2)/D2 => [Value] #DIV/0!
+     F3: [Formula] =(F2-E2)/E2 => [Value] #DIV/0!
+     G3: [Formula] =(G2-F2)/F2 => [Value] #DIV/0!
+     H3: [Formula] =(H2-G2)/G2 => [Value] #DIV/0!
+     I3: [Formula] =(I2-H2)/H2 => [Value] #DIV/0!
+     J3: [Formula] =(J2-I2)/I2 => [Value] #DIV/0!
+     K3: [Formula] =(K2-J2)/J2 => [Value] #DIV/0!
+     L3: [Formula] =(L2-K2)/K2 => [Value] #DIV/0!
+     M3: [Formula] =(M2-L2)/L2 => [Value] 0.1991617862019115
+Row   4 | Loại: Tính   | Chỉ tiêu: Chi phí vận hành (SG & A)
+     M4: [Formula] =M7-M2 => [Value] -18630319
+Row   5 | Loại: Fill   | Chỉ tiêu: Tỷ lệ Chi phí / Thu nhập (CIR)
+Row   6 | Loại: Tính   | Chỉ tiêu: Tăng tưởng CPVH
+     D6: [Formula] =(D4-C4)/C4 => [Value] #DIV/0!
+     E6: [Formula] =(E4-D4)/D4 => [Value] #DIV/0!
+     F6: [Formula] =(F4-E4)/E4 => [Value] #DIV/0!
+     G6: [Formula] =(G4-F4)/F4 => [Value] #DIV/0!
+     H6: [Formula] =(H4-G4)/G4 => [Value] #DIV/0!
+     I6: [Formula] =(I4-H4)/H4 => [Value] #DIV/0!
+     J6: [Formula] =(J4-I4)/I4 => [Value] #DIV/0!
+     K6: [Formula] =(K4-J4)/J4 => [Value] #DIV/0!
+     L6: [Formula] =(L4-K4)/K4 => [Value] #DIV/0!
+     M6: [Formula] =(ABS(M4)-ABS(L4))/ABS(L4) => [Value] 0.29918542538354254
+Row   7 | Loại: Fill   | Chỉ tiêu: Lợi nhuận thuần từ hoạt động kinh doanh trước chi phí dự phòng rủi ro tín dụng
+Row   8 | Loại: Tính   | Chỉ tiêu: Biên lãi vận hành (trước DPRR)
+     M8: [Formula] =M7/M2 => [Value] 0.7504438520538073
+Row   9 | Loại: Fill   | Chỉ tiêu: Chi phí dự phòng rủi ro tín dụng
+Row  10 | Loại: Fill   | Chỉ tiêu: Tổng lợi nhuận trước thuế (PBT)
+Row  11 | Loại: Tính   | Chỉ tiêu: Biên lợi nhuận trước thuế
+     M11: [Formula] =M10/M2 => [Value] 0.4102261643232522
+Row  12 | Loại: Fill   | Chỉ tiêu: Lợi nhuận sau thuế thu nhập doanh nghiệp
+Row  13 | Loại: Tính   | Chỉ tiêu: Biên lợi nhuận sau thuế thu nhập doanh nghiệp
+     M13: [Formula] =M12/M2 => [Value] 0.32623376779247604
+Row  14 | Loại: Fill   | Chỉ tiêu: Lợi nhuận sau thuế của cổ đông công ty mẹ
+Row  15 | Loại: Tính   | Chỉ tiêu: Biên Lợi nhuận ST của CĐ công ty mẹ
+     M15: [Formula] =M14/M2 => [Value] 0.3213490075129045
+Row  16 | Loại: Tính   | Chỉ tiêu: Tăng trưởng lãi ròng sau CĐ thiểu số
+     D16: [Formula] =(D14-C14)/C14 => [Value] #DIV/0!
+     E16: [Formula] =(E14-D14)/D14 => [Value] #DIV/0!
+     F16: [Formula] =(F14-E14)/E14 => [Value] #DIV/0!
+     G16: [Formula] =(G14-F14)/F14 => [Value] #DIV/0!
+     H16: [Formula] =(H14-G14)/G14 => [Value] #DIV/0!
+     I16: [Formula] =(I14-H14)/H14 => [Value] #DIV/0!
+     J16: [Formula] =(J14-I14)/I14 => [Value] #DIV/0!
+     K16: [Formula] =(K14-J14)/J14 => [Value] #DIV/0!
+     L16: [Formula] =(L14-K14)/K14 => [Value] #DIV/0!
+     M16: [Formula] =(M14-L14)/L14 => [Value] 0.5203904987674914
+Row  17 | Loại: Fill   | Chỉ tiêu: Lãi cơ bản trên cổ phiếu (EPS)
+Row  18 | Loại: Fill   | Chỉ tiêu: Chi Khấu hao TSCĐ
+Row  19 | Loại: Tính   | Chỉ tiêu: CPKH/Tổng thu nhập hoạt động
+     M19: [Formula] =M18/M2 => [Value] 0.007361820494724335
+Row  20 | Loại: Fill   | Chỉ tiêu: Biên lãi thuần (NIM)
+Row  21 | Loại: Fill   | Chỉ tiêu: Chi phí vốn bình quân
+Row  22 | Loại: Tính   | Chỉ tiêu: Thay đổi tỷ lệ chi phí vốn
+     M22: [Formula] =(ABS(M21)-ABS(L21))/ABS(L21) => [Value] 0.07918552036199086
+Row  23 | Loại: Fill   | Chỉ tiêu: Tỷ lệ nợ xấu (NPL) cuối năm
+Row  24 | Loại: Fill   | Chỉ tiêu: Tỷ lệ tiền gửi không kỳ hạn (CASA)
+Row  25 | Loại: Fill   | Chỉ tiêu: Tổng tài sản
+Row  26 | Loại: Fill   | Chỉ tiêu: Lưu chuyển tiền thuần từ hoạt động kinh doanh
+Row  27 | Loại: Fill   | Chỉ tiêu: Cổ tức trả cổ đông, lợi nhuận đã chia
+Row  28 | Loại: Fill   | Chỉ tiêu: Lưu chuyển tiền thuần từ/(sử dụng vào) hoạt
+động tài chính
+Row  29 | Loại: Fill   | Chỉ tiêu: Nợ nghi ngờ
+Row  30 | Loại: Tính   | Chỉ tiêu: Thay đổi tỷ lệ nợ nghi ngờ
+     M30: [Formula] =(M29-L29)/L29 => [Value] -0.10071397634736379
+Row  31 | Loại: Fill   | Chỉ tiêu: Nợ xấu có khả năng mất vốn
+Row  32 | Loại: Tính   | Chỉ tiêu: Thay đổi tỷ lệ nợ xấu có khả năng mất vốn
+     M32: [Formula] =(M31-L31)/L31 => [Value] 0.4960885512130966
+Row  33 | Loại: Fill   | Chỉ tiêu: Tỷ lệ bao phủ nợ xấu (LLR Coverage)
+Row  34 | Loại: Fill   | Chỉ tiêu: Tổng nợ phải trả
+Row  35 | Loại: Fill   | Chỉ tiêu: Hệ số an toàn vốn (CAR)
+Row  36 | Loại: Fill   | Chỉ tiêu: Vốn chủ sở hữu
+Row  37 | Loại: Tính   | Chỉ tiêu: Debt/Equity
+     M37: [Formula] =M34/M36 => [Value] 5.990127301122882
+Row  38 | Loại: Fill   | Chỉ tiêu: Tỷ suất sinh lời trên Tổng Tài Sản (ROA)
+Row  39 | Loại: Fill   | Chỉ tiêu: Tỷ suất sinh lời trên Vốn CSH (ROE)
+Row  40 | Loại: Fill   | Chỉ tiêu: Tiền chi để mua sắm, xây dựng TSCĐ và các tài sản dài hạn khác (CapEx)
+Row  41 | Loại: Tính   | Chỉ tiêu: Chỉ số tự tài trợ
+     M41: [Formula] =M26/(ABS(M18)+ABS(M27)) => [Value] 9.857234780067998
+Row  42 | Loại: Fill   | Chỉ tiêu: Chỉ số P/E cơ bản
+Row  43 | Loại: Fill   | Chỉ tiêu: Chỉ số P/B
+Row  44 | Loại: Fill   | Chỉ tiêu: Lợi nhuận sau thuế chưa phân phối
+Row  45 | Loại: Fill   | Chỉ tiêu: Vốn hóa thị trường
+Row  46 | Loại: Tính   | Chỉ tiêu: Owner Earnings
+     L46: [Formula] =L14+L18-ABS(L40) => [Value] 16231140
+     M46: [Formula] =M14+M18-ABS(M40) => [Value] 24408423
+Row  47 | Loại: Tính   | Chỉ tiêu: Tăng trưởng OE
+     M47: [Formula] =(M46-L46)/L46 => [Value] 0.5038021358943364
+Row  48 | Loại: None   | Chỉ tiêu: None
+Row  49 | Loại: None   | Chỉ tiêu: None
+Row  50 | Loại: None   | Chỉ tiêu: None
+Row  51 | Loại: None   | Chỉ tiêu: None
+Row  52 | Loại: None   | Chỉ tiêu: None
+Row  53 | Loại: None   | Chỉ tiêu: None
+Row  54 | Loại: None   | Chỉ tiêu: None
+Row  55 | Loại: None   | Chỉ tiêu: None
+Row  56 | Loại: None   | Chỉ tiêu: None
+Row  57 | Loại: None   | Chỉ tiêu: None
+Row  58 | Loại: None   | Chỉ tiêu: None
+Row  59 | Loại: None   | Chỉ tiêu: None
+Row  60 | Loại: None   | Chỉ tiêu: None
+Row  61 | Loại: None   | Chỉ tiêu: None
+Row  62 | Loại: None   | Chỉ tiêu: None
+Row  63 | Loại: None   | Chỉ tiêu: None
+Row  64 | Loại: None   | Chỉ tiêu: None
+Row  65 | Loại: None   | Chỉ tiêu: None
+Row  66 | Loại: None   | Chỉ tiêu: None
+Row  67 | Loại: None   | Chỉ tiêu: None
+Row  68 | Loại: None   | Chỉ tiêu: None
+Row  69 | Loại: None   | Chỉ tiêu: None
+Row  70 | Loại: None   | Chỉ tiêu: None
+Row  71 | Loại: None   | Chỉ tiêu: None
+Row  72 | Loại: None   | Chỉ tiêu: None
+Row  73 | Loại: None   | Chỉ tiêu: None
+Row  74 | Loại: None   | Chỉ tiêu: None
+Row  75 | Loại: None   | Chỉ tiêu: None
+Row  76 | Loại: None   | Chỉ tiêu: None
+Row  77 | Loại: None   | Chỉ tiêu: None
+Row  78 | Loại: None   | Chỉ tiêu: None
+Row  79 | Loại: None   | Chỉ tiêu: None
+Row  80 | Loại: None   | Chỉ tiêu: None
+Row  81 | Loại: None   | Chỉ tiêu: None
+Row  82 | Loại: None   | Chỉ tiêu: None
+Row  83 | Loại: None   | Chỉ tiêu: None
+Row  84 | Loại: None   | Chỉ tiêu: None
+Row  85 | Loại: None   | Chỉ tiêu: None
+Row  86 | Loại: None   | Chỉ tiêu: None
+Row  87 | Loại: None   | Chỉ tiêu: None
+Row  88 | Loại: None   | Chỉ tiêu: None
+Row  89 | Loại: None   | Chỉ tiêu: None
+Row  90 | Loại: None   | Chỉ tiêu: None
+Row  91 | Loại: None   | Chỉ tiêu: None
+Row  92 | Loại: None   | Chỉ tiêu: None
+Row  93 | Loại: None   | Chỉ tiêu: None
+Row  94 | Loại: None   | Chỉ tiêu: None
+Row  95 | Loại: None   | Chỉ tiêu: None
+Row  96 | Loại: None   | Chỉ tiêu: None
+Row  97 | Loại: None   | Chỉ tiêu: None
+Row  98 | Loại: None   | Chỉ tiêu: None
+Row  99 | Loại: None   | Chỉ tiêu: None
+Row 100 | Loại: None   | Chỉ tiêu: None
+Row 101 | Loại: None   | Chỉ tiêu: None
+Row 102 | Loại: None   | Chỉ tiêu: None
+Row 103 | Loại: None   | Chỉ tiêu: None
+Row 104 | Loại: None   | Chỉ tiêu: None
+Row 105 | Loại: None   | Chỉ tiêu: None
+Row 106 | Loại: None   | Chỉ tiêu: None
+Row 107 | Loại: None   | Chỉ tiêu: None
+Row 108 | Loại: None   | Chỉ tiêu: None
+Row 109 | Loại: None   | Chỉ tiêu: None
+Row 110 | Loại: None   | Chỉ tiêu: None
+Row 111 | Loại: None   | Chỉ tiêu: None
+Row 112 | Loại: None   | Chỉ tiêu: None
+Row 113 | Loại: None   | Chỉ tiêu: None
+Row 114 | Loại: None   | Chỉ tiêu: None
+Row 115 | Loại: None   | Chỉ tiêu: None
+Row 116 | Loại: None   | Chỉ tiêu: None
+Row 117 | Loại: None   | Chỉ tiêu: None
+Row 118 | Loại: None   | Chỉ tiêu: None
+Row 119 | Loại: None   | Chỉ tiêu: None
+Row 120 | Loại: None   | Chỉ tiêu: None
+Row 121 | Loại: None   | Chỉ tiêu: None
+Row 122 | Loại: None   | Chỉ tiêu: None
+Row 123 | Loại: None   | Chỉ tiêu: None
+Row 124 | Loại: None   | Chỉ tiêu: None
+Row 125 | Loại: None   | Chỉ tiêu: None
+Row 126 | Loại: None   | Chỉ tiêu: None
+Row 127 | Loại: None   | Chỉ tiêu: None
+Row 128 | Loại: None   | Chỉ tiêu: None
+Row 129 | Loại: None   | Chỉ tiêu: None
+Row 130 | Loại: None   | Chỉ tiêu: None
+Row 131 | Loại: None   | Chỉ tiêu: None
+Row 132 | Loại: None   | Chỉ tiêu: None
+Row 133 | Loại: None   | Chỉ tiêu: None
+Row 134 | Loại: None   | Chỉ tiêu: None
+Row 135 | Loại: None   | Chỉ tiêu: None
+Row 136 | Loại: None   | Chỉ tiêu: None
+Row 137 | Loại: None   | Chỉ tiêu: None
+Row 138 | Loại: None   | Chỉ tiêu: None
+Row 139 | Loại: None   | Chỉ tiêu: None
+Row 140 | Loại: None   | Chỉ tiêu: None
+Row 141 | Loại: None   | Chỉ tiêu: None
+Row 142 | Loại: None   | Chỉ tiêu: None
+Row 143 | Loại: None   | Chỉ tiêu: None
+Row 144 | Loại: None   | Chỉ tiêu: None
+Row 145 | Loại: None   | Chỉ tiêu: None
+Row 146 | Loại: None   | Chỉ tiêu: None
+Row 147 | Loại: None   | Chỉ tiêu: None
+Row 148 | Loại: None   | Chỉ tiêu: None
+Row 149 | Loại: None   | Chỉ tiêu: None
+Row 150 | Loại: None   | Chỉ tiêu: None
+Row 151 | Loại: None   | Chỉ tiêu: None
+Row 152 | Loại: None   | Chỉ tiêu: None
+Row 153 | Loại: None   | Chỉ tiêu: None
+Row 154 | Loại: None   | Chỉ tiêu: None
+Row 155 | Loại: None   | Chỉ tiêu: None
+Row 156 | Loại: None   | Chỉ tiêu: None
+Row 157 | Loại: None   | Chỉ tiêu: None
+Row 158 | Loại: None   | Chỉ tiêu: None
+Row 159 | Loại: None   | Chỉ tiêu: None
+Row 160 | Loại: None   | Chỉ tiêu: None
+Row 161 | Loại: None   | Chỉ tiêu: None
+Row 162 | Loại: None   | Chỉ tiêu: None
+Row 163 | Loại: None   | Chỉ tiêu: None
+Row 164 | Loại: None   | Chỉ tiêu: None
+Row 165 | Loại: None   | Chỉ tiêu: None
+Row 166 | Loại: None   | Chỉ tiêu: None
+Row 167 | Loại: None   | Chỉ tiêu: None
+Row 168 | Loại: None   | Chỉ tiêu: None
+Row 169 | Loại: None   | Chỉ tiêu: None
+Row 170 | Loại: None   | Chỉ tiêu: None
+Row 171 | Loại: None   | Chỉ tiêu: None
+Row 172 | Loại: None   | Chỉ tiêu: None
+Row 173 | Loại: None   | Chỉ tiêu: None
+Row 174 | Loại: None   | Chỉ tiêu: None
+Row 175 | Loại: None   | Chỉ tiêu: None
+Row 176 | Loại: None   | Chỉ tiêu: None
+Row 177 | Loại: None   | Chỉ tiêu: None
+Row 178 | Loại: None   | Chỉ tiêu: None
+Row 179 | Loại: None   | Chỉ tiêu: None
+Row 180 | Loại: None   | Chỉ tiêu: None
+Row 181 | Loại: None   | Chỉ tiêu: None
+Row 182 | Loại: None   | Chỉ tiêu: None
+Row 183 | Loại: None   | Chỉ tiêu: None
+Row 184 | Loại: None   | Chỉ tiêu: None
+Row 185 | Loại: None   | Chỉ tiêu: None
+Row 186 | Loại: None   | Chỉ tiêu: None
+Row 187 | Loại: None   | Chỉ tiêu: None
+Row 188 | Loại: None   | Chỉ tiêu: None
+Row 189 | Loại: None   | Chỉ tiêu: None
+Row 190 | Loại: None   | Chỉ tiêu: None
+Row 191 | Loại: None   | Chỉ tiêu: None
+Row 192 | Loại: None   | Chỉ tiêu: None
+Row 193 | Loại: None   | Chỉ tiêu: None
+Row 194 | Loại: None   | Chỉ tiêu: None
+Row 195 | Loại: None   | Chỉ tiêu: None
+Row 196 | Loại: None   | Chỉ tiêu: None
+Row 197 | Loại: None   | Chỉ tiêu: None
+Row 198 | Loại: None   | Chỉ tiêu: None
+Row 199 | Loại: None   | Chỉ tiêu: None
+Row 200 | Loại: None   | Chỉ tiêu: None
+Row 201 | Loại: None   | Chỉ tiêu: None
+Row 202 | Loại: None   | Chỉ tiêu: None
+Row 203 | Loại: None   | Chỉ tiêu: None
+Row 204 | Loại: None   | Chỉ tiêu: None
+Row 205 | Loại: None   | Chỉ tiêu: None
+Row 206 | Loại: None   | Chỉ tiêu: None
+Row 207 | Loại: None   | Chỉ tiêu: None
+Row 208 | Loại: None   | Chỉ tiêu: None
+Row 209 | Loại: None   | Chỉ tiêu: None
+Row 210 | Loại: None   | Chỉ tiêu: None
+Row 211 | Loại: None   | Chỉ tiêu: None
+Row 212 | Loại: None   | Chỉ tiêu: None
+Row 213 | Loại: None   | Chỉ tiêu: None
+Row 214 | Loại: None   | Chỉ tiêu: None
+Row 215 | Loại: None   | Chỉ tiêu: None
+Row 216 | Loại: None   | Chỉ tiêu: None
+Row 217 | Loại: None   | Chỉ tiêu: None
+Row 218 | Loại: None   | Chỉ tiêu: None
+Row 219 | Loại: None   | Chỉ tiêu: None
+Row 220 | Loại: None   | Chỉ tiêu: None
+Row 221 | Loại: None   | Chỉ tiêu: None
+Row 222 | Loại: None   | Chỉ tiêu: None
+Row 223 | Loại: None   | Chỉ tiêu: None
+Row 224 | Loại: None   | Chỉ tiêu: None
+Row 225 | Loại: None   | Chỉ tiêu: None
+Row 226 | Loại: None   | Chỉ tiêu: None
+Row 227 | Loại: None   | Chỉ tiêu: None
+Row 228 | Loại: None   | Chỉ tiêu: None
+Row 229 | Loại: None   | Chỉ tiêu: None
+Row 230 | Loại: None   | Chỉ tiêu: None
+Row 231 | Loại: None   | Chỉ tiêu: None
+Row 232 | Loại: None   | Chỉ tiêu: None
+Row 233 | Loại: None   | Chỉ tiêu: None
+Row 234 | Loại: None   | Chỉ tiêu: None
+Row 235 | Loại: None   | Chỉ tiêu: None
+Row 236 | Loại: None   | Chỉ tiêu: None
+Row 237 | Loại: None   | Chỉ tiêu: None
+Row 238 | Loại: None   | Chỉ tiêu: None
+Row 239 | Loại: None   | Chỉ tiêu: None
+Row 240 | Loại: None   | Chỉ tiêu: None
+Row 241 | Loại: None   | Chỉ tiêu: None
+Row 242 | Loại: None   | Chỉ tiêu: None
+Row 243 | Loại: None   | Chỉ tiêu: None
+Row 244 | Loại: None   | Chỉ tiêu: None
+Row 245 | Loại: None   | Chỉ tiêu: None
+Row 246 | Loại: None   | Chỉ tiêu: None
+Row 247 | Loại: None   | Chỉ tiêu: None
+Row 248 | Loại: None   | Chỉ tiêu: None
+Row 249 | Loại: None   | Chỉ tiêu: None
+Row 250 | Loại: None   | Chỉ tiêu: None
+Row 251 | Loại: None   | Chỉ tiêu: None
+Row 252 | Loại: None   | Chỉ tiêu: None
+Row 253 | Loại: None   | Chỉ tiêu: None
+Row 254 | Loại: None   | Chỉ tiêu: None
+Row 255 | Loại: None   | Chỉ tiêu: None
+Row 256 | Loại: None   | Chỉ tiêu: None
+Row 257 | Loại: None   | Chỉ tiêu: None
+Row 258 | Loại: None   | Chỉ tiêu: None
+Row 259 | Loại: None   | Chỉ tiêu: None
+Row 260 | Loại: None   | Chỉ tiêu: None
+Row 261 | Loại: None   | Chỉ tiêu: None
+Row 262 | Loại: None   | Chỉ tiêu: None
+Row 263 | Loại: None   | Chỉ tiêu: None
+Row 264 | Loại: None   | Chỉ tiêu: None
+Row 265 | Loại: None   | Chỉ tiêu: None
+Row 266 | Loại: None   | Chỉ tiêu: None
+Row 267 | Loại: None   | Chỉ tiêu: None
+Row 268 | Loại: None   | Chỉ tiêu: None
+Row 269 | Loại: None   | Chỉ tiêu: None
+Row 270 | Loại: None   | Chỉ tiêu: None
+Row 271 | Loại: None   | Chỉ tiêu: None
+Row 272 | Loại: None   | Chỉ tiêu: None
+Row 273 | Loại: None   | Chỉ tiêu: None
+Row 274 | Loại: None   | Chỉ tiêu: None
+Row 275 | Loại: None   | Chỉ tiêu: None
+Row 276 | Loại: None   | Chỉ tiêu: None
+Row 277 | Loại: None   | Chỉ tiêu: None
+Row 278 | Loại: None   | Chỉ tiêu: None
+Row 279 | Loại: None   | Chỉ tiêu: None
+Row 280 | Loại: None   | Chỉ tiêu: None
+Row 281 | Loại: None   | Chỉ tiêu: None
+Row 282 | Loại: None   | Chỉ tiêu: None
+Row 283 | Loại: None   | Chỉ tiêu: None
+Row 284 | Loại: None   | Chỉ tiêu: None
+Row 285 | Loại: None   | Chỉ tiêu: None
+Row 286 | Loại: None   | Chỉ tiêu: None
+Row 287 | Loại: None   | Chỉ tiêu: None
+Row 288 | Loại: None   | Chỉ tiêu: None
+Row 289 | Loại: None   | Chỉ tiêu: None
+Row 290 | Loại: None   | Chỉ tiêu: None
+Row 291 | Loại: None   | Chỉ tiêu: None
+Row 292 | Loại: None   | Chỉ tiêu: None
+Row 293 | Loại: None   | Chỉ tiêu: None
+Row 294 | Loại: None   | Chỉ tiêu: None
+Row 295 | Loại: None   | Chỉ tiêu: None
+Row 296 | Loại: None   | Chỉ tiêu: None
+Row 297 | Loại: None   | Chỉ tiêu: None
+Row 298 | Loại: None   | Chỉ tiêu: None
+Row 299 | Loại: None   | Chỉ tiêu: None
+Row 300 | Loại: None   | Chỉ tiêu: None
+Row 301 | Loại: None   | Chỉ tiêu: None
+Row 302 | Loại: None   | Chỉ tiêu: None
+Row 303 | Loại: None   | Chỉ tiêu: None
+Row 304 | Loại: None   | Chỉ tiêu: None
+Row 305 | Loại: None   | Chỉ tiêu: None
+Row 306 | Loại: None   | Chỉ tiêu: None
+Row 307 | Loại: None   | Chỉ tiêu: None
+Row 308 | Loại: None   | Chỉ tiêu: None
+Row 309 | Loại: None   | Chỉ tiêu: None
+Row 310 | Loại: None   | Chỉ tiêu: None
+Row 311 | Loại: None   | Chỉ tiêu: None
+Row 312 | Loại: None   | Chỉ tiêu: None
+Row 313 | Loại: None   | Chỉ tiêu: None
+Row 314 | Loại: None   | Chỉ tiêu: None
+Row 315 | Loại: None   | Chỉ tiêu: None
+Row 316 | Loại: None   | Chỉ tiêu: None
+Row 317 | Loại: None   | Chỉ tiêu: None
+Row 318 | Loại: None   | Chỉ tiêu: None
+Row 319 | Loại: None   | Chỉ tiêu: None
+Row 320 | Loại: None   | Chỉ tiêu: None
+Row 321 | Loại: None   | Chỉ tiêu: None
+Row 322 | Loại: None   | Chỉ tiêu: None
+Row 323 | Loại: None   | Chỉ tiêu: None
+Row 324 | Loại: None   | Chỉ tiêu: None
+Row 325 | Loại: None   | Chỉ tiêu: None
+Row 326 | Loại: None   | Chỉ tiêu: None
+Row 327 | Loại: None   | Chỉ tiêu: None
+Row 328 | Loại: None   | Chỉ tiêu: None
+Row 329 | Loại: None   | Chỉ tiêu: None
+Row 330 | Loại: None   | Chỉ tiêu: None
+Row 331 | Loại: None   | Chỉ tiêu: None
+Row 332 | Loại: None   | Chỉ tiêu: None
+Row 333 | Loại: None   | Chỉ tiêu: None
+Row 334 | Loại: None   | Chỉ tiêu: None
+Row 335 | Loại: None   | Chỉ tiêu: None
+Row 336 | Loại: None   | Chỉ tiêu: None
+Row 337 | Loại: None   | Chỉ tiêu: None
+Row 338 | Loại: None   | Chỉ tiêu: None
+Row 339 | Loại: None   | Chỉ tiêu: None
+Row 340 | Loại: None   | Chỉ tiêu: None
+Row 341 | Loại: None   | Chỉ tiêu: None
+Row 342 | Loại: None   | Chỉ tiêu: None
+Row 343 | Loại: None   | Chỉ tiêu: None
+Row 344 | Loại: None   | Chỉ tiêu: None
+Row 345 | Loại: None   | Chỉ tiêu: None
+Row 346 | Loại: None   | Chỉ tiêu: None
+Row 347 | Loại: None   | Chỉ tiêu: None
+Row 348 | Loại: None   | Chỉ tiêu: None
+Row 349 | Loại: None   | Chỉ tiêu: None
+Row 350 | Loại: None   | Chỉ tiêu: None
+Row 351 | Loại: None   | Chỉ tiêu: None
+Row 352 | Loại: None   | Chỉ tiêu: None
+Row 353 | Loại: None   | Chỉ tiêu: None
+Row 354 | Loại: None   | Chỉ tiêu: None
+Row 355 | Loại: None   | Chỉ tiêu: None
+Row 356 | Loại: None   | Chỉ tiêu: None
+Row 357 | Loại: None   | Chỉ tiêu: None
+Row 358 | Loại: None   | Chỉ tiêu: None
+Row 359 | Loại: None   | Chỉ tiêu: None
+Row 360 | Loại: None   | Chỉ tiêu: None
+Row 361 | Loại: None   | Chỉ tiêu: None
+Row 362 | Loại: None   | Chỉ tiêu: None
+Row 363 | Loại: None   | Chỉ tiêu: None
+Row 364 | Loại: None   | Chỉ tiêu: None
+Row 365 | Loại: None   | Chỉ tiêu: None
+Row 366 | Loại: None   | Chỉ tiêu: None
+Row 367 | Loại: None   | Chỉ tiêu: None
+Row 368 | Loại: None   | Chỉ tiêu: None
+Row 369 | Loại: None   | Chỉ tiêu: None
+Row 370 | Loại: None   | Chỉ tiêu: None
+Row 371 | Loại: None   | Chỉ tiêu: None
+Row 372 | Loại: None   | Chỉ tiêu: None
+Row 373 | Loại: None   | Chỉ tiêu: None
+Row 374 | Loại: None   | Chỉ tiêu: None
+Row 375 | Loại: None   | Chỉ tiêu: None
+Row 376 | Loại: None   | Chỉ tiêu: None
+Row 377 | Loại: None   | Chỉ tiêu: None
+Row 378 | Loại: None   | Chỉ tiêu: None
+Row 379 | Loại: None   | Chỉ tiêu: None
+Row 380 | Loại: None   | Chỉ tiêu: None
+Row 381 | Loại: None   | Chỉ tiêu: None
+Row 382 | Loại: None   | Chỉ tiêu: None
+Row 383 | Loại: None   | Chỉ tiêu: None
+Row 384 | Loại: None   | Chỉ tiêu: None
+Row 385 | Loại: None   | Chỉ tiêu: None
+Row 386 | Loại: None   | Chỉ tiêu: None
+Row 387 | Loại: None   | Chỉ tiêu: None
+Row 388 | Loại: None   | Chỉ tiêu: None
+Row 389 | Loại: None   | Chỉ tiêu: None
+Row 390 | Loại: None   | Chỉ tiêu: None
+Row 391 | Loại: None   | Chỉ tiêu: None
+Row 392 | Loại: None   | Chỉ tiêu: None
+Row 393 | Loại: None   | Chỉ tiêu: None
+Row 394 | Loại: None   | Chỉ tiêu: None
+Row 395 | Loại: None   | Chỉ tiêu: None
+Row 396 | Loại: None   | Chỉ tiêu: None
+Row 397 | Loại: None   | Chỉ tiêu: None
+Row 398 | Loại: None   | Chỉ tiêu: None
+Row 399 | Loại: None   | Chỉ tiêu: None
+Row 400 | Loại: None   | Chỉ tiêu: None
+Row 401 | Loại: None   | Chỉ tiêu: None
+Row 402 | Loại: None   | Chỉ tiêu: None
+Row 403 | Loại: None   | Chỉ tiêu: None
+Row 404 | Loại: None   | Chỉ tiêu: None
+Row 405 | Loại: None   | Chỉ tiêu: None
+Row 406 | Loại: None   | Chỉ tiêu: None
+Row 407 | Loại: None   | Chỉ tiêu: None
+Row 408 | Loại: None   | Chỉ tiêu: None
+Row 409 | Loại: None   | Chỉ tiêu: None
+Row 410 | Loại: None   | Chỉ tiêu: None
+Row 411 | Loại: None   | Chỉ tiêu: None
+Row 412 | Loại: None   | Chỉ tiêu: None
+Row 413 | Loại: None   | Chỉ tiêu: None
+Row 414 | Loại: None   | Chỉ tiêu: None
+Row 415 | Loại: None   | Chỉ tiêu: None
+Row 416 | Loại: None   | Chỉ tiêu: None
+Row 417 | Loại: None   | Chỉ tiêu: None
+Row 418 | Loại: None   | Chỉ tiêu: None
+Row 419 | Loại: None   | Chỉ tiêu: None
+Row 420 | Loại: None   | Chỉ tiêu: None
+Row 421 | Loại: None   | Chỉ tiêu: None
+Row 422 | Loại: None   | Chỉ tiêu: None
+Row 423 | Loại: None   | Chỉ tiêu: None
+Row 424 | Loại: None   | Chỉ tiêu: None
+Row 425 | Loại: None   | Chỉ tiêu: None
+Row 426 | Loại: None   | Chỉ tiêu: None
+Row 427 | Loại: None   | Chỉ tiêu: None
+Row 428 | Loại: None   | Chỉ tiêu: None
+Row 429 | Loại: None   | Chỉ tiêu: None
+Row 430 | Loại: None   | Chỉ tiêu: None
+Row 431 | Loại: None   | Chỉ tiêu: None
+Row 432 | Loại: None   | Chỉ tiêu: None
+Row 433 | Loại: None   | Chỉ tiêu: None
+Row 434 | Loại: None   | Chỉ tiêu: None
+Row 435 | Loại: None   | Chỉ tiêu: None
+Row 436 | Loại: None   | Chỉ tiêu: None
+Row 437 | Loại: None   | Chỉ tiêu: None
+Row 438 | Loại: None   | Chỉ tiêu: None
+Row 439 | Loại: None   | Chỉ tiêu: None
+Row 440 | Loại: None   | Chỉ tiêu: None
+Row 441 | Loại: None   | Chỉ tiêu: None
+Row 442 | Loại: None   | Chỉ tiêu: None
+Row 443 | Loại: None   | Chỉ tiêu: None
+Row 444 | Loại: None   | Chỉ tiêu: None
+Row 445 | Loại: None   | Chỉ tiêu: None
+Row 446 | Loại: None   | Chỉ tiêu: None
+Row 447 | Loại: None   | Chỉ tiêu: None
+Row 448 | Loại: None   | Chỉ tiêu: None
+Row 449 | Loại: None   | Chỉ tiêu: None
+Row 450 | Loại: None   | Chỉ tiêu: None
+Row 451 | Loại: None   | Chỉ tiêu: None
+Row 452 | Loại: None   | Chỉ tiêu: None
+Row 453 | Loại: None   | Chỉ tiêu: None
+Row 454 | Loại: None   | Chỉ tiêu: None
+Row 455 | Loại: None   | Chỉ tiêu: None
+Row 456 | Loại: None   | Chỉ tiêu: None
+Row 457 | Loại: None   | Chỉ tiêu: None
+Row 458 | Loại: None   | Chỉ tiêu: None
+Row 459 | Loại: None   | Chỉ tiêu: None
+Row 460 | Loại: None   | Chỉ tiêu: None
+Row 461 | Loại: None   | Chỉ tiêu: None
+Row 462 | Loại: None   | Chỉ tiêu: None
+Row 463 | Loại: None   | Chỉ tiêu: None
+Row 464 | Loại: None   | Chỉ tiêu: None
+Row 465 | Loại: None   | Chỉ tiêu: None
+Row 466 | Loại: None   | Chỉ tiêu: None
+Row 467 | Loại: None   | Chỉ tiêu: None
+Row 468 | Loại: None   | Chỉ tiêu: None
+Row 469 | Loại: None   | Chỉ tiêu: None
+Row 470 | Loại: None   | Chỉ tiêu: None
+Row 471 | Loại: None   | Chỉ tiêu: None
+Row 472 | Loại: None   | Chỉ tiêu: None
+Row 473 | Loại: None   | Chỉ tiêu: None
+Row 474 | Loại: None   | Chỉ tiêu: None
+Row 475 | Loại: None   | Chỉ tiêu: None
+Row 476 | Loại: None   | Chỉ tiêu: None
+Row 477 | Loại: None   | Chỉ tiêu: None
+Row 478 | Loại: None   | Chỉ tiêu: None
+Row 479 | Loại: None   | Chỉ tiêu: None
+Row 480 | Loại: None   | Chỉ tiêu: None
+Row 481 | Loại: None   | Chỉ tiêu: None
+Row 482 | Loại: None   | Chỉ tiêu: None
+Row 483 | Loại: None   | Chỉ tiêu: None
+Row 484 | Loại: None   | Chỉ tiêu: None
+Row 485 | Loại: None   | Chỉ tiêu: None
+Row 486 | Loại: None   | Chỉ tiêu: None
+Row 487 | Loại: None   | Chỉ tiêu: None
+Row 488 | Loại: None   | Chỉ tiêu: None
+Row 489 | Loại: None   | Chỉ tiêu: None
+Row 490 | Loại: None   | Chỉ tiêu: None
+Row 491 | Loại: None   | Chỉ tiêu: None
+Row 492 | Loại: None   | Chỉ tiêu: None
+Row 493 | Loại: None   | Chỉ tiêu: None
+Row 494 | Loại: None   | Chỉ tiêu: None
+Row 495 | Loại: None   | Chỉ tiêu: None
+Row 496 | Loại: None   | Chỉ tiêu: None
+Row 497 | Loại: None   | Chỉ tiêu: None
+Row 498 | Loại: None   | Chỉ tiêu: None
+Row 499 | Loại: None   | Chỉ tiêu: None
+Row 500 | Loại: None   | Chỉ tiêu: None
+Row 501 | Loại: None   | Chỉ tiêu: None
+Row 502 | Loại: None   | Chỉ tiêu: None
+Row 503 | Loại: None   | Chỉ tiêu: None
+Row 504 | Loại: None   | Chỉ tiêu: None
+Row 505 | Loại: None   | Chỉ tiêu: None
+Row 506 | Loại: None   | Chỉ tiêu: None
+Row 507 | Loại: None   | Chỉ tiêu: None
+Row 508 | Loại: None   | Chỉ tiêu: None
+Row 509 | Loại: None   | Chỉ tiêu: None
+Row 510 | Loại: None   | Chỉ tiêu: None
+Row 511 | Loại: None   | Chỉ tiêu: None
+Row 512 | Loại: None   | Chỉ tiêu: None
+Row 513 | Loại: None   | Chỉ tiêu: None
+Row 514 | Loại: None   | Chỉ tiêu: None
+Row 515 | Loại: None   | Chỉ tiêu: None
+Row 516 | Loại: None   | Chỉ tiêu: None
+Row 517 | Loại: None   | Chỉ tiêu: None
+Row 518 | Loại: None   | Chỉ tiêu: None
+Row 519 | Loại: None   | Chỉ tiêu: None
+Row 520 | Loại: None   | Chỉ tiêu: None
+Row 521 | Loại: None   | Chỉ tiêu: None
+Row 522 | Loại: None   | Chỉ tiêu: None
+Row 523 | Loại: None   | Chỉ tiêu: None
+Row 524 | Loại: None   | Chỉ tiêu: None
+Row 525 | Loại: None   | Chỉ tiêu: None
+Row 526 | Loại: None   | Chỉ tiêu: None
+Row 527 | Loại: None   | Chỉ tiêu: None
+Row 528 | Loại: None   | Chỉ tiêu: None
+Row 529 | Loại: None   | Chỉ tiêu: None
+Row 530 | Loại: None   | Chỉ tiêu: None
+Row 531 | Loại: None   | Chỉ tiêu: None
+Row 532 | Loại: None   | Chỉ tiêu: None
+Row 533 | Loại: None   | Chỉ tiêu: None
+Row 534 | Loại: None   | Chỉ tiêu: None
+Row 535 | Loại: None   | Chỉ tiêu: None
+Row 536 | Loại: None   | Chỉ tiêu: None
+Row 537 | Loại: None   | Chỉ tiêu: None
+Row 538 | Loại: None   | Chỉ tiêu: None
+Row 539 | Loại: None   | Chỉ tiêu: None
+Row 540 | Loại: None   | Chỉ tiêu: None
+Row 541 | Loại: None   | Chỉ tiêu: None
+Row 542 | Loại: None   | Chỉ tiêu: None
+Row 543 | Loại: None   | Chỉ tiêu: None
+Row 544 | Loại: None   | Chỉ tiêu: None
+Row 545 | Loại: None   | Chỉ tiêu: None
+Row 546 | Loại: None   | Chỉ tiêu: None
+Row 547 | Loại: None   | Chỉ tiêu: None
+Row 548 | Loại: None   | Chỉ tiêu: None
+Row 549 | Loại: None   | Chỉ tiêu: None
+Row 550 | Loại: None   | Chỉ tiêu: None
+Row 551 | Loại: None   | Chỉ tiêu: None
+Row 552 | Loại: None   | Chỉ tiêu: None
+Row 553 | Loại: None   | Chỉ tiêu: None
+Row 554 | Loại: None   | Chỉ tiêu: None
+Row 555 | Loại: None   | Chỉ tiêu: None
+Row 556 | Loại: None   | Chỉ tiêu: None
+Row 557 | Loại: None   | Chỉ tiêu: None
+Row 558 | Loại: None   | Chỉ tiêu: None
+Row 559 | Loại: None   | Chỉ tiêu: None
+Row 560 | Loại: None   | Chỉ tiêu: None
+Row 561 | Loại: None   | Chỉ tiêu: None
+Row 562 | Loại: None   | Chỉ tiêu: None
+Row 563 | Loại: None   | Chỉ tiêu: None
+Row 564 | Loại: None   | Chỉ tiêu: None
+Row 565 | Loại: None   | Chỉ tiêu: None
+Row 566 | Loại: None   | Chỉ tiêu: None
+Row 567 | Loại: None   | Chỉ tiêu: None
+Row 568 | Loại: None   | Chỉ tiêu: None
+Row 569 | Loại: None   | Chỉ tiêu: None
+Row 570 | Loại: None   | Chỉ tiêu: None
+Row 571 | Loại: None   | Chỉ tiêu: None
+Row 572 | Loại: None   | Chỉ tiêu: None
+Row 573 | Loại: None   | Chỉ tiêu: None
+Row 574 | Loại: None   | Chỉ tiêu: None
+Row 575 | Loại: None   | Chỉ tiêu: None
+Row 576 | Loại: None   | Chỉ tiêu: None
+Row 577 | Loại: None   | Chỉ tiêu: None
+Row 578 | Loại: None   | Chỉ tiêu: None
+Row 579 | Loại: None   | Chỉ tiêu: None
+Row 580 | Loại: None   | Chỉ tiêu: None
+Row 581 | Loại: None   | Chỉ tiêu: None
+Row 582 | Loại: None   | Chỉ tiêu: None
+Row 583 | Loại: None   | Chỉ tiêu: None
+Row 584 | Loại: None   | Chỉ tiêu: None
+Row 585 | Loại: None   | Chỉ tiêu: None
+Row 586 | Loại: None   | Chỉ tiêu: None
+Row 587 | Loại: None   | Chỉ tiêu: None
+Row 588 | Loại: None   | Chỉ tiêu: None
+Row 589 | Loại: None   | Chỉ tiêu: None
+Row 590 | Loại: None   | Chỉ tiêu: None
+Row 591 | Loại: None   | Chỉ tiêu: None
+Row 592 | Loại: None   | Chỉ tiêu: None
+Row 593 | Loại: None   | Chỉ tiêu: None
+Row 594 | Loại: None   | Chỉ tiêu: None
+Row 595 | Loại: None   | Chỉ tiêu: None
+Row 596 | Loại: None   | Chỉ tiêu: None
+Row 597 | Loại: None   | Chỉ tiêu: None
+Row 598 | Loại: None   | Chỉ tiêu: None
+Row 599 | Loại: None   | Chỉ tiêu: None
+Row 600 | Loại: None   | Chỉ tiêu: None
+Row 601 | Loại: None   | Chỉ tiêu: None
+Row 602 | Loại: None   | Chỉ tiêu: None
+Row 603 | Loại: None   | Chỉ tiêu: None
+Row 604 | Loại: None   | Chỉ tiêu: None
+Row 605 | Loại: None   | Chỉ tiêu: None
+Row 606 | Loại: None   | Chỉ tiêu: None
+Row 607 | Loại: None   | Chỉ tiêu: None
+Row 608 | Loại: None   | Chỉ tiêu: None
+Row 609 | Loại: None   | Chỉ tiêu: None
+Row 610 | Loại: None   | Chỉ tiêu: None
+Row 611 | Loại: None   | Chỉ tiêu: None
+Row 612 | Loại: None   | Chỉ tiêu: None
+Row 613 | Loại: None   | Chỉ tiêu: None
+Row 614 | Loại: None   | Chỉ tiêu: None
+Row 615 | Loại: None   | Chỉ tiêu: None
+Row 616 | Loại: None   | Chỉ tiêu: None
+Row 617 | Loại: None   | Chỉ tiêu: None
+Row 618 | Loại: None   | Chỉ tiêu: None
+Row 619 | Loại: None   | Chỉ tiêu: None
+Row 620 | Loại: None   | Chỉ tiêu: None
+Row 621 | Loại: None   | Chỉ tiêu: None
+Row 622 | Loại: None   | Chỉ tiêu: None
+Row 623 | Loại: None   | Chỉ tiêu: None
+Row 624 | Loại: None   | Chỉ tiêu: None
+Row 625 | Loại: None   | Chỉ tiêu: None
+Row 626 | Loại: None   | Chỉ tiêu: None
+Row 627 | Loại: None   | Chỉ tiêu: None
+Row 628 | Loại: None   | Chỉ tiêu: None
+Row 629 | Loại: None   | Chỉ tiêu: None
+Row 630 | Loại: None   | Chỉ tiêu: None
+Row 631 | Loại: None   | Chỉ tiêu: None
+Row 632 | Loại: None   | Chỉ tiêu: None
+Row 633 | Loại: None   | Chỉ tiêu: None
+Row 634 | Loại: None   | Chỉ tiêu: None
+Row 635 | Loại: None   | Chỉ tiêu: None
+Row 636 | Loại: None   | Chỉ tiêu: None
+Row 637 | Loại: None   | Chỉ tiêu: None
+Row 638 | Loại: None   | Chỉ tiêu: None
+Row 639 | Loại: None   | Chỉ tiêu: None
+Row 640 | Loại: None   | Chỉ tiêu: None
+Row 641 | Loại: None   | Chỉ tiêu: None
+Row 642 | Loại: None   | Chỉ tiêu: None
+Row 643 | Loại: None   | Chỉ tiêu: None
+Row 644 | Loại: None   | Chỉ tiêu: None
+Row 645 | Loại: None   | Chỉ tiêu: None
+Row 646 | Loại: None   | Chỉ tiêu: None
+Row 647 | Loại: None   | Chỉ tiêu: None
+Row 648 | Loại: None   | Chỉ tiêu: None
+Row 649 | Loại: None   | Chỉ tiêu: None
+Row 650 | Loại: None   | Chỉ tiêu: None
+Row 651 | Loại: None   | Chỉ tiêu: None
+Row 652 | Loại: None   | Chỉ tiêu: None
+Row 653 | Loại: None   | Chỉ tiêu: None
+Row 654 | Loại: None   | Chỉ tiêu: None
+Row 655 | Loại: None   | Chỉ tiêu: None
+Row 656 | Loại: None   | Chỉ tiêu: None
+Row 657 | Loại: None   | Chỉ tiêu: None
+Row 658 | Loại: None   | Chỉ tiêu: None
+Row 659 | Loại: None   | Chỉ tiêu: None
+Row 660 | Loại: None   | Chỉ tiêu: None
+Row 661 | Loại: None   | Chỉ tiêu: None
+Row 662 | Loại: None   | Chỉ tiêu: None
+Row 663 | Loại: None   | Chỉ tiêu: None
+Row 664 | Loại: None   | Chỉ tiêu: None
+Row 665 | Loại: None   | Chỉ tiêu: None
+Row 666 | Loại: None   | Chỉ tiêu: None
+Row 667 | Loại: None   | Chỉ tiêu: None
+Row 668 | Loại: None   | Chỉ tiêu: None
+Row 669 | Loại: None   | Chỉ tiêu: None
+Row 670 | Loại: None   | Chỉ tiêu: None
+Row 671 | Loại: None   | Chỉ tiêu: None
+Row 672 | Loại: None   | Chỉ tiêu: None
+Row 673 | Loại: None   | Chỉ tiêu: None
+Row 674 | Loại: None   | Chỉ tiêu: None
+Row 675 | Loại: None   | Chỉ tiêu: None
+Row 676 | Loại: None   | Chỉ tiêu: None
+Row 677 | Loại: None   | Chỉ tiêu: None
+Row 678 | Loại: None   | Chỉ tiêu: None
+Row 679 | Loại: None   | Chỉ tiêu: None
+Row 680 | Loại: None   | Chỉ tiêu: None
+Row 681 | Loại: None   | Chỉ tiêu: None
+Row 682 | Loại: None   | Chỉ tiêu: None
+Row 683 | Loại: None   | Chỉ tiêu: None
+Row 684 | Loại: None   | Chỉ tiêu: None
+Row 685 | Loại: None   | Chỉ tiêu: None
+Row 686 | Loại: None   | Chỉ tiêu: None
+Row 687 | Loại: None   | Chỉ tiêu: None
+Row 688 | Loại: None   | Chỉ tiêu: None
+Row 689 | Loại: None   | Chỉ tiêu: None
+Row 690 | Loại: None   | Chỉ tiêu: None
+Row 691 | Loại: None   | Chỉ tiêu: None
+Row 692 | Loại: None   | Chỉ tiêu: None
+Row 693 | Loại: None   | Chỉ tiêu: None
+Row 694 | Loại: None   | Chỉ tiêu: None
+Row 695 | Loại: None   | Chỉ tiêu: None
+Row 696 | Loại: None   | Chỉ tiêu: None
+Row 697 | Loại: None   | Chỉ tiêu: None
+Row 698 | Loại: None   | Chỉ tiêu: None
+Row 699 | Loại: None   | Chỉ tiêu: None
+Row 700 | Loại: None   | Chỉ tiêu: None
+Row 701 | Loại: None   | Chỉ tiêu: None
+Row 702 | Loại: None   | Chỉ tiêu: None
+Row 703 | Loại: None   | Chỉ tiêu: None
+Row 704 | Loại: None   | Chỉ tiêu: None
+Row 705 | Loại: None   | Chỉ tiêu: None
+Row 706 | Loại: None   | Chỉ tiêu: None
+Row 707 | Loại: None   | Chỉ tiêu: None
+Row 708 | Loại: None   | Chỉ tiêu: None
+Row 709 | Loại: None   | Chỉ tiêu: None
+Row 710 | Loại: None   | Chỉ tiêu: None
+Row 711 | Loại: None   | Chỉ tiêu: None
+Row 712 | Loại: None   | Chỉ tiêu: None
+Row 713 | Loại: None   | Chỉ tiêu: None
+Row 714 | Loại: None   | Chỉ tiêu: None
+Row 715 | Loại: None   | Chỉ tiêu: None
+Row 716 | Loại: None   | Chỉ tiêu: None
+Row 717 | Loại: None   | Chỉ tiêu: None
+Row 718 | Loại: None   | Chỉ tiêu: None
+Row 719 | Loại: None   | Chỉ tiêu: None
+Row 720 | Loại: None   | Chỉ tiêu: None
+Row 721 | Loại: None   | Chỉ tiêu: None
+Row 722 | Loại: None   | Chỉ tiêu: None
+Row 723 | Loại: None   | Chỉ tiêu: None
+Row 724 | Loại: None   | Chỉ tiêu: None
+Row 725 | Loại: None   | Chỉ tiêu: None
+Row 726 | Loại: None   | Chỉ tiêu: None
+Row 727 | Loại: None   | Chỉ tiêu: None
+Row 728 | Loại: None   | Chỉ tiêu: None
+Row 729 | Loại: None   | Chỉ tiêu: None
+Row 730 | Loại: None   | Chỉ tiêu: None
+Row 731 | Loại: None   | Chỉ tiêu: None
+Row 732 | Loại: None   | Chỉ tiêu: None
+Row 733 | Loại: None   | Chỉ tiêu: None
+Row 734 | Loại: None   | Chỉ tiêu: None
+Row 735 | Loại: None   | Chỉ tiêu: None
+Row 736 | Loại: None   | Chỉ tiêu: None
+Row 737 | Loại: None   | Chỉ tiêu: None
+Row 738 | Loại: None   | Chỉ tiêu: None
+Row 739 | Loại: None   | Chỉ tiêu: None
+Row 740 | Loại: None   | Chỉ tiêu: None
+Row 741 | Loại: None   | Chỉ tiêu: None
+Row 742 | Loại: None   | Chỉ tiêu: None
+Row 743 | Loại: None   | Chỉ tiêu: None
+Row 744 | Loại: None   | Chỉ tiêu: None
+Row 745 | Loại: None   | Chỉ tiêu: None
+Row 746 | Loại: None   | Chỉ tiêu: None
+Row 747 | Loại: None   | Chỉ tiêu: None
+Row 748 | Loại: None   | Chỉ tiêu: None
+Row 749 | Loại: None   | Chỉ tiêu: None
+Row 750 | Loại: None   | Chỉ tiêu: None
+Row 751 | Loại: None   | Chỉ tiêu: None
+Row 752 | Loại: None   | Chỉ tiêu: None
+Row 753 | Loại: None   | Chỉ tiêu: None
+Row 754 | Loại: None   | Chỉ tiêu: None
+Row 755 | Loại: None   | Chỉ tiêu: None
+Row 756 | Loại: None   | Chỉ tiêu: None
+Row 757 | Loại: None   | Chỉ tiêu: None
+Row 758 | Loại: None   | Chỉ tiêu: None
+Row 759 | Loại: None   | Chỉ tiêu: None
+Row 760 | Loại: None   | Chỉ tiêu: None
+Row 761 | Loại: None   | Chỉ tiêu: None
+Row 762 | Loại: None   | Chỉ tiêu: None
+Row 763 | Loại: None   | Chỉ tiêu: None
+Row 764 | Loại: None   | Chỉ tiêu: None
+Row 765 | Loại: None   | Chỉ tiêu: None
+Row 766 | Loại: None   | Chỉ tiêu: None
+Row 767 | Loại: None   | Chỉ tiêu: None
+Row 768 | Loại: None   | Chỉ tiêu: None
+Row 769 | Loại: None   | Chỉ tiêu: None
+Row 770 | Loại: None   | Chỉ tiêu: None
+Row 771 | Loại: None   | Chỉ tiêu: None
+Row 772 | Loại: None   | Chỉ tiêu: None
+Row 773 | Loại: None   | Chỉ tiêu: None
+Row 774 | Loại: None   | Chỉ tiêu: None
+Row 775 | Loại: None   | Chỉ tiêu: None
+Row 776 | Loại: None   | Chỉ tiêu: None
+Row 777 | Loại: None   | Chỉ tiêu: None
+Row 778 | Loại: None   | Chỉ tiêu: None
+Row 779 | Loại: None   | Chỉ tiêu: None
+Row 780 | Loại: None   | Chỉ tiêu: None
+Row 781 | Loại: None   | Chỉ tiêu: None
+Row 782 | Loại: None   | Chỉ tiêu: None
+Row 783 | Loại: None   | Chỉ tiêu: None
+Row 784 | Loại: None   | Chỉ tiêu: None
+Row 785 | Loại: None   | Chỉ tiêu: None
+Row 786 | Loại: None   | Chỉ tiêu: None
+Row 787 | Loại: None   | Chỉ tiêu: None
+Row 788 | Loại: None   | Chỉ tiêu: None
+Row 789 | Loại: None   | Chỉ tiêu: None
+Row 790 | Loại: None   | Chỉ tiêu: None
+Row 791 | Loại: None   | Chỉ tiêu: None
+Row 792 | Loại: None   | Chỉ tiêu: None
+Row 793 | Loại: None   | Chỉ tiêu: None
+Row 794 | Loại: None   | Chỉ tiêu: None
+Row 795 | Loại: None   | Chỉ tiêu: None
+Row 796 | Loại: None   | Chỉ tiêu: None
+Row 797 | Loại: None   | Chỉ tiêu: None
+Row 798 | Loại: None   | Chỉ tiêu: None
+Row 799 | Loại: None   | Chỉ tiêu: None
+Row 800 | Loại: None   | Chỉ tiêu: None
+Row 801 | Loại: None   | Chỉ tiêu: None
+Row 802 | Loại: None   | Chỉ tiêu: None
+Row 803 | Loại: None   | Chỉ tiêu: None
+Row 804 | Loại: None   | Chỉ tiêu: None
+Row 805 | Loại: None   | Chỉ tiêu: None
+Row 806 | Loại: None   | Chỉ tiêu: None
+Row 807 | Loại: None   | Chỉ tiêu: None
+Row 808 | Loại: None   | Chỉ tiêu: None
+Row 809 | Loại: None   | Chỉ tiêu: None
+Row 810 | Loại: None   | Chỉ tiêu: None
+Row 811 | Loại: None   | Chỉ tiêu: None
+Row 812 | Loại: None   | Chỉ tiêu: None
+Row 813 | Loại: None   | Chỉ tiêu: None
+Row 814 | Loại: None   | Chỉ tiêu: None
+Row 815 | Loại: None   | Chỉ tiêu: None
+Row 816 | Loại: None   | Chỉ tiêu: None
+Row 817 | Loại: None   | Chỉ tiêu: None
+Row 818 | Loại: None   | Chỉ tiêu: None
+Row 819 | Loại: None   | Chỉ tiêu: None
+Row 820 | Loại: None   | Chỉ tiêu: None
+Row 821 | Loại: None   | Chỉ tiêu: None
+Row 822 | Loại: None   | Chỉ tiêu: None
+Row 823 | Loại: None   | Chỉ tiêu: None
+Row 824 | Loại: None   | Chỉ tiêu: None
+Row 825 | Loại: None   | Chỉ tiêu: None
+Row 826 | Loại: None   | Chỉ tiêu: None
+Row 827 | Loại: None   | Chỉ tiêu: None
+Row 828 | Loại: None   | Chỉ tiêu: None
+Row 829 | Loại: None   | Chỉ tiêu: None
+Row 830 | Loại: None   | Chỉ tiêu: None
+Row 831 | Loại: None   | Chỉ tiêu: None
+Row 832 | Loại: None   | Chỉ tiêu: None
+Row 833 | Loại: None   | Chỉ tiêu: None
+Row 834 | Loại: None   | Chỉ tiêu: None
+Row 835 | Loại: None   | Chỉ tiêu: None
+Row 836 | Loại: None   | Chỉ tiêu: None
+Row 837 | Loại: None   | Chỉ tiêu: None
+Row 838 | Loại: None   | Chỉ tiêu: None
+Row 839 | Loại: None   | Chỉ tiêu: None
+Row 840 | Loại: None   | Chỉ tiêu: None
+Row 841 | Loại: None   | Chỉ tiêu: None
+Row 842 | Loại: None   | Chỉ tiêu: None
+Row 843 | Loại: None   | Chỉ tiêu: None
+Row 844 | Loại: None   | Chỉ tiêu: None
+Row 845 | Loại: None   | Chỉ tiêu: None
+Row 846 | Loại: None   | Chỉ tiêu: None
+Row 847 | Loại: None   | Chỉ tiêu: None
+Row 848 | Loại: None   | Chỉ tiêu: None
+Row 849 | Loại: None   | Chỉ tiêu: None
+Row 850 | Loại: None   | Chỉ tiêu: None
+Row 851 | Loại: None   | Chỉ tiêu: None
+Row 852 | Loại: None   | Chỉ tiêu: None
+Row 853 | Loại: None   | Chỉ tiêu: None
+Row 854 | Loại: None   | Chỉ tiêu: None
+Row 855 | Loại: None   | Chỉ tiêu: None
+Row 856 | Loại: None   | Chỉ tiêu: None
+Row 857 | Loại: None   | Chỉ tiêu: None
+Row 858 | Loại: None   | Chỉ tiêu: None
+Row 859 | Loại: None   | Chỉ tiêu: None
+Row 860 | Loại: None   | Chỉ tiêu: None
+Row 861 | Loại: None   | Chỉ tiêu: None
+Row 862 | Loại: None   | Chỉ tiêu: None
+Row 863 | Loại: None   | Chỉ tiêu: None
+Row 864 | Loại: None   | Chỉ tiêu: None
+Row 865 | Loại: None   | Chỉ tiêu: None
+Row 866 | Loại: None   | Chỉ tiêu: None
+Row 867 | Loại: None   | Chỉ tiêu: None
+Row 868 | Loại: None   | Chỉ tiêu: None
+Row 869 | Loại: None   | Chỉ tiêu: None
+Row 870 | Loại: None   | Chỉ tiêu: None
+Row 871 | Loại: None   | Chỉ tiêu: None
+Row 872 | Loại: None   | Chỉ tiêu: None
+Row 873 | Loại: None   | Chỉ tiêu: None
+Row 874 | Loại: None   | Chỉ tiêu: None
+Row 875 | Loại: None   | Chỉ tiêu: None
+Row 876 | Loại: None   | Chỉ tiêu: None
+Row 877 | Loại: None   | Chỉ tiêu: None
+Row 878 | Loại: None   | Chỉ tiêu: None
+Row 879 | Loại: None   | Chỉ tiêu: None
+Row 880 | Loại: None   | Chỉ tiêu: None
+Row 881 | Loại: None   | Chỉ tiêu: None
+Row 882 | Loại: None   | Chỉ tiêu: None
+Row 883 | Loại: None   | Chỉ tiêu: None
+Row 884 | Loại: None   | Chỉ tiêu: None
+Row 885 | Loại: None   | Chỉ tiêu: None
+Row 886 | Loại: None   | Chỉ tiêu: None
+Row 887 | Loại: None   | Chỉ tiêu: None
+Row 888 | Loại: None   | Chỉ tiêu: None
+Row 889 | Loại: None   | Chỉ tiêu: None
+Row 890 | Loại: None   | Chỉ tiêu: None
+Row 891 | Loại: None   | Chỉ tiêu: None
+Row 892 | Loại: None   | Chỉ tiêu: None
+Row 893 | Loại: None   | Chỉ tiêu: None
+Row 894 | Loại: None   | Chỉ tiêu: None
+Row 895 | Loại: None   | Chỉ tiêu: None
+Row 896 | Loại: None   | Chỉ tiêu: None
+Row 897 | Loại: None   | Chỉ tiêu: None
+Row 898 | Loại: None   | Chỉ tiêu: None
+Row 899 | Loại: None   | Chỉ tiêu: None
+Row 900 | Loại: None   | Chỉ tiêu: None
+Row 901 | Loại: None   | Chỉ tiêu: None
+Row 902 | Loại: None   | Chỉ tiêu: None
+Row 903 | Loại: None   | Chỉ tiêu: None
+Row 904 | Loại: None   | Chỉ tiêu: None
+Row 905 | Loại: None   | Chỉ tiêu: None
+Row 906 | Loại: None   | Chỉ tiêu: None
+Row 907 | Loại: None   | Chỉ tiêu: None
+Row 908 | Loại: None   | Chỉ tiêu: None
+Row 909 | Loại: None   | Chỉ tiêu: None
+Row 910 | Loại: None   | Chỉ tiêu: None
+Row 911 | Loại: None   | Chỉ tiêu: None
+Row 912 | Loại: None   | Chỉ tiêu: None
+Row 913 | Loại: None   | Chỉ tiêu: None
+Row 914 | Loại: None   | Chỉ tiêu: None
+Row 915 | Loại: None   | Chỉ tiêu: None
+Row 916 | Loại: None   | Chỉ tiêu: None
+Row 917 | Loại: None   | Chỉ tiêu: None
+Row 918 | Loại: None   | Chỉ tiêu: None
+Row 919 | Loại: None   | Chỉ tiêu: None
+Row 920 | Loại: None   | Chỉ tiêu: None
+Row 921 | Loại: None   | Chỉ tiêu: None
+Row 922 | Loại: None   | Chỉ tiêu: None
+Row 923 | Loại: None   | Chỉ tiêu: None
+Row 924 | Loại: None   | Chỉ tiêu: None
+Row 925 | Loại: None   | Chỉ tiêu: None
+Row 926 | Loại: None   | Chỉ tiêu: None
+Row 927 | Loại: None   | Chỉ tiêu: None
+Row 928 | Loại: None   | Chỉ tiêu: None
+Row 929 | Loại: None   | Chỉ tiêu: None
+Row 930 | Loại: None   | Chỉ tiêu: None
+Row 931 | Loại: None   | Chỉ tiêu: None
+Row 932 | Loại: None   | Chỉ tiêu: None
+Row 933 | Loại: None   | Chỉ tiêu: None
+Row 934 | Loại: None   | Chỉ tiêu: None
+Row 935 | Loại: None   | Chỉ tiêu: None
+Row 936 | Loại: None   | Chỉ tiêu: None
+Row 937 | Loại: None   | Chỉ tiêu: None
+Row 938 | Loại: None   | Chỉ tiêu: None
+Row 939 | Loại: None   | Chỉ tiêu: None
+Row 940 | Loại: None   | Chỉ tiêu: None
+Row 941 | Loại: None   | Chỉ tiêu: None
+Row 942 | Loại: None   | Chỉ tiêu: None
+Row 943 | Loại: None   | Chỉ tiêu: None
+Row 944 | Loại: None   | Chỉ tiêu: None
+Row 945 | Loại: None   | Chỉ tiêu: None
+Row 946 | Loại: None   | Chỉ tiêu: None
+Row 947 | Loại: None   | Chỉ tiêu: None
+Row 948 | Loại: None   | Chỉ tiêu: None
+Row 949 | Loại: None   | Chỉ tiêu: None
+Row 950 | Loại: None   | Chỉ tiêu: None
+Row 951 | Loại: None   | Chỉ tiêu: None
+Row 952 | Loại: None   | Chỉ tiêu: None
+Row 953 | Loại: None   | Chỉ tiêu: None
+Row 954 | Loại: None   | Chỉ tiêu: None
+Row 955 | Loại: None   | Chỉ tiêu: None
+Row 956 | Loại: None   | Chỉ tiêu: None
+Row 957 | Loại: None   | Chỉ tiêu: None
+Row 958 | Loại: None   | Chỉ tiêu: None
+Row 959 | Loại: None   | Chỉ tiêu: None
+Row 960 | Loại: None   | Chỉ tiêu: None
+Row 961 | Loại: None   | Chỉ tiêu: None
+Row 962 | Loại: None   | Chỉ tiêu: None
+Row 963 | Loại: None   | Chỉ tiêu: None
+Row 964 | Loại: None   | Chỉ tiêu: None
+Row 965 | Loại: None   | Chỉ tiêu: None
+Row 966 | Loại: None   | Chỉ tiêu: None
+Row 967 | Loại: None   | Chỉ tiêu: None
+Row 968 | Loại: None   | Chỉ tiêu: None
+Row 969 | Loại: None   | Chỉ tiêu: None
+Row 970 | Loại: None   | Chỉ tiêu: None
+Row 971 | Loại: None   | Chỉ tiêu: None
+Row 972 | Loại: None   | Chỉ tiêu: None
+Row 973 | Loại: None   | Chỉ tiêu: None
+Row 974 | Loại: None   | Chỉ tiêu: None
+=== SHEET: Bản sao của Báo cáo từng cty ===
+Headers: ['Loại', 'VPB', 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, None, 'Kéo dữ liệu', None, None, None, None, None, None, None, None, None, None, None]
+
+Row   1 | Loại: Loại   | Chỉ tiêu: VPB
+Row   2 | Loại: Fill   | Chỉ tiêu: Thu nhập lãi và các khoản thu nhập tương tự
+Row   3 | Loại: Fill   | Chỉ tiêu: Chi phí lãi và các chi phí tương tự
+Row   4 | Loại: Fill   | Chỉ tiêu: Thu nhập từ hoạt động dịch vụ
+Row   5 | Loại: Fill   | Chỉ tiêu: Thu nhập từ hoạt động kinh doanh ngoại hối
+Row   6 | Loại: Fill   | Chỉ tiêu: Thu nhập từ mua bán chứng khoán
+kinh doanh
+Row   7 | Loại: Fill   | Chỉ tiêu: Thu nhập từ mua bán chứng khoán đầu tư 
+Row   8 | Loại: Fill   | Chỉ tiêu: Hoàn nhập dự phòng chứng khoán đầu tư sẵn
+sàng để bán
+Row   9 | Loại: Fill   | Chỉ tiêu: Hoàn nhập dự phòng chứng khoán giữ đến
+ngày đáo hạn
+     M9: [Formula] =0 => [Value] 0
+Row  10 | Loại: Fill   | Chỉ tiêu: Thu nhập từ hoạt động khác
+Row  11 | Loại: Fill   | Chỉ tiêu: Thu nhập từ góp vốn mua cổ phần
+Row  12 | Loại: Tính   | Chỉ tiêu: Tổng doanh thu
+     M12: [Formula] =M2+M4+M5+M6+M7+M10+M11+M8+M9 => [Value] 133851252
+Row  13 | Loại: Fill   | Chỉ tiêu: Tổng thu nhập HĐ (Total Operating Income)
+Row  14 | Loại: Tính   | Chỉ tiêu: Biên lãi gộp
+     M14: [Formula] =M13/M12 => [Value] 0.5577371588575055
+Row  15 | Loại: Tính   | Chỉ tiêu: Tăng trưởng TOI
+     D15: [Formula] =(D13-C13)/C13 => [Value] #DIV/0!
+     E15: [Formula] =(E13-D13)/D13 => [Value] #DIV/0!
+     F15: [Formula] =(F13-E13)/E13 => [Value] #DIV/0!
+     G15: [Formula] =(G13-F13)/F13 => [Value] #DIV/0!
+     H15: [Formula] =(H13-G13)/G13 => [Value] #DIV/0!
+     I15: [Formula] =(I13-H13)/H13 => [Value] #DIV/0!
+     J15: [Formula] =(J13-I13)/I13 => [Value] #DIV/0!
+     K15: [Formula] =(K13-J13)/J13 => [Value] #DIV/0!
+     L15: [Formula] =(L13-K13)/K13 => [Value] #DIV/0!
+     M15: [Formula] =(M13-L13)/L13 => [Value] 0.1991617862019115
+Row  16 | Loại: Fill   | Chỉ tiêu: Chi phí vận hành (SG & A)
+Row  17 | Loại: Tính   | Chỉ tiêu: Tỷ lệ Chi phí / Thu nhập (CIR)
+     M17: [Formula] =ABS(M16)/M13 => [Value] 0.24955614794619277
+Row  18 | Loại: Tính   | Chỉ tiêu: Tăng tưởng CPVH
+     D18: [Formula] =(D16-C16)/C16 => [Value] #DIV/0!
+     E18: [Formula] =(E16-D16)/D16 => [Value] #DIV/0!
+     F18: [Formula] =(F16-E16)/E16 => [Value] #DIV/0!
+     G18: [Formula] =(G16-F16)/F16 => [Value] #DIV/0!
+     H18: [Formula] =(H16-G16)/G16 => [Value] #DIV/0!
+     I18: [Formula] =(I16-H16)/H16 => [Value] #DIV/0!
+     J18: [Formula] =(J16-I16)/I16 => [Value] #DIV/0!
+     K18: [Formula] =(K16-J16)/J16 => [Value] #DIV/0!
+     L18: [Formula] =(L16-K16)/K16 => [Value] #DIV/0!
+     M18: [Formula] =(ABS(M16)-ABS(L16))/ABS(L16) => [Value] 0.29918542538354254
+Row  19 | Loại: Fill   | Chỉ tiêu: Lãi vận hành (trước DPRR)
+Row  20 | Loại: Tính   | Chỉ tiêu: Biên lãi vận hành (trước DPRR)
+     M20: [Formula] =M19/M12 => [Value] 0.41855042192657266
+Row  21 | Loại: Tính   | Chỉ tiêu: Chi phí lãi vay/Lãi vận hành
+     M21: [Formula] =ABS(M3)/M19 => [Value] 0.7603281216035457
+Row  22 | Loại: Fill   | Chỉ tiêu: Trích lập dự phòng rủi ro tín dụng
+Row  23 | Loại: Fill   | Chỉ tiêu: Tổng lợi nhuận trước thuế (PBT)
+Row  24 | Loại: Tính   | Chỉ tiêu: Biên lãi lợi nhuận trước thuế
+     M24: [Formula] =M23/M12 => [Value] 0.22879837537866288
+Row  25 | Loại: Fill   | Chỉ tiêu: Lợi nhuận sau thuế
+Row  26 | Loại: Fill   | Chỉ tiêu: Lợi nhuận ST của CĐ Ngân hàng mẹ (PAT)
+     M26: [Formula] =23989930 => [Value] 23989930
+Row  27 | Loại: Tính   | Chỉ tiêu: Biên Lợi nhuận ST của CĐ Ngân hàng mẹ (PAT)
+     M27: [Formula] =M26/M12 => [Value] 0.17922828245192657
+Row  28 | Loại: Tính   | Chỉ tiêu: Tăng trưởng lãi ròng sau CĐ thiểu số
+     D28: [Formula] =(D26-C26)/C26 => [Value] #DIV/0!
+     E28: [Formula] =(E26-D26)/D26 => [Value] #DIV/0!
+     F28: [Formula] =(F26-E26)/E26 => [Value] #DIV/0!
+     G28: [Formula] =(G26-F26)/F26 => [Value] #DIV/0!
+     H28: [Formula] =(H26-G26)/G26 => [Value] #DIV/0!
+     I28: [Formula] =(I26-H26)/H26 => [Value] #DIV/0!
+     J28: [Formula] =(J26-I26)/I26 => [Value] #DIV/0!
+     K28: [Formula] =(K26-J26)/J26 => [Value] #DIV/0!
+     L28: [Formula] =(L26-K26)/K26 => [Value] #DIV/0!
+     M28: [Formula] =(M26-L26)/L26 => [Value] 0.5203904987674914
+Row  29 | Loại: Fill   | Chỉ tiêu: EPS - Lãi cơ bản trên cổ phiếu (VND/CP)
+Row  30 | Loại: Fill   | Chỉ tiêu: Chi phí công nghệ thông tin
+Row  31 | Loại: Tính   | Chỉ tiêu: CNTT/Tổng thu nhập hoạt động
+     M31: [Formula] =M30/M13 => [Value] 0.017079796469080744
+Row  32 | Loại: Fill   | Chỉ tiêu: Chi phí khấu hao
+Row  33 | Loại: Tính   | Chỉ tiêu: CPKH/Tổng thu nhập hoạt động
+     M33: [Formula] =M32/M13 => [Value] 0.007361820494724335
+Row  34 | Loại: Fill   | Chỉ tiêu: Cho vay KH (trước dự phòng)
+Row  35 | Loại: Fill   | Chỉ tiêu: Dự phòng rủi ro cho vay khách hàng
+Row  36 | Loại: Fill   | Chỉ tiêu: Biên lãi thuần (NIM)
+Row  37 | Loại: Fill   | Chỉ tiêu: Nợ dưới tiêu chuẩn (nhóm 3)
+Row  38 | Loại: Fill   | Chỉ tiêu: Nợ nghi ngờ (nhóm 4)
+Row  39 | Loại: Fill   | Chỉ tiêu: Nợ có khả năng mất vốn (nhóm 5)
+Row  40 | Loại: Tính   | Chỉ tiêu: Tổng nợ xấu (nhóm 3 đến 5)
+     M40: [Formula] =SUM(M37:M39) => [Value] 31464705
+Row  41 | Loại: Tính   | Chỉ tiêu: Tỷ lệ nợ xấu (NPL) cuối năm
+     M41: [Formula] =M40/M34 => [Value] 0.0333347289589912
+Row  42 | Loại: Fill   | Chỉ tiêu: Tỷ lệ tiền gửi không kỳ hạn (CASA)
+Row  43 | Loại: Fill   | Chỉ tiêu: Tổng tài sản
+Row  44 | Loại: Fill   | Chỉ tiêu: Lưu chuyển tiền thuần từ hoạt động kinh doanh
+Row  45 | Loại: Fill   | Chỉ tiêu: Cổ tức trả cổ đông, lợi nhuận đã chia
+Row  46 | Loại: Fill   | Chỉ tiêu: Lưu chuyển tiền thuần từ/(sử dụng vào) hoạt
+động tài chính
+Row  47 | Loại: Tính   | Chỉ tiêu: Tỷ lệ bao phủ nợ xấu (LLR Coverage)
+     M47: [Formula] =M35/M40 => [Value] 0.553921322319723
+Row  48 | Loại: Fill   | Chỉ tiêu: Tổng nợ phải trả
+Row  49 | Loại: Fill   | Chỉ tiêu: Hệ số an toàn vốn (CAR)
+Row  50 | Loại: Tính   | Chỉ tiêu: Tỷ lệ chi trả cổ tức (trên lãi ròng)
+     M50: [Formula] =ABS(M45)/M26 => [Value] 0.1654099032385672
+Row  51 | Loại: Fill   | Chỉ tiêu: Vốn chủ sở hữu
+Row  52 | Loại: Tính   | Chỉ tiêu: Debt/Equity
+     M52: [Formula] =M48/M51 => [Value] 5.990127301122882
+Row  53 | Loại: Tính   | Chỉ tiêu: Tỷ suất sinh lời trên Tổng Tài Sản (ROA)
+     M53: [Formula] =M26/((M43+L43)/2) => [Value] 0.021968828199518144
+Row  54 | Loại: Tính   | Chỉ tiêu: Tỷ suất sinh lời trên Vốn CSH (ROE)
+     M54: [Formula] =M26/((M51+L51)/2) => [Value] 0.14648062734166092
+Row  55 | Loại: Fill   | Chỉ tiêu: Mua sắm tài sản cố định (CapEx)
+Row  56 | Loại: Tính   | Chỉ tiêu: CapEx tăng trưởng
+     M56: [Formula] =ABS(M55)-M32 => [Value] -418493
+Row  57 | Loại: Tính   | Chỉ tiêu: Chỉ số tự tài trợ
+     M57: [Formula] =M44/(ABS(M32)+ABS(M45)) => [Value] 9.857234780067998
+Row  58 | Loại: Fill   | Chỉ tiêu: Chỉ số P/E cơ bản
+Row  59 | Loại: Fill   | Chỉ tiêu: Chỉ số P/B
+Row  60 | Loại: Tính   | Chỉ tiêu: Owner Earnings
+     L60: [Formula] =L26+L32-ABS(L55) => [Value] 16231140
+     M60: [Formula] =M26+M32-ABS(M55) => [Value] 24408423
+Row  61 | Loại: Tính   | Chỉ tiêu: Tăng trưởng OE
+     M61: [Formula] =(M60-L60)/L60 => [Value] 0.5038021358943364
+Row  62 | Loại: None   | Chỉ tiêu: None
+Row  63 | Loại: None   | Chỉ tiêu: None
+Row  64 | Loại: None   | Chỉ tiêu: None
+Row  65 | Loại: None   | Chỉ tiêu: None
+Row  66 | Loại: None   | Chỉ tiêu: None
+Row  67 | Loại: None   | Chỉ tiêu: None
+Row  68 | Loại: None   | Chỉ tiêu: None
+Row  69 | Loại: None   | Chỉ tiêu: None
+Row  70 | Loại: None   | Chỉ tiêu: None
+Row  71 | Loại: None   | Chỉ tiêu: None
+Row  72 | Loại: None   | Chỉ tiêu: None
+Row  73 | Loại: None   | Chỉ tiêu: None
+Row  74 | Loại: None   | Chỉ tiêu: None
+Row  75 | Loại: None   | Chỉ tiêu: None
+Row  76 | Loại: None   | Chỉ tiêu: None
+Row  77 | Loại: None   | Chỉ tiêu: None
+Row  78 | Loại: None   | Chỉ tiêu: None
+Row  79 | Loại: None   | Chỉ tiêu: None
+Row  80 | Loại: None   | Chỉ tiêu: None
+Row  81 | Loại: None   | Chỉ tiêu: None
+Row  82 | Loại: None   | Chỉ tiêu: None
+Row  83 | Loại: None   | Chỉ tiêu: None
+Row  84 | Loại: None   | Chỉ tiêu: None
+Row  85 | Loại: None   | Chỉ tiêu: None
+Row  86 | Loại: None   | Chỉ tiêu: None
+Row  87 | Loại: None   | Chỉ tiêu: None
+Row  88 | Loại: None   | Chỉ tiêu: None
+Row  89 | Loại: None   | Chỉ tiêu: None
+Row  90 | Loại: None   | Chỉ tiêu: None
+Row  91 | Loại: None   | Chỉ tiêu: None
+Row  92 | Loại: None   | Chỉ tiêu: None
+Row  93 | Loại: None   | Chỉ tiêu: None
+Row  94 | Loại: None   | Chỉ tiêu: None
+Row  95 | Loại: None   | Chỉ tiêu: None
+Row  96 | Loại: None   | Chỉ tiêu: None
+Row  97 | Loại: None   | Chỉ tiêu: None
+Row  98 | Loại: None   | Chỉ tiêu: None
+Row  99 | Loại: None   | Chỉ tiêu: None
+Row 100 | Loại: None   | Chỉ tiêu: None
+Row 101 | Loại: None   | Chỉ tiêu: None
+Row 102 | Loại: None   | Chỉ tiêu: None
+Row 103 | Loại: None   | Chỉ tiêu: None
+Row 104 | Loại: None   | Chỉ tiêu: None
+Row 105 | Loại: None   | Chỉ tiêu: None
+Row 106 | Loại: None   | Chỉ tiêu: None
+Row 107 | Loại: None   | Chỉ tiêu: None
+Row 108 | Loại: None   | Chỉ tiêu: None
+Row 109 | Loại: None   | Chỉ tiêu: None
+Row 110 | Loại: None   | Chỉ tiêu: None
+Row 111 | Loại: None   | Chỉ tiêu: None
+Row 112 | Loại: None   | Chỉ tiêu: None
+Row 113 | Loại: None   | Chỉ tiêu: None
+Row 114 | Loại: None   | Chỉ tiêu: None
+Row 115 | Loại: None   | Chỉ tiêu: None
+Row 116 | Loại: None   | Chỉ tiêu: None
+Row 117 | Loại: None   | Chỉ tiêu: None
+Row 118 | Loại: None   | Chỉ tiêu: None
+Row 119 | Loại: None   | Chỉ tiêu: None
+Row 120 | Loại: None   | Chỉ tiêu: None
+Row 121 | Loại: None   | Chỉ tiêu: None
+Row 122 | Loại: None   | Chỉ tiêu: None
+Row 123 | Loại: None   | Chỉ tiêu: None
+Row 124 | Loại: None   | Chỉ tiêu: None
+Row 125 | Loại: None   | Chỉ tiêu: None
+Row 126 | Loại: None   | Chỉ tiêu: None
+Row 127 | Loại: None   | Chỉ tiêu: None
+Row 128 | Loại: None   | Chỉ tiêu: None
+Row 129 | Loại: None   | Chỉ tiêu: None
+Row 130 | Loại: None   | Chỉ tiêu: None
+Row 131 | Loại: None   | Chỉ tiêu: None
+Row 132 | Loại: None   | Chỉ tiêu: None
+Row 133 | Loại: None   | Chỉ tiêu: None
+Row 134 | Loại: None   | Chỉ tiêu: None
+Row 135 | Loại: None   | Chỉ tiêu: None
+Row 136 | Loại: None   | Chỉ tiêu: None
+Row 137 | Loại: None   | Chỉ tiêu: None
+Row 138 | Loại: None   | Chỉ tiêu: None
+Row 139 | Loại: None   | Chỉ tiêu: None
+Row 140 | Loại: None   | Chỉ tiêu: None
+Row 141 | Loại: None   | Chỉ tiêu: None
+Row 142 | Loại: None   | Chỉ tiêu: None
+Row 143 | Loại: None   | Chỉ tiêu: None
+Row 144 | Loại: None   | Chỉ tiêu: None
+Row 145 | Loại: None   | Chỉ tiêu: None
+Row 146 | Loại: None   | Chỉ tiêu: None
+Row 147 | Loại: None   | Chỉ tiêu: None
+Row 148 | Loại: None   | Chỉ tiêu: None
+Row 149 | Loại: None   | Chỉ tiêu: None
+Row 150 | Loại: None   | Chỉ tiêu: None
+Row 151 | Loại: None   | Chỉ tiêu: None
+Row 152 | Loại: None   | Chỉ tiêu: None
+Row 153 | Loại: None   | Chỉ tiêu: None
+Row 154 | Loại: None   | Chỉ tiêu: None
+Row 155 | Loại: None   | Chỉ tiêu: None
+Row 156 | Loại: None   | Chỉ tiêu: None
+Row 157 | Loại: None   | Chỉ tiêu: None
+Row 158 | Loại: None   | Chỉ tiêu: None
+Row 159 | Loại: None   | Chỉ tiêu: None
+Row 160 | Loại: None   | Chỉ tiêu: None
+Row 161 | Loại: None   | Chỉ tiêu: None
+Row 162 | Loại: None   | Chỉ tiêu: None
+Row 163 | Loại: None   | Chỉ tiêu: None
+Row 164 | Loại: None   | Chỉ tiêu: None
+Row 165 | Loại: None   | Chỉ tiêu: None
+Row 166 | Loại: None   | Chỉ tiêu: None
+Row 167 | Loại: None   | Chỉ tiêu: None
+Row 168 | Loại: None   | Chỉ tiêu: None
+Row 169 | Loại: None   | Chỉ tiêu: None
+Row 170 | Loại: None   | Chỉ tiêu: None
+Row 171 | Loại: None   | Chỉ tiêu: None
+Row 172 | Loại: None   | Chỉ tiêu: None
+Row 173 | Loại: None   | Chỉ tiêu: None
+Row 174 | Loại: None   | Chỉ tiêu: None
+Row 175 | Loại: None   | Chỉ tiêu: None
+Row 176 | Loại: None   | Chỉ tiêu: None
+Row 177 | Loại: None   | Chỉ tiêu: None
+Row 178 | Loại: None   | Chỉ tiêu: None
+Row 179 | Loại: None   | Chỉ tiêu: None
+Row 180 | Loại: None   | Chỉ tiêu: None
+Row 181 | Loại: None   | Chỉ tiêu: None
+Row 182 | Loại: None   | Chỉ tiêu: None
+Row 183 | Loại: None   | Chỉ tiêu: None
+Row 184 | Loại: None   | Chỉ tiêu: None
+Row 185 | Loại: None   | Chỉ tiêu: None
+Row 186 | Loại: None   | Chỉ tiêu: None
+Row 187 | Loại: None   | Chỉ tiêu: None
+Row 188 | Loại: None   | Chỉ tiêu: None
+Row 189 | Loại: None   | Chỉ tiêu: None
+Row 190 | Loại: None   | Chỉ tiêu: None
+Row 191 | Loại: None   | Chỉ tiêu: None
+Row 192 | Loại: None   | Chỉ tiêu: None
+Row 193 | Loại: None   | Chỉ tiêu: None
+Row 194 | Loại: None   | Chỉ tiêu: None
+Row 195 | Loại: None   | Chỉ tiêu: None
+Row 196 | Loại: None   | Chỉ tiêu: None
+Row 197 | Loại: None   | Chỉ tiêu: None
+Row 198 | Loại: None   | Chỉ tiêu: None
+Row 199 | Loại: None   | Chỉ tiêu: None
+Row 200 | Loại: None   | Chỉ tiêu: None
+Row 201 | Loại: None   | Chỉ tiêu: None
+Row 202 | Loại: None   | Chỉ tiêu: None
+Row 203 | Loại: None   | Chỉ tiêu: None
+Row 204 | Loại: None   | Chỉ tiêu: None
+Row 205 | Loại: None   | Chỉ tiêu: None
+Row 206 | Loại: None   | Chỉ tiêu: None
+Row 207 | Loại: None   | Chỉ tiêu: None
+Row 208 | Loại: None   | Chỉ tiêu: None
+Row 209 | Loại: None   | Chỉ tiêu: None
+Row 210 | Loại: None   | Chỉ tiêu: None
+Row 211 | Loại: None   | Chỉ tiêu: None
+Row 212 | Loại: None   | Chỉ tiêu: None
+Row 213 | Loại: None   | Chỉ tiêu: None
+Row 214 | Loại: None   | Chỉ tiêu: None
+Row 215 | Loại: None   | Chỉ tiêu: None
+Row 216 | Loại: None   | Chỉ tiêu: None
+Row 217 | Loại: None   | Chỉ tiêu: None
+Row 218 | Loại: None   | Chỉ tiêu: None
+Row 219 | Loại: None   | Chỉ tiêu: None
+Row 220 | Loại: None   | Chỉ tiêu: None
+Row 221 | Loại: None   | Chỉ tiêu: None
+Row 222 | Loại: None   | Chỉ tiêu: None
+Row 223 | Loại: None   | Chỉ tiêu: None
+Row 224 | Loại: None   | Chỉ tiêu: None
+Row 225 | Loại: None   | Chỉ tiêu: None
+Row 226 | Loại: None   | Chỉ tiêu: None
+Row 227 | Loại: None   | Chỉ tiêu: None
+Row 228 | Loại: None   | Chỉ tiêu: None
+Row 229 | Loại: None   | Chỉ tiêu: None
+Row 230 | Loại: None   | Chỉ tiêu: None
+Row 231 | Loại: None   | Chỉ tiêu: None
+Row 232 | Loại: None   | Chỉ tiêu: None
+Row 233 | Loại: None   | Chỉ tiêu: None
+Row 234 | Loại: None   | Chỉ tiêu: None
+Row 235 | Loại: None   | Chỉ tiêu: None
+Row 236 | Loại: None   | Chỉ tiêu: None
+Row 237 | Loại: None   | Chỉ tiêu: None
+Row 238 | Loại: None   | Chỉ tiêu: None
+Row 239 | Loại: None   | Chỉ tiêu: None
+Row 240 | Loại: None   | Chỉ tiêu: None
+Row 241 | Loại: None   | Chỉ tiêu: None
+Row 242 | Loại: None   | Chỉ tiêu: None
+Row 243 | Loại: None   | Chỉ tiêu: None
+Row 244 | Loại: None   | Chỉ tiêu: None
+Row 245 | Loại: None   | Chỉ tiêu: None
+Row 246 | Loại: None   | Chỉ tiêu: None
+Row 247 | Loại: None   | Chỉ tiêu: None
+Row 248 | Loại: None   | Chỉ tiêu: None
+Row 249 | Loại: None   | Chỉ tiêu: None
+Row 250 | Loại: None   | Chỉ tiêu: None
+Row 251 | Loại: None   | Chỉ tiêu: None
+Row 252 | Loại: None   | Chỉ tiêu: None
+Row 253 | Loại: None   | Chỉ tiêu: None
+Row 254 | Loại: None   | Chỉ tiêu: None
+Row 255 | Loại: None   | Chỉ tiêu: None
+Row 256 | Loại: None   | Chỉ tiêu: None
+Row 257 | Loại: None   | Chỉ tiêu: None
+Row 258 | Loại: None   | Chỉ tiêu: None
+Row 259 | Loại: None   | Chỉ tiêu: None
+Row 260 | Loại: None   | Chỉ tiêu: None
+Row 261 | Loại: None   | Chỉ tiêu: None
+Row 262 | Loại: None   | Chỉ tiêu: None
+Row 263 | Loại: None   | Chỉ tiêu: None
+Row 264 | Loại: None   | Chỉ tiêu: None
+Row 265 | Loại: None   | Chỉ tiêu: None
+Row 266 | Loại: None   | Chỉ tiêu: None
+Row 267 | Loại: None   | Chỉ tiêu: None
+Row 268 | Loại: None   | Chỉ tiêu: None
+Row 269 | Loại: None   | Chỉ tiêu: None
+Row 270 | Loại: None   | Chỉ tiêu: None
+Row 271 | Loại: None   | Chỉ tiêu: None
+Row 272 | Loại: None   | Chỉ tiêu: None
+Row 273 | Loại: None   | Chỉ tiêu: None
+Row 274 | Loại: None   | Chỉ tiêu: None
+Row 275 | Loại: None   | Chỉ tiêu: None
+Row 276 | Loại: None   | Chỉ tiêu: None
+Row 277 | Loại: None   | Chỉ tiêu: None
+Row 278 | Loại: None   | Chỉ tiêu: None
+Row 279 | Loại: None   | Chỉ tiêu: None
+Row 280 | Loại: None   | Chỉ tiêu: None
+Row 281 | Loại: None   | Chỉ tiêu: None
+Row 282 | Loại: None   | Chỉ tiêu: None
+Row 283 | Loại: None   | Chỉ tiêu: None
+Row 284 | Loại: None   | Chỉ tiêu: None
+Row 285 | Loại: None   | Chỉ tiêu: None
+Row 286 | Loại: None   | Chỉ tiêu: None
+Row 287 | Loại: None   | Chỉ tiêu: None
+Row 288 | Loại: None   | Chỉ tiêu: None
+Row 289 | Loại: None   | Chỉ tiêu: None
+Row 290 | Loại: None   | Chỉ tiêu: None
+Row 291 | Loại: None   | Chỉ tiêu: None
+Row 292 | Loại: None   | Chỉ tiêu: None
+Row 293 | Loại: None   | Chỉ tiêu: None
+Row 294 | Loại: None   | Chỉ tiêu: None
+Row 295 | Loại: None   | Chỉ tiêu: None
+Row 296 | Loại: None   | Chỉ tiêu: None
+Row 297 | Loại: None   | Chỉ tiêu: None
+Row 298 | Loại: None   | Chỉ tiêu: None
+Row 299 | Loại: None   | Chỉ tiêu: None
+Row 300 | Loại: None   | Chỉ tiêu: None
+Row 301 | Loại: None   | Chỉ tiêu: None
+Row 302 | Loại: None   | Chỉ tiêu: None
+Row 303 | Loại: None   | Chỉ tiêu: None
+Row 304 | Loại: None   | Chỉ tiêu: None
+Row 305 | Loại: None   | Chỉ tiêu: None
+Row 306 | Loại: None   | Chỉ tiêu: None
+Row 307 | Loại: None   | Chỉ tiêu: None
+Row 308 | Loại: None   | Chỉ tiêu: None
+Row 309 | Loại: None   | Chỉ tiêu: None
+Row 310 | Loại: None   | Chỉ tiêu: None
+Row 311 | Loại: None   | Chỉ tiêu: None
+Row 312 | Loại: None   | Chỉ tiêu: None
+Row 313 | Loại: None   | Chỉ tiêu: None
+Row 314 | Loại: None   | Chỉ tiêu: None
+Row 315 | Loại: None   | Chỉ tiêu: None
+Row 316 | Loại: None   | Chỉ tiêu: None
+Row 317 | Loại: None   | Chỉ tiêu: None
+Row 318 | Loại: None   | Chỉ tiêu: None
+Row 319 | Loại: None   | Chỉ tiêu: None
+Row 320 | Loại: None   | Chỉ tiêu: None
+Row 321 | Loại: None   | Chỉ tiêu: None
+Row 322 | Loại: None   | Chỉ tiêu: None
+Row 323 | Loại: None   | Chỉ tiêu: None
+Row 324 | Loại: None   | Chỉ tiêu: None
+Row 325 | Loại: None   | Chỉ tiêu: None
+Row 326 | Loại: None   | Chỉ tiêu: None
+Row 327 | Loại: None   | Chỉ tiêu: None
+Row 328 | Loại: None   | Chỉ tiêu: None
+Row 329 | Loại: None   | Chỉ tiêu: None
+Row 330 | Loại: None   | Chỉ tiêu: None
+Row 331 | Loại: None   | Chỉ tiêu: None
+Row 332 | Loại: None   | Chỉ tiêu: None
+Row 333 | Loại: None   | Chỉ tiêu: None
+Row 334 | Loại: None   | Chỉ tiêu: None
+Row 335 | Loại: None   | Chỉ tiêu: None
+Row 336 | Loại: None   | Chỉ tiêu: None
+Row 337 | Loại: None   | Chỉ tiêu: None
+Row 338 | Loại: None   | Chỉ tiêu: None
+Row 339 | Loại: None   | Chỉ tiêu: None
+Row 340 | Loại: None   | Chỉ tiêu: None
+Row 341 | Loại: None   | Chỉ tiêu: None
+Row 342 | Loại: None   | Chỉ tiêu: None
+Row 343 | Loại: None   | Chỉ tiêu: None
+Row 344 | Loại: None   | Chỉ tiêu: None
+Row 345 | Loại: None   | Chỉ tiêu: None
+Row 346 | Loại: None   | Chỉ tiêu: None
+Row 347 | Loại: None   | Chỉ tiêu: None
+Row 348 | Loại: None   | Chỉ tiêu: None
+Row 349 | Loại: None   | Chỉ tiêu: None
+Row 350 | Loại: None   | Chỉ tiêu: None
+Row 351 | Loại: None   | Chỉ tiêu: None
+Row 352 | Loại: None   | Chỉ tiêu: None
+Row 353 | Loại: None   | Chỉ tiêu: None
+Row 354 | Loại: None   | Chỉ tiêu: None
+Row 355 | Loại: None   | Chỉ tiêu: None
+Row 356 | Loại: None   | Chỉ tiêu: None
+Row 357 | Loại: None   | Chỉ tiêu: None
+Row 358 | Loại: None   | Chỉ tiêu: None
+Row 359 | Loại: None   | Chỉ tiêu: None
+Row 360 | Loại: None   | Chỉ tiêu: None
+Row 361 | Loại: None   | Chỉ tiêu: None
+Row 362 | Loại: None   | Chỉ tiêu: None
+Row 363 | Loại: None   | Chỉ tiêu: None
+Row 364 | Loại: None   | Chỉ tiêu: None
+Row 365 | Loại: None   | Chỉ tiêu: None
+Row 366 | Loại: None   | Chỉ tiêu: None
+Row 367 | Loại: None   | Chỉ tiêu: None
+Row 368 | Loại: None   | Chỉ tiêu: None
+Row 369 | Loại: None   | Chỉ tiêu: None
+Row 370 | Loại: None   | Chỉ tiêu: None
+Row 371 | Loại: None   | Chỉ tiêu: None
+Row 372 | Loại: None   | Chỉ tiêu: None
+Row 373 | Loại: None   | Chỉ tiêu: None
+Row 374 | Loại: None   | Chỉ tiêu: None
+Row 375 | Loại: None   | Chỉ tiêu: None
+Row 376 | Loại: None   | Chỉ tiêu: None
+Row 377 | Loại: None   | Chỉ tiêu: None
+Row 378 | Loại: None   | Chỉ tiêu: None
+Row 379 | Loại: None   | Chỉ tiêu: None
+Row 380 | Loại: None   | Chỉ tiêu: None
+Row 381 | Loại: None   | Chỉ tiêu: None
+Row 382 | Loại: None   | Chỉ tiêu: None
+Row 383 | Loại: None   | Chỉ tiêu: None
+Row 384 | Loại: None   | Chỉ tiêu: None
+Row 385 | Loại: None   | Chỉ tiêu: None
+Row 386 | Loại: None   | Chỉ tiêu: None
+Row 387 | Loại: None   | Chỉ tiêu: None
+Row 388 | Loại: None   | Chỉ tiêu: None
+Row 389 | Loại: None   | Chỉ tiêu: None
+Row 390 | Loại: None   | Chỉ tiêu: None
+Row 391 | Loại: None   | Chỉ tiêu: None
+Row 392 | Loại: None   | Chỉ tiêu: None
+Row 393 | Loại: None   | Chỉ tiêu: None
+Row 394 | Loại: None   | Chỉ tiêu: None
+Row 395 | Loại: None   | Chỉ tiêu: None
+Row 396 | Loại: None   | Chỉ tiêu: None
+Row 397 | Loại: None   | Chỉ tiêu: None
+Row 398 | Loại: None   | Chỉ tiêu: None
+Row 399 | Loại: None   | Chỉ tiêu: None
+Row 400 | Loại: None   | Chỉ tiêu: None
+Row 401 | Loại: None   | Chỉ tiêu: None
+Row 402 | Loại: None   | Chỉ tiêu: None
+Row 403 | Loại: None   | Chỉ tiêu: None
+Row 404 | Loại: None   | Chỉ tiêu: None
+Row 405 | Loại: None   | Chỉ tiêu: None
+Row 406 | Loại: None   | Chỉ tiêu: None
+Row 407 | Loại: None   | Chỉ tiêu: None
+Row 408 | Loại: None   | Chỉ tiêu: None
+Row 409 | Loại: None   | Chỉ tiêu: None
+Row 410 | Loại: None   | Chỉ tiêu: None
+Row 411 | Loại: None   | Chỉ tiêu: None
+Row 412 | Loại: None   | Chỉ tiêu: None
+Row 413 | Loại: None   | Chỉ tiêu: None
+Row 414 | Loại: None   | Chỉ tiêu: None
+Row 415 | Loại: None   | Chỉ tiêu: None
+Row 416 | Loại: None   | Chỉ tiêu: None
+Row 417 | Loại: None   | Chỉ tiêu: None
+Row 418 | Loại: None   | Chỉ tiêu: None
+Row 419 | Loại: None   | Chỉ tiêu: None
+Row 420 | Loại: None   | Chỉ tiêu: None
+Row 421 | Loại: None   | Chỉ tiêu: None
+Row 422 | Loại: None   | Chỉ tiêu: None
+Row 423 | Loại: None   | Chỉ tiêu: None
+Row 424 | Loại: None   | Chỉ tiêu: None
+Row 425 | Loại: None   | Chỉ tiêu: None
+Row 426 | Loại: None   | Chỉ tiêu: None
+Row 427 | Loại: None   | Chỉ tiêu: None
+Row 428 | Loại: None   | Chỉ tiêu: None
+Row 429 | Loại: None   | Chỉ tiêu: None
+Row 430 | Loại: None   | Chỉ tiêu: None
+Row 431 | Loại: None   | Chỉ tiêu: None
+Row 432 | Loại: None   | Chỉ tiêu: None
+Row 433 | Loại: None   | Chỉ tiêu: None
+Row 434 | Loại: None   | Chỉ tiêu: None
+Row 435 | Loại: None   | Chỉ tiêu: None
+Row 436 | Loại: None   | Chỉ tiêu: None
+Row 437 | Loại: None   | Chỉ tiêu: None
+Row 438 | Loại: None   | Chỉ tiêu: None
+Row 439 | Loại: None   | Chỉ tiêu: None
+Row 440 | Loại: None   | Chỉ tiêu: None
+Row 441 | Loại: None   | Chỉ tiêu: None
+Row 442 | Loại: None   | Chỉ tiêu: None
+Row 443 | Loại: None   | Chỉ tiêu: None
+Row 444 | Loại: None   | Chỉ tiêu: None
+Row 445 | Loại: None   | Chỉ tiêu: None
+Row 446 | Loại: None   | Chỉ tiêu: None
+Row 447 | Loại: None   | Chỉ tiêu: None
+Row 448 | Loại: None   | Chỉ tiêu: None
+Row 449 | Loại: None   | Chỉ tiêu: None
+Row 450 | Loại: None   | Chỉ tiêu: None
+Row 451 | Loại: None   | Chỉ tiêu: None
+Row 452 | Loại: None   | Chỉ tiêu: None
+Row 453 | Loại: None   | Chỉ tiêu: None
+Row 454 | Loại: None   | Chỉ tiêu: None
+Row 455 | Loại: None   | Chỉ tiêu: None
+Row 456 | Loại: None   | Chỉ tiêu: None
+Row 457 | Loại: None   | Chỉ tiêu: None
+Row 458 | Loại: None   | Chỉ tiêu: None
+Row 459 | Loại: None   | Chỉ tiêu: None
+Row 460 | Loại: None   | Chỉ tiêu: None
+Row 461 | Loại: None   | Chỉ tiêu: None
+Row 462 | Loại: None   | Chỉ tiêu: None
+Row 463 | Loại: None   | Chỉ tiêu: None
+Row 464 | Loại: None   | Chỉ tiêu: None
+Row 465 | Loại: None   | Chỉ tiêu: None
+Row 466 | Loại: None   | Chỉ tiêu: None
+Row 467 | Loại: None   | Chỉ tiêu: None
+Row 468 | Loại: None   | Chỉ tiêu: None
+Row 469 | Loại: None   | Chỉ tiêu: None
+Row 470 | Loại: None   | Chỉ tiêu: None
+Row 471 | Loại: None   | Chỉ tiêu: None
+Row 472 | Loại: None   | Chỉ tiêu: None
+Row 473 | Loại: None   | Chỉ tiêu: None
+Row 474 | Loại: None   | Chỉ tiêu: None
+Row 475 | Loại: None   | Chỉ tiêu: None
+Row 476 | Loại: None   | Chỉ tiêu: None
+Row 477 | Loại: None   | Chỉ tiêu: None
+Row 478 | Loại: None   | Chỉ tiêu: None
+Row 479 | Loại: None   | Chỉ tiêu: None
+Row 480 | Loại: None   | Chỉ tiêu: None
+Row 481 | Loại: None   | Chỉ tiêu: None
+Row 482 | Loại: None   | Chỉ tiêu: None
+Row 483 | Loại: None   | Chỉ tiêu: None
+Row 484 | Loại: None   | Chỉ tiêu: None
+Row 485 | Loại: None   | Chỉ tiêu: None
+Row 486 | Loại: None   | Chỉ tiêu: None
+Row 487 | Loại: None   | Chỉ tiêu: None
+Row 488 | Loại: None   | Chỉ tiêu: None
+Row 489 | Loại: None   | Chỉ tiêu: None
+Row 490 | Loại: None   | Chỉ tiêu: None
+Row 491 | Loại: None   | Chỉ tiêu: None
+Row 492 | Loại: None   | Chỉ tiêu: None
+Row 493 | Loại: None   | Chỉ tiêu: None
+Row 494 | Loại: None   | Chỉ tiêu: None
+Row 495 | Loại: None   | Chỉ tiêu: None
+Row 496 | Loại: None   | Chỉ tiêu: None
+Row 497 | Loại: None   | Chỉ tiêu: None
+Row 498 | Loại: None   | Chỉ tiêu: None
+Row 499 | Loại: None   | Chỉ tiêu: None
+Row 500 | Loại: None   | Chỉ tiêu: None
+Row 501 | Loại: None   | Chỉ tiêu: None
+Row 502 | Loại: None   | Chỉ tiêu: None
+Row 503 | Loại: None   | Chỉ tiêu: None
+Row 504 | Loại: None   | Chỉ tiêu: None
+Row 505 | Loại: None   | Chỉ tiêu: None
+Row 506 | Loại: None   | Chỉ tiêu: None
+Row 507 | Loại: None   | Chỉ tiêu: None
+Row 508 | Loại: None   | Chỉ tiêu: None
+Row 509 | Loại: None   | Chỉ tiêu: None
+Row 510 | Loại: None   | Chỉ tiêu: None
+Row 511 | Loại: None   | Chỉ tiêu: None
+Row 512 | Loại: None   | Chỉ tiêu: None
+Row 513 | Loại: None   | Chỉ tiêu: None
+Row 514 | Loại: None   | Chỉ tiêu: None
+Row 515 | Loại: None   | Chỉ tiêu: None
+Row 516 | Loại: None   | Chỉ tiêu: None
+Row 517 | Loại: None   | Chỉ tiêu: None
+Row 518 | Loại: None   | Chỉ tiêu: None
+Row 519 | Loại: None   | Chỉ tiêu: None
+Row 520 | Loại: None   | Chỉ tiêu: None
+Row 521 | Loại: None   | Chỉ tiêu: None
+Row 522 | Loại: None   | Chỉ tiêu: None
+Row 523 | Loại: None   | Chỉ tiêu: None
+Row 524 | Loại: None   | Chỉ tiêu: None
+Row 525 | Loại: None   | Chỉ tiêu: None
+Row 526 | Loại: None   | Chỉ tiêu: None
+Row 527 | Loại: None   | Chỉ tiêu: None
+Row 528 | Loại: None   | Chỉ tiêu: None
+Row 529 | Loại: None   | Chỉ tiêu: None
+Row 530 | Loại: None   | Chỉ tiêu: None
+Row 531 | Loại: None   | Chỉ tiêu: None
+Row 532 | Loại: None   | Chỉ tiêu: None
+Row 533 | Loại: None   | Chỉ tiêu: None
+Row 534 | Loại: None   | Chỉ tiêu: None
+Row 535 | Loại: None   | Chỉ tiêu: None
+Row 536 | Loại: None   | Chỉ tiêu: None
+Row 537 | Loại: None   | Chỉ tiêu: None
+Row 538 | Loại: None   | Chỉ tiêu: None
+Row 539 | Loại: None   | Chỉ tiêu: None
+Row 540 | Loại: None   | Chỉ tiêu: None
+Row 541 | Loại: None   | Chỉ tiêu: None
+Row 542 | Loại: None   | Chỉ tiêu: None
+Row 543 | Loại: None   | Chỉ tiêu: None
+Row 544 | Loại: None   | Chỉ tiêu: None
+Row 545 | Loại: None   | Chỉ tiêu: None
+Row 546 | Loại: None   | Chỉ tiêu: None
+Row 547 | Loại: None   | Chỉ tiêu: None
+Row 548 | Loại: None   | Chỉ tiêu: None
+Row 549 | Loại: None   | Chỉ tiêu: None
+Row 550 | Loại: None   | Chỉ tiêu: None
+Row 551 | Loại: None   | Chỉ tiêu: None
+Row 552 | Loại: None   | Chỉ tiêu: None
+Row 553 | Loại: None   | Chỉ tiêu: None
+Row 554 | Loại: None   | Chỉ tiêu: None
+Row 555 | Loại: None   | Chỉ tiêu: None
+Row 556 | Loại: None   | Chỉ tiêu: None
+Row 557 | Loại: None   | Chỉ tiêu: None
+Row 558 | Loại: None   | Chỉ tiêu: None
+Row 559 | Loại: None   | Chỉ tiêu: None
+Row 560 | Loại: None   | Chỉ tiêu: None
+Row 561 | Loại: None   | Chỉ tiêu: None
+Row 562 | Loại: None   | Chỉ tiêu: None
+Row 563 | Loại: None   | Chỉ tiêu: None
+Row 564 | Loại: None   | Chỉ tiêu: None
+Row 565 | Loại: None   | Chỉ tiêu: None
+Row 566 | Loại: None   | Chỉ tiêu: None
+Row 567 | Loại: None   | Chỉ tiêu: None
+Row 568 | Loại: None   | Chỉ tiêu: None
+Row 569 | Loại: None   | Chỉ tiêu: None
+Row 570 | Loại: None   | Chỉ tiêu: None
+Row 571 | Loại: None   | Chỉ tiêu: None
+Row 572 | Loại: None   | Chỉ tiêu: None
+Row 573 | Loại: None   | Chỉ tiêu: None
+Row 574 | Loại: None   | Chỉ tiêu: None
+Row 575 | Loại: None   | Chỉ tiêu: None
+Row 576 | Loại: None   | Chỉ tiêu: None
+Row 577 | Loại: None   | Chỉ tiêu: None
+Row 578 | Loại: None   | Chỉ tiêu: None
+Row 579 | Loại: None   | Chỉ tiêu: None
+Row 580 | Loại: None   | Chỉ tiêu: None
+Row 581 | Loại: None   | Chỉ tiêu: None
+Row 582 | Loại: None   | Chỉ tiêu: None
+Row 583 | Loại: None   | Chỉ tiêu: None
+Row 584 | Loại: None   | Chỉ tiêu: None
+Row 585 | Loại: None   | Chỉ tiêu: None
+Row 586 | Loại: None   | Chỉ tiêu: None
+Row 587 | Loại: None   | Chỉ tiêu: None
+Row 588 | Loại: None   | Chỉ tiêu: None
+Row 589 | Loại: None   | Chỉ tiêu: None
+Row 590 | Loại: None   | Chỉ tiêu: None
+Row 591 | Loại: None   | Chỉ tiêu: None
+Row 592 | Loại: None   | Chỉ tiêu: None
+Row 593 | Loại: None   | Chỉ tiêu: None
+Row 594 | Loại: None   | Chỉ tiêu: None
+Row 595 | Loại: None   | Chỉ tiêu: None
+Row 596 | Loại: None   | Chỉ tiêu: None
+Row 597 | Loại: None   | Chỉ tiêu: None
+Row 598 | Loại: None   | Chỉ tiêu: None
+Row 599 | Loại: None   | Chỉ tiêu: None
+Row 600 | Loại: None   | Chỉ tiêu: None
+Row 601 | Loại: None   | Chỉ tiêu: None
+Row 602 | Loại: None   | Chỉ tiêu: None
+Row 603 | Loại: None   | Chỉ tiêu: None
+Row 604 | Loại: None   | Chỉ tiêu: None
+Row 605 | Loại: None   | Chỉ tiêu: None
+Row 606 | Loại: None   | Chỉ tiêu: None
+Row 607 | Loại: None   | Chỉ tiêu: None
+Row 608 | Loại: None   | Chỉ tiêu: None
+Row 609 | Loại: None   | Chỉ tiêu: None
+Row 610 | Loại: None   | Chỉ tiêu: None
+Row 611 | Loại: None   | Chỉ tiêu: None
+Row 612 | Loại: None   | Chỉ tiêu: None
+Row 613 | Loại: None   | Chỉ tiêu: None
+Row 614 | Loại: None   | Chỉ tiêu: None
+Row 615 | Loại: None   | Chỉ tiêu: None
+Row 616 | Loại: None   | Chỉ tiêu: None
+Row 617 | Loại: None   | Chỉ tiêu: None
+Row 618 | Loại: None   | Chỉ tiêu: None
+Row 619 | Loại: None   | Chỉ tiêu: None
+Row 620 | Loại: None   | Chỉ tiêu: None
+Row 621 | Loại: None   | Chỉ tiêu: None
+Row 622 | Loại: None   | Chỉ tiêu: None
+Row 623 | Loại: None   | Chỉ tiêu: None
+Row 624 | Loại: None   | Chỉ tiêu: None
+Row 625 | Loại: None   | Chỉ tiêu: None
+Row 626 | Loại: None   | Chỉ tiêu: None
+Row 627 | Loại: None   | Chỉ tiêu: None
+Row 628 | Loại: None   | Chỉ tiêu: None
+Row 629 | Loại: None   | Chỉ tiêu: None
+Row 630 | Loại: None   | Chỉ tiêu: None
+Row 631 | Loại: None   | Chỉ tiêu: None
+Row 632 | Loại: None   | Chỉ tiêu: None
+Row 633 | Loại: None   | Chỉ tiêu: None
+Row 634 | Loại: None   | Chỉ tiêu: None
+Row 635 | Loại: None   | Chỉ tiêu: None
+Row 636 | Loại: None   | Chỉ tiêu: None
+Row 637 | Loại: None   | Chỉ tiêu: None
+Row 638 | Loại: None   | Chỉ tiêu: None
+Row 639 | Loại: None   | Chỉ tiêu: None
+Row 640 | Loại: None   | Chỉ tiêu: None
+Row 641 | Loại: None   | Chỉ tiêu: None
+Row 642 | Loại: None   | Chỉ tiêu: None
+Row 643 | Loại: None   | Chỉ tiêu: None
+Row 644 | Loại: None   | Chỉ tiêu: None
+Row 645 | Loại: None   | Chỉ tiêu: None
+Row 646 | Loại: None   | Chỉ tiêu: None
+Row 647 | Loại: None   | Chỉ tiêu: None
+Row 648 | Loại: None   | Chỉ tiêu: None
+Row 649 | Loại: None   | Chỉ tiêu: None
+Row 650 | Loại: None   | Chỉ tiêu: None
+Row 651 | Loại: None   | Chỉ tiêu: None
+Row 652 | Loại: None   | Chỉ tiêu: None
+Row 653 | Loại: None   | Chỉ tiêu: None
+Row 654 | Loại: None   | Chỉ tiêu: None
+Row 655 | Loại: None   | Chỉ tiêu: None
+Row 656 | Loại: None   | Chỉ tiêu: None
+Row 657 | Loại: None   | Chỉ tiêu: None
+Row 658 | Loại: None   | Chỉ tiêu: None
+Row 659 | Loại: None   | Chỉ tiêu: None
+Row 660 | Loại: None   | Chỉ tiêu: None
+Row 661 | Loại: None   | Chỉ tiêu: None
+Row 662 | Loại: None   | Chỉ tiêu: None
+Row 663 | Loại: None   | Chỉ tiêu: None
+Row 664 | Loại: None   | Chỉ tiêu: None
+Row 665 | Loại: None   | Chỉ tiêu: None
+Row 666 | Loại: None   | Chỉ tiêu: None
+Row 667 | Loại: None   | Chỉ tiêu: None
+Row 668 | Loại: None   | Chỉ tiêu: None
+Row 669 | Loại: None   | Chỉ tiêu: None
+Row 670 | Loại: None   | Chỉ tiêu: None
+Row 671 | Loại: None   | Chỉ tiêu: None
+Row 672 | Loại: None   | Chỉ tiêu: None
+Row 673 | Loại: None   | Chỉ tiêu: None
+Row 674 | Loại: None   | Chỉ tiêu: None
+Row 675 | Loại: None   | Chỉ tiêu: None
+Row 676 | Loại: None   | Chỉ tiêu: None
+Row 677 | Loại: None   | Chỉ tiêu: None
+Row 678 | Loại: None   | Chỉ tiêu: None
+Row 679 | Loại: None   | Chỉ tiêu: None
+Row 680 | Loại: None   | Chỉ tiêu: None
+Row 681 | Loại: None   | Chỉ tiêu: None
+Row 682 | Loại: None   | Chỉ tiêu: None
+Row 683 | Loại: None   | Chỉ tiêu: None
+Row 684 | Loại: None   | Chỉ tiêu: None
+Row 685 | Loại: None   | Chỉ tiêu: None
+Row 686 | Loại: None   | Chỉ tiêu: None
+Row 687 | Loại: None   | Chỉ tiêu: None
+Row 688 | Loại: None   | Chỉ tiêu: None
+Row 689 | Loại: None   | Chỉ tiêu: None
+Row 690 | Loại: None   | Chỉ tiêu: None
+Row 691 | Loại: None   | Chỉ tiêu: None
+Row 692 | Loại: None   | Chỉ tiêu: None
+Row 693 | Loại: None   | Chỉ tiêu: None
+Row 694 | Loại: None   | Chỉ tiêu: None
+Row 695 | Loại: None   | Chỉ tiêu: None
+Row 696 | Loại: None   | Chỉ tiêu: None
+Row 697 | Loại: None   | Chỉ tiêu: None
+Row 698 | Loại: None   | Chỉ tiêu: None
+Row 699 | Loại: None   | Chỉ tiêu: None
+Row 700 | Loại: None   | Chỉ tiêu: None
+Row 701 | Loại: None   | Chỉ tiêu: None
+Row 702 | Loại: None   | Chỉ tiêu: None
+Row 703 | Loại: None   | Chỉ tiêu: None
+Row 704 | Loại: None   | Chỉ tiêu: None
+Row 705 | Loại: None   | Chỉ tiêu: None
+Row 706 | Loại: None   | Chỉ tiêu: None
+Row 707 | Loại: None   | Chỉ tiêu: None
+Row 708 | Loại: None   | Chỉ tiêu: None
+Row 709 | Loại: None   | Chỉ tiêu: None
+Row 710 | Loại: None   | Chỉ tiêu: None
+Row 711 | Loại: None   | Chỉ tiêu: None
+Row 712 | Loại: None   | Chỉ tiêu: None
+Row 713 | Loại: None   | Chỉ tiêu: None
+Row 714 | Loại: None   | Chỉ tiêu: None
+Row 715 | Loại: None   | Chỉ tiêu: None
+Row 716 | Loại: None   | Chỉ tiêu: None
+Row 717 | Loại: None   | Chỉ tiêu: None
+Row 718 | Loại: None   | Chỉ tiêu: None
+Row 719 | Loại: None   | Chỉ tiêu: None
+Row 720 | Loại: None   | Chỉ tiêu: None
+Row 721 | Loại: None   | Chỉ tiêu: None
+Row 722 | Loại: None   | Chỉ tiêu: None
+Row 723 | Loại: None   | Chỉ tiêu: None
+Row 724 | Loại: None   | Chỉ tiêu: None
+Row 725 | Loại: None   | Chỉ tiêu: None
+Row 726 | Loại: None   | Chỉ tiêu: None
+Row 727 | Loại: None   | Chỉ tiêu: None
+Row 728 | Loại: None   | Chỉ tiêu: None
+Row 729 | Loại: None   | Chỉ tiêu: None
+Row 730 | Loại: None   | Chỉ tiêu: None
+Row 731 | Loại: None   | Chỉ tiêu: None
+Row 732 | Loại: None   | Chỉ tiêu: None
+Row 733 | Loại: None   | Chỉ tiêu: None
+Row 734 | Loại: None   | Chỉ tiêu: None
+Row 735 | Loại: None   | Chỉ tiêu: None
+Row 736 | Loại: None   | Chỉ tiêu: None
+Row 737 | Loại: None   | Chỉ tiêu: None
+Row 738 | Loại: None   | Chỉ tiêu: None
+Row 739 | Loại: None   | Chỉ tiêu: None
+Row 740 | Loại: None   | Chỉ tiêu: None
+Row 741 | Loại: None   | Chỉ tiêu: None
+Row 742 | Loại: None   | Chỉ tiêu: None
+Row 743 | Loại: None   | Chỉ tiêu: None
+Row 744 | Loại: None   | Chỉ tiêu: None
+Row 745 | Loại: None   | Chỉ tiêu: None
+Row 746 | Loại: None   | Chỉ tiêu: None
+Row 747 | Loại: None   | Chỉ tiêu: None
+Row 748 | Loại: None   | Chỉ tiêu: None
+Row 749 | Loại: None   | Chỉ tiêu: None
+Row 750 | Loại: None   | Chỉ tiêu: None
+Row 751 | Loại: None   | Chỉ tiêu: None
+Row 752 | Loại: None   | Chỉ tiêu: None
+Row 753 | Loại: None   | Chỉ tiêu: None
+Row 754 | Loại: None   | Chỉ tiêu: None
+Row 755 | Loại: None   | Chỉ tiêu: None
+Row 756 | Loại: None   | Chỉ tiêu: None
+Row 757 | Loại: None   | Chỉ tiêu: None
+Row 758 | Loại: None   | Chỉ tiêu: None
+Row 759 | Loại: None   | Chỉ tiêu: None
+Row 760 | Loại: None   | Chỉ tiêu: None
+Row 761 | Loại: None   | Chỉ tiêu: None
+Row 762 | Loại: None   | Chỉ tiêu: None
+Row 763 | Loại: None   | Chỉ tiêu: None
+Row 764 | Loại: None   | Chỉ tiêu: None
+Row 765 | Loại: None   | Chỉ tiêu: None
+Row 766 | Loại: None   | Chỉ tiêu: None
+Row 767 | Loại: None   | Chỉ tiêu: None
+Row 768 | Loại: None   | Chỉ tiêu: None
+Row 769 | Loại: None   | Chỉ tiêu: None
+Row 770 | Loại: None   | Chỉ tiêu: None
+Row 771 | Loại: None   | Chỉ tiêu: None
+Row 772 | Loại: None   | Chỉ tiêu: None
+Row 773 | Loại: None   | Chỉ tiêu: None
+Row 774 | Loại: None   | Chỉ tiêu: None
+Row 775 | Loại: None   | Chỉ tiêu: None
+Row 776 | Loại: None   | Chỉ tiêu: None
+Row 777 | Loại: None   | Chỉ tiêu: None
+Row 778 | Loại: None   | Chỉ tiêu: None
+Row 779 | Loại: None   | Chỉ tiêu: None
+Row 780 | Loại: None   | Chỉ tiêu: None
+Row 781 | Loại: None   | Chỉ tiêu: None
+Row 782 | Loại: None   | Chỉ tiêu: None
+Row 783 | Loại: None   | Chỉ tiêu: None
+Row 784 | Loại: None   | Chỉ tiêu: None
+Row 785 | Loại: None   | Chỉ tiêu: None
+Row 786 | Loại: None   | Chỉ tiêu: None
+Row 787 | Loại: None   | Chỉ tiêu: None
+Row 788 | Loại: None   | Chỉ tiêu: None
+Row 789 | Loại: None   | Chỉ tiêu: None
+Row 790 | Loại: None   | Chỉ tiêu: None
+Row 791 | Loại: None   | Chỉ tiêu: None
+Row 792 | Loại: None   | Chỉ tiêu: None
+Row 793 | Loại: None   | Chỉ tiêu: None
+Row 794 | Loại: None   | Chỉ tiêu: None
+Row 795 | Loại: None   | Chỉ tiêu: None
+Row 796 | Loại: None   | Chỉ tiêu: None
+Row 797 | Loại: None   | Chỉ tiêu: None
+Row 798 | Loại: None   | Chỉ tiêu: None
+Row 799 | Loại: None   | Chỉ tiêu: None
+Row 800 | Loại: None   | Chỉ tiêu: None
+Row 801 | Loại: None   | Chỉ tiêu: None
+Row 802 | Loại: None   | Chỉ tiêu: None
+Row 803 | Loại: None   | Chỉ tiêu: None
+Row 804 | Loại: None   | Chỉ tiêu: None
+Row 805 | Loại: None   | Chỉ tiêu: None
+Row 806 | Loại: None   | Chỉ tiêu: None
+Row 807 | Loại: None   | Chỉ tiêu: None
+Row 808 | Loại: None   | Chỉ tiêu: None
+Row 809 | Loại: None   | Chỉ tiêu: None
+Row 810 | Loại: None   | Chỉ tiêu: None
+Row 811 | Loại: None   | Chỉ tiêu: None
+Row 812 | Loại: None   | Chỉ tiêu: None
+Row 813 | Loại: None   | Chỉ tiêu: None
+Row 814 | Loại: None   | Chỉ tiêu: None
+Row 815 | Loại: None   | Chỉ tiêu: None
+Row 816 | Loại: None   | Chỉ tiêu: None
+Row 817 | Loại: None   | Chỉ tiêu: None
+Row 818 | Loại: None   | Chỉ tiêu: None
+Row 819 | Loại: None   | Chỉ tiêu: None
+Row 820 | Loại: None   | Chỉ tiêu: None
+Row 821 | Loại: None   | Chỉ tiêu: None
+Row 822 | Loại: None   | Chỉ tiêu: None
+Row 823 | Loại: None   | Chỉ tiêu: None
+Row 824 | Loại: None   | Chỉ tiêu: None
+Row 825 | Loại: None   | Chỉ tiêu: None
+Row 826 | Loại: None   | Chỉ tiêu: None
+Row 827 | Loại: None   | Chỉ tiêu: None
+Row 828 | Loại: None   | Chỉ tiêu: None
+Row 829 | Loại: None   | Chỉ tiêu: None
+Row 830 | Loại: None   | Chỉ tiêu: None
+Row 831 | Loại: None   | Chỉ tiêu: None
+Row 832 | Loại: None   | Chỉ tiêu: None
+Row 833 | Loại: None   | Chỉ tiêu: None
+Row 834 | Loại: None   | Chỉ tiêu: None
+Row 835 | Loại: None   | Chỉ tiêu: None
+Row 836 | Loại: None   | Chỉ tiêu: None
+Row 837 | Loại: None   | Chỉ tiêu: None
+Row 838 | Loại: None   | Chỉ tiêu: None
+Row 839 | Loại: None   | Chỉ tiêu: None
+Row 840 | Loại: None   | Chỉ tiêu: None
+Row 841 | Loại: None   | Chỉ tiêu: None
+Row 842 | Loại: None   | Chỉ tiêu: None
+Row 843 | Loại: None   | Chỉ tiêu: None
+Row 844 | Loại: None   | Chỉ tiêu: None
+Row 845 | Loại: None   | Chỉ tiêu: None
+Row 846 | Loại: None   | Chỉ tiêu: None
+Row 847 | Loại: None   | Chỉ tiêu: None
+Row 848 | Loại: None   | Chỉ tiêu: None
+Row 849 | Loại: None   | Chỉ tiêu: None
+Row 850 | Loại: None   | Chỉ tiêu: None
+Row 851 | Loại: None   | Chỉ tiêu: None
+Row 852 | Loại: None   | Chỉ tiêu: None
+Row 853 | Loại: None   | Chỉ tiêu: None
+Row 854 | Loại: None   | Chỉ tiêu: None
+Row 855 | Loại: None   | Chỉ tiêu: None
+Row 856 | Loại: None   | Chỉ tiêu: None
+Row 857 | Loại: None   | Chỉ tiêu: None
+Row 858 | Loại: None   | Chỉ tiêu: None
+Row 859 | Loại: None   | Chỉ tiêu: None
+Row 860 | Loại: None   | Chỉ tiêu: None
+Row 861 | Loại: None   | Chỉ tiêu: None
+Row 862 | Loại: None   | Chỉ tiêu: None
+Row 863 | Loại: None   | Chỉ tiêu: None
+Row 864 | Loại: None   | Chỉ tiêu: None
+Row 865 | Loại: None   | Chỉ tiêu: None
+Row 866 | Loại: None   | Chỉ tiêu: None
+Row 867 | Loại: None   | Chỉ tiêu: None
+Row 868 | Loại: None   | Chỉ tiêu: None
+Row 869 | Loại: None   | Chỉ tiêu: None
+Row 870 | Loại: None   | Chỉ tiêu: None
+Row 871 | Loại: None   | Chỉ tiêu: None
+Row 872 | Loại: None   | Chỉ tiêu: None
+Row 873 | Loại: None   | Chỉ tiêu: None
+Row 874 | Loại: None   | Chỉ tiêu: None
+Row 875 | Loại: None   | Chỉ tiêu: None
+Row 876 | Loại: None   | Chỉ tiêu: None
+Row 877 | Loại: None   | Chỉ tiêu: None
+Row 878 | Loại: None   | Chỉ tiêu: None
+Row 879 | Loại: None   | Chỉ tiêu: None
+Row 880 | Loại: None   | Chỉ tiêu: None
+Row 881 | Loại: None   | Chỉ tiêu: None
+Row 882 | Loại: None   | Chỉ tiêu: None
+Row 883 | Loại: None   | Chỉ tiêu: None
+Row 884 | Loại: None   | Chỉ tiêu: None
+Row 885 | Loại: None   | Chỉ tiêu: None
+Row 886 | Loại: None   | Chỉ tiêu: None
+Row 887 | Loại: None   | Chỉ tiêu: None
+Row 888 | Loại: None   | Chỉ tiêu: None
+Row 889 | Loại: None   | Chỉ tiêu: None
+Row 890 | Loại: None   | Chỉ tiêu: None
+Row 891 | Loại: None   | Chỉ tiêu: None
+Row 892 | Loại: None   | Chỉ tiêu: None
+Row 893 | Loại: None   | Chỉ tiêu: None
+Row 894 | Loại: None   | Chỉ tiêu: None
+Row 895 | Loại: None   | Chỉ tiêu: None
+Row 896 | Loại: None   | Chỉ tiêu: None
+Row 897 | Loại: None   | Chỉ tiêu: None
+Row 898 | Loại: None   | Chỉ tiêu: None
+Row 899 | Loại: None   | Chỉ tiêu: None
+Row 900 | Loại: None   | Chỉ tiêu: None
+Row 901 | Loại: None   | Chỉ tiêu: None
+Row 902 | Loại: None   | Chỉ tiêu: None
+Row 903 | Loại: None   | Chỉ tiêu: None
+Row 904 | Loại: None   | Chỉ tiêu: None
+Row 905 | Loại: None   | Chỉ tiêu: None
+Row 906 | Loại: None   | Chỉ tiêu: None
+Row 907 | Loại: None   | Chỉ tiêu: None
+Row 908 | Loại: None   | Chỉ tiêu: None
+Row 909 | Loại: None   | Chỉ tiêu: None
+Row 910 | Loại: None   | Chỉ tiêu: None
+Row 911 | Loại: None   | Chỉ tiêu: None
+Row 912 | Loại: None   | Chỉ tiêu: None
+Row 913 | Loại: None   | Chỉ tiêu: None
+Row 914 | Loại: None   | Chỉ tiêu: None
+Row 915 | Loại: None   | Chỉ tiêu: None
+Row 916 | Loại: None   | Chỉ tiêu: None
+Row 917 | Loại: None   | Chỉ tiêu: None
+Row 918 | Loại: None   | Chỉ tiêu: None
+Row 919 | Loại: None   | Chỉ tiêu: None
+Row 920 | Loại: None   | Chỉ tiêu: None
+Row 921 | Loại: None   | Chỉ tiêu: None
+Row 922 | Loại: None   | Chỉ tiêu: None
+Row 923 | Loại: None   | Chỉ tiêu: None
+Row 924 | Loại: None   | Chỉ tiêu: None
+Row 925 | Loại: None   | Chỉ tiêu: None
+Row 926 | Loại: None   | Chỉ tiêu: None
+Row 927 | Loại: None   | Chỉ tiêu: None
+Row 928 | Loại: None   | Chỉ tiêu: None
+Row 929 | Loại: None   | Chỉ tiêu: None
+Row 930 | Loại: None   | Chỉ tiêu: None
+Row 931 | Loại: None   | Chỉ tiêu: None
+Row 932 | Loại: None   | Chỉ tiêu: None
+Row 933 | Loại: None   | Chỉ tiêu: None
+Row 934 | Loại: None   | Chỉ tiêu: None
+Row 935 | Loại: None   | Chỉ tiêu: None
+Row 936 | Loại: None   | Chỉ tiêu: None
+Row 937 | Loại: None   | Chỉ tiêu: None
+Row 938 | Loại: None   | Chỉ tiêu: None
+Row 939 | Loại: None   | Chỉ tiêu: None
+Row 940 | Loại: None   | Chỉ tiêu: None
+Row 941 | Loại: None   | Chỉ tiêu: None
+Row 942 | Loại: None   | Chỉ tiêu: None
+Row 943 | Loại: None   | Chỉ tiêu: None
+Row 944 | Loại: None   | Chỉ tiêu: None
+Row 945 | Loại: None   | Chỉ tiêu: None
+Row 946 | Loại: None   | Chỉ tiêu: None
+Row 947 | Loại: None   | Chỉ tiêu: None
+Row 948 | Loại: None   | Chỉ tiêu: None
+Row 949 | Loại: None   | Chỉ tiêu: None
+Row 950 | Loại: None   | Chỉ tiêu: None
+Row 951 | Loại: None   | Chỉ tiêu: None
+Row 952 | Loại: None   | Chỉ tiêu: None
+Row 953 | Loại: None   | Chỉ tiêu: None
+Row 954 | Loại: None   | Chỉ tiêu: None
+Row 955 | Loại: None   | Chỉ tiêu: None
+Row 956 | Loại: None   | Chỉ tiêu: None
+Row 957 | Loại: None   | Chỉ tiêu: None
+Row 958 | Loại: None   | Chỉ tiêu: None
+Row 959 | Loại: None   | Chỉ tiêu: None
+Row 960 | Loại: None   | Chỉ tiêu: None
+Row 961 | Loại: None   | Chỉ tiêu: None
+Row 962 | Loại: None   | Chỉ tiêu: None
+Row 963 | Loại: None   | Chỉ tiêu: None
+Row 964 | Loại: None   | Chỉ tiêu: None
+Row 965 | Loại: None   | Chỉ tiêu: None
+Row 966 | Loại: None   | Chỉ tiêu: None
+Row 967 | Loại: None   | Chỉ tiêu: None
+Row 968 | Loại: None   | Chỉ tiêu: None
+Row 969 | Loại: None   | Chỉ tiêu: None
+Row 970 | Loại: None   | Chỉ tiêu: None
+Row 971 | Loại: None   | Chỉ tiêu: None
+Row 972 | Loại: None   | Chỉ tiêu: None
+Row 973 | Loại: None   | Chỉ tiêu: None
+Row 974 | Loại: None   | Chỉ tiêu: None
+Row 975 | Loại: None   | Chỉ tiêu: None
+Row 976 | Loại: None   | Chỉ tiêu: None
+Row 977 | Loại: None   | Chỉ tiêu: None
+Row 978 | Loại: None   | Chỉ tiêu: None
+Row 979 | Loại: None   | Chỉ tiêu: None
+Row 980 | Loại: None   | Chỉ tiêu: None
+Row 981 | Loại: None   | Chỉ tiêu: None
+Row 982 | Loại: None   | Chỉ tiêu: None
+Row 983 | Loại: None   | Chỉ tiêu: None
+Row 984 | Loại: None   | Chỉ tiêu: None
+Row 985 | Loại: None   | Chỉ tiêu: None
+Row 986 | Loại: None   | Chỉ tiêu: None
+Row 987 | Loại: None   | Chỉ tiêu: None
+Row 988 | Loại: None   | Chỉ tiêu: None
+=== SHEET: Raw data ===
+Headers: ['Code', 'Statement', 'Item name', 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
+
+Row   1 | Loại: Code   | Chỉ tiêu: Statement
+Row   2 | Loại: VPB    | Chỉ tiêu: Balance
+Row   3 | Loại: VPB    | Chỉ tiêu: Balance
+Row   4 | Loại: VPB    | Chỉ tiêu: Balance
+Row   5 | Loại: VPB    | Chỉ tiêu: Balance
+Row   6 | Loại: VPB    | Chỉ tiêu: Balance
+Row   7 | Loại: VPB    | Chỉ tiêu: Income
+     H7: [Formula] =30670461+2791620-216879+284845+803159+2019665+2634 => [Value] 36355505
+     I7: [Formula] =32345823+3356127+226466+1170731+2236161+5013-307207 => [Value] 39033114
+Row   8 | Loại: VPB    | Chỉ tiêu: Income
+Row   9 | Loại: VPB    | Chỉ tiêu: Income
+Row  10 | Loại: VPB    | Chỉ tiêu: Income
+Row  11 | Loại: VPB    | Chỉ tiêu: Income
+Row  12 | Loại: VPB    | Chỉ tiêu: Income
+Row  13 | Loại: VPB    | Chỉ tiêu: Cashflow
+     E13: [Formula] =-6423441 => [Value] -6423441
+Row  14 | Loại: VPB    | Chỉ tiêu: Cashflow
+Row  15 | Loại: VPB    | Chỉ tiêu: Cashflow
+Row  16 | Loại: VPB    | Chỉ tiêu: Notes
+Row  17 | Loại: VPB    | Chỉ tiêu: Notes
+Row  18 | Loại: VPB    | Chỉ tiêu: Notes
+Row  19 | Loại: VPB    | Chỉ tiêu: Notes
+     D19: [Formula] =0 => [Value] 0
+     E19: [Formula] =0 => [Value] 0
+     F19: [Formula] =0 => [Value] 0
+     G19: [Formula] =0 => [Value] 0
+     H19: [Formula] =0 => [Value] 0
+Row  20 | Loại: VPB    | Chỉ tiêu: Notes
+Row  21 | Loại: VPB    | Chỉ tiêu: Search
+Row  22 | Loại: VPB    | Chỉ tiêu: Search
+Row  23 | Loại: VPB    | Chỉ tiêu: Search
+Row  24 | Loại: VPB    | Chỉ tiêu: Search
+Row  25 | Loại: TCB    | Chỉ tiêu: Balance
+Row  26 | Loại: TCB    | Chỉ tiêu: Balance
+Row  27 | Loại: TCB    | Chỉ tiêu: Balance
+Row  28 | Loại: TCB    | Chỉ tiêu: Balance
+Row  29 | Loại: TCB    | Chỉ tiêu: Balance
+Row  30 | Loại: TCB    | Chỉ tiêu: Income
+Row  31 | Loại: TCB    | Chỉ tiêu: Income
+Row  32 | Loại: TCB    | Chỉ tiêu: Income
+Row  33 | Loại: TCB    | Chỉ tiêu: Income
+Row  34 | Loại: TCB    | Chỉ tiêu: Income
+Row  35 | Loại: TCB    | Chỉ tiêu: Income
+Row  36 | Loại: TCB    | Chỉ tiêu: Cashflow
+Row  37 | Loại: TCB    | Chỉ tiêu: Cashflow
+Row  38 | Loại: TCB    | Chỉ tiêu: Cashflow
+Row  39 | Loại: TCB    | Chỉ tiêu: Notes
+Row  40 | Loại: TCB    | Chỉ tiêu: Notes
+Row  41 | Loại: TCB    | Chỉ tiêu: Notes
+Row  42 | Loại: TCB    | Chỉ tiêu: Notes
+     F42: [Formula] =0 => [Value] 0
+     G42: [Formula] =0 => [Value] 0
+     H42: [Formula] =0 => [Value] 0
+     I42: [Formula] =0 => [Value] 0
+Row  43 | Loại: TCB    | Chỉ tiêu: Notes
+Row  44 | Loại: TCB    | Chỉ tiêu: Search
+Row  45 | Loại: TCB    | Chỉ tiêu: Search
+Row  46 | Loại: TCB    | Chỉ tiêu: Search
+Row  47 | Loại: TCB    | Chỉ tiêu: Search
+Row  48 | Loại: TCB    | Chỉ tiêu: Search
+Row  49 | Loại: None   | Chỉ tiêu: None
+Row  50 | Loại: None   | Chỉ tiêu: None
+Row  51 | Loại: None   | Chỉ tiêu: None
+Row  52 | Loại: None   | Chỉ tiêu: None
+Row  53 | Loại: None   | Chỉ tiêu: None
+Row  54 | Loại: None   | Chỉ tiêu: None
+Row  55 | Loại: None   | Chỉ tiêu: None
+Row  56 | Loại: None   | Chỉ tiêu: None
+Row  57 | Loại: None   | Chỉ tiêu: None
+Row  58 | Loại: None   | Chỉ tiêu: None
+Row  59 | Loại: None   | Chỉ tiêu: None
+Row  60 | Loại: None   | Chỉ tiêu: None
+Row  61 | Loại: None   | Chỉ tiêu: None
+Row  62 | Loại: None   | Chỉ tiêu: None
+Row  63 | Loại: None   | Chỉ tiêu: None
+Row  64 | Loại: None   | Chỉ tiêu: None
+Row  65 | Loại: None   | Chỉ tiêu: None
+Row  66 | Loại: None   | Chỉ tiêu: None
+Row  67 | Loại: None   | Chỉ tiêu: None
+Row  68 | Loại: None   | Chỉ tiêu: None
+Row  69 | Loại: None   | Chỉ tiêu: None
+Row  70 | Loại: None   | Chỉ tiêu: None
+Row  71 | Loại: None   | Chỉ tiêu: None
+Row  72 | Loại: None   | Chỉ tiêu: None
+Row  73 | Loại: None   | Chỉ tiêu: None
+Row  74 | Loại: None   | Chỉ tiêu: None
+Row  75 | Loại: None   | Chỉ tiêu: None
+Row  76 | Loại: None   | Chỉ tiêu: None
+Row  77 | Loại: None   | Chỉ tiêu: None
+Row  78 | Loại: None   | Chỉ tiêu: None
+Row  79 | Loại: None   | Chỉ tiêu: None
+Row  80 | Loại: None   | Chỉ tiêu: None
+Row  81 | Loại: None   | Chỉ tiêu: None
+Row  82 | Loại: None   | Chỉ tiêu: None
+Row  83 | Loại: None   | Chỉ tiêu: None
+Row  84 | Loại: None   | Chỉ tiêu: None
+Row  85 | Loại: None   | Chỉ tiêu: None
+Row  86 | Loại: None   | Chỉ tiêu: None
+Row  87 | Loại: None   | Chỉ tiêu: None
+Row  88 | Loại: None   | Chỉ tiêu: None
+Row  89 | Loại: None   | Chỉ tiêu: None
+Row  90 | Loại: None   | Chỉ tiêu: None
+Row  91 | Loại: None   | Chỉ tiêu: None
+Row  92 | Loại: None   | Chỉ tiêu: None
+Row  93 | Loại: None   | Chỉ tiêu: None
+Row  94 | Loại: None   | Chỉ tiêu: None
+Row  95 | Loại: None   | Chỉ tiêu: None
+Row  96 | Loại: None   | Chỉ tiêu: None
+Row  97 | Loại: None   | Chỉ tiêu: None
+Row  98 | Loại: None   | Chỉ tiêu: None
+Row  99 | Loại: None   | Chỉ tiêu: None
+Row 100 | Loại: None   | Chỉ tiêu: None
+Row 101 | Loại: None   | Chỉ tiêu: None
+Row 102 | Loại: None   | Chỉ tiêu: None
+Row 103 | Loại: None   | Chỉ tiêu: None
+Row 104 | Loại: None   | Chỉ tiêu: None
+Row 105 | Loại: None   | Chỉ tiêu: None
+Row 106 | Loại: None   | Chỉ tiêu: None
+Row 107 | Loại: None   | Chỉ tiêu: None
+Row 108 | Loại: None   | Chỉ tiêu: None
+Row 109 | Loại: None   | Chỉ tiêu: None
+Row 110 | Loại: None   | Chỉ tiêu: None
+Row 111 | Loại: None   | Chỉ tiêu: None
+Row 112 | Loại: None   | Chỉ tiêu: None
+Row 113 | Loại: None   | Chỉ tiêu: None
+Row 114 | Loại: None   | Chỉ tiêu: None
+Row 115 | Loại: None   | Chỉ tiêu: None
+Row 116 | Loại: None   | Chỉ tiêu: None
+Row 117 | Loại: None   | Chỉ tiêu: None
+Row 118 | Loại: None   | Chỉ tiêu: None
+Row 119 | Loại: None   | Chỉ tiêu: None
+Row 120 | Loại: None   | Chỉ tiêu: None
+Row 121 | Loại: None   | Chỉ tiêu: None
+Row 122 | Loại: None   | Chỉ tiêu: None
+Row 123 | Loại: None   | Chỉ tiêu: None
+Row 124 | Loại: None   | Chỉ tiêu: None
+Row 125 | Loại: None   | Chỉ tiêu: None
+Row 126 | Loại: None   | Chỉ tiêu: None
+Row 127 | Loại: None   | Chỉ tiêu: None
+Row 128 | Loại: None   | Chỉ tiêu: None
+Row 129 | Loại: None   | Chỉ tiêu: None
+Row 130 | Loại: None   | Chỉ tiêu: None
+Row 131 | Loại: None   | Chỉ tiêu: None
+Row 132 | Loại: None   | Chỉ tiêu: None
+Row 133 | Loại: None   | Chỉ tiêu: None
+Row 134 | Loại: None   | Chỉ tiêu: None
+Row 135 | Loại: None   | Chỉ tiêu: None
+Row 136 | Loại: None   | Chỉ tiêu: None
+Row 137 | Loại: None   | Chỉ tiêu: None
+Row 138 | Loại: None   | Chỉ tiêu: None
+Row 139 | Loại: None   | Chỉ tiêu: None
+Row 140 | Loại: None   | Chỉ tiêu: None
+Row 141 | Loại: None   | Chỉ tiêu: None
+Row 142 | Loại: None   | Chỉ tiêu: None
+Row 143 | Loại: None   | Chỉ tiêu: None
+Row 144 | Loại: None   | Chỉ tiêu: None
+Row 145 | Loại: None   | Chỉ tiêu: None
+Row 146 | Loại: None   | Chỉ tiêu: None
+Row 147 | Loại: None   | Chỉ tiêu: None
+Row 148 | Loại: None   | Chỉ tiêu: None
+Row 149 | Loại: None   | Chỉ tiêu: None
+Row 150 | Loại: None   | Chỉ tiêu: None
+Row 151 | Loại: None   | Chỉ tiêu: None
+Row 152 | Loại: None   | Chỉ tiêu: None
+Row 153 | Loại: None   | Chỉ tiêu: None
+Row 154 | Loại: None   | Chỉ tiêu: None
+Row 155 | Loại: None   | Chỉ tiêu: None
+Row 156 | Loại: None   | Chỉ tiêu: None
+Row 157 | Loại: None   | Chỉ tiêu: None
+Row 158 | Loại: None   | Chỉ tiêu: None
+Row 159 | Loại: None   | Chỉ tiêu: None
+Row 160 | Loại: None   | Chỉ tiêu: None
+Row 161 | Loại: None   | Chỉ tiêu: None
+Row 162 | Loại: None   | Chỉ tiêu: None
+Row 163 | Loại: None   | Chỉ tiêu: None
+Row 164 | Loại: None   | Chỉ tiêu: None
+Row 165 | Loại: None   | Chỉ tiêu: None
+Row 166 | Loại: None   | Chỉ tiêu: None
+Row 167 | Loại: None   | Chỉ tiêu: None
+Row 168 | Loại: None   | Chỉ tiêu: None
+Row 169 | Loại: None   | Chỉ tiêu: None
+Row 170 | Loại: None   | Chỉ tiêu: None
+Row 171 | Loại: None   | Chỉ tiêu: None
+Row 172 | Loại: None   | Chỉ tiêu: None
+Row 173 | Loại: None   | Chỉ tiêu: None
+Row 174 | Loại: None   | Chỉ tiêu: None
+Row 175 | Loại: None   | Chỉ tiêu: None
+Row 176 | Loại: None   | Chỉ tiêu: None
+Row 177 | Loại: None   | Chỉ tiêu: None
+Row 178 | Loại: None   | Chỉ tiêu: None
+Row 179 | Loại: None   | Chỉ tiêu: None
+Row 180 | Loại: None   | Chỉ tiêu: None
+Row 181 | Loại: None   | Chỉ tiêu: None
+Row 182 | Loại: None   | Chỉ tiêu: None
+Row 183 | Loại: None   | Chỉ tiêu: None
+Row 184 | Loại: None   | Chỉ tiêu: None
+Row 185 | Loại: None   | Chỉ tiêu: None
+Row 186 | Loại: None   | Chỉ tiêu: None
+Row 187 | Loại: None   | Chỉ tiêu: None
+Row 188 | Loại: None   | Chỉ tiêu: None
+Row 189 | Loại: None   | Chỉ tiêu: None
+Row 190 | Loại: None   | Chỉ tiêu: None
+Row 191 | Loại: None   | Chỉ tiêu: None
+Row 192 | Loại: None   | Chỉ tiêu: None
+Row 193 | Loại: None   | Chỉ tiêu: None
+Row 194 | Loại: None   | Chỉ tiêu: None
+Row 195 | Loại: None   | Chỉ tiêu: None
+Row 196 | Loại: None   | Chỉ tiêu: None
+Row 197 | Loại: None   | Chỉ tiêu: None
+Row 198 | Loại: None   | Chỉ tiêu: None
+Row 199 | Loại: None   | Chỉ tiêu: None
+Row 200 | Loại: None   | Chỉ tiêu: None
+Row 201 | Loại: None   | Chỉ tiêu: None
+Row 202 | Loại: None   | Chỉ tiêu: None
+Row 203 | Loại: None   | Chỉ tiêu: None
+Row 204 | Loại: None   | Chỉ tiêu: None
+Row 205 | Loại: None   | Chỉ tiêu: None
+Row 206 | Loại: None   | Chỉ tiêu: None
+Row 207 | Loại: None   | Chỉ tiêu: None
+Row 208 | Loại: None   | Chỉ tiêu: None
+Row 209 | Loại: None   | Chỉ tiêu: None
+Row 210 | Loại: None   | Chỉ tiêu: None
+Row 211 | Loại: None   | Chỉ tiêu: None
+Row 212 | Loại: None   | Chỉ tiêu: None
+Row 213 | Loại: None   | Chỉ tiêu: None
+Row 214 | Loại: None   | Chỉ tiêu: None
+Row 215 | Loại: None   | Chỉ tiêu: None
+Row 216 | Loại: None   | Chỉ tiêu: None
+Row 217 | Loại: None   | Chỉ tiêu: None
+Row 218 | Loại: None   | Chỉ tiêu: None
+Row 219 | Loại: None   | Chỉ tiêu: None
+Row 220 | Loại: None   | Chỉ tiêu: None
+Row 221 | Loại: None   | Chỉ tiêu: None
+Row 222 | Loại: None   | Chỉ tiêu: None
+Row 223 | Loại: None   | Chỉ tiêu: None
+Row 224 | Loại: None   | Chỉ tiêu: None
+Row 225 | Loại: None   | Chỉ tiêu: None
+Row 226 | Loại: None   | Chỉ tiêu: None
+Row 227 | Loại: None   | Chỉ tiêu: None
+Row 228 | Loại: None   | Chỉ tiêu: None
+Row 229 | Loại: None   | Chỉ tiêu: None
+Row 230 | Loại: None   | Chỉ tiêu: None
+Row 231 | Loại: None   | Chỉ tiêu: None
+Row 232 | Loại: None   | Chỉ tiêu: None
+Row 233 | Loại: None   | Chỉ tiêu: None
+Row 234 | Loại: None   | Chỉ tiêu: None
+Row 235 | Loại: None   | Chỉ tiêu: None
+Row 236 | Loại: None   | Chỉ tiêu: None
+Row 237 | Loại: None   | Chỉ tiêu: None
+Row 238 | Loại: None   | Chỉ tiêu: None
+Row 239 | Loại: None   | Chỉ tiêu: None
+Row 240 | Loại: None   | Chỉ tiêu: None
+Row 241 | Loại: None   | Chỉ tiêu: None
+Row 242 | Loại: None   | Chỉ tiêu: None
+Row 243 | Loại: None   | Chỉ tiêu: None
+Row 244 | Loại: None   | Chỉ tiêu: None
+Row 245 | Loại: None   | Chỉ tiêu: None
+Row 246 | Loại: None   | Chỉ tiêu: None
+Row 247 | Loại: None   | Chỉ tiêu: None
+Row 248 | Loại: None   | Chỉ tiêu: None
+Row 249 | Loại: None   | Chỉ tiêu: None
+Row 250 | Loại: None   | Chỉ tiêu: None
+Row 251 | Loại: None   | Chỉ tiêu: None
+Row 252 | Loại: None   | Chỉ tiêu: None
+Row 253 | Loại: None   | Chỉ tiêu: None
+Row 254 | Loại: None   | Chỉ tiêu: None
+Row 255 | Loại: None   | Chỉ tiêu: None
+Row 256 | Loại: None   | Chỉ tiêu: None
+Row 257 | Loại: None   | Chỉ tiêu: None
+Row 258 | Loại: None   | Chỉ tiêu: None
+Row 259 | Loại: None   | Chỉ tiêu: None
+Row 260 | Loại: None   | Chỉ tiêu: None
+Row 261 | Loại: None   | Chỉ tiêu: None
+Row 262 | Loại: None   | Chỉ tiêu: None
+Row 263 | Loại: None   | Chỉ tiêu: None
+Row 264 | Loại: None   | Chỉ tiêu: None
+Row 265 | Loại: None   | Chỉ tiêu: None
+Row 266 | Loại: None   | Chỉ tiêu: None
+Row 267 | Loại: None   | Chỉ tiêu: None
+Row 268 | Loại: None   | Chỉ tiêu: None
+Row 269 | Loại: None   | Chỉ tiêu: None
+Row 270 | Loại: None   | Chỉ tiêu: None
+Row 271 | Loại: None   | Chỉ tiêu: None
+Row 272 | Loại: None   | Chỉ tiêu: None
+Row 273 | Loại: None   | Chỉ tiêu: None
+Row 274 | Loại: None   | Chỉ tiêu: None
+Row 275 | Loại: None   | Chỉ tiêu: None
+Row 276 | Loại: None   | Chỉ tiêu: None
+Row 277 | Loại: None   | Chỉ tiêu: None
+Row 278 | Loại: None   | Chỉ tiêu: None
+Row 279 | Loại: None   | Chỉ tiêu: None
+Row 280 | Loại: None   | Chỉ tiêu: None
+Row 281 | Loại: None   | Chỉ tiêu: None
+Row 282 | Loại: None   | Chỉ tiêu: None
+Row 283 | Loại: None   | Chỉ tiêu: None
+Row 284 | Loại: None   | Chỉ tiêu: None
+Row 285 | Loại: None   | Chỉ tiêu: None
+Row 286 | Loại: None   | Chỉ tiêu: None
+Row 287 | Loại: None   | Chỉ tiêu: None
+Row 288 | Loại: None   | Chỉ tiêu: None
+Row 289 | Loại: None   | Chỉ tiêu: None
+Row 290 | Loại: None   | Chỉ tiêu: None
+Row 291 | Loại: None   | Chỉ tiêu: None
+Row 292 | Loại: None   | Chỉ tiêu: None
+Row 293 | Loại: None   | Chỉ tiêu: None
+Row 294 | Loại: None   | Chỉ tiêu: None
+Row 295 | Loại: None   | Chỉ tiêu: None
+Row 296 | Loại: None   | Chỉ tiêu: None
+Row 297 | Loại: None   | Chỉ tiêu: None
+Row 298 | Loại: None   | Chỉ tiêu: None
+Row 299 | Loại: None   | Chỉ tiêu: None
+Row 300 | Loại: None   | Chỉ tiêu: None
+Row 301 | Loại: None   | Chỉ tiêu: None
+Row 302 | Loại: None   | Chỉ tiêu: None
+Row 303 | Loại: None   | Chỉ tiêu: None
+Row 304 | Loại: None   | Chỉ tiêu: None
+Row 305 | Loại: None   | Chỉ tiêu: None
+Row 306 | Loại: None   | Chỉ tiêu: None
+Row 307 | Loại: None   | Chỉ tiêu: None
+Row 308 | Loại: None   | Chỉ tiêu: None
+Row 309 | Loại: None   | Chỉ tiêu: None
+Row 310 | Loại: None   | Chỉ tiêu: None
+Row 311 | Loại: None   | Chỉ tiêu: None
+Row 312 | Loại: None   | Chỉ tiêu: None
+Row 313 | Loại: None   | Chỉ tiêu: None
+Row 314 | Loại: None   | Chỉ tiêu: None
+Row 315 | Loại: None   | Chỉ tiêu: None
+Row 316 | Loại: None   | Chỉ tiêu: None
+Row 317 | Loại: None   | Chỉ tiêu: None
+Row 318 | Loại: None   | Chỉ tiêu: None
+Row 319 | Loại: None   | Chỉ tiêu: None
+Row 320 | Loại: None   | Chỉ tiêu: None
+Row 321 | Loại: None   | Chỉ tiêu: None
+Row 322 | Loại: None   | Chỉ tiêu: None
+Row 323 | Loại: None   | Chỉ tiêu: None
+Row 324 | Loại: None   | Chỉ tiêu: None
+Row 325 | Loại: None   | Chỉ tiêu: None
+Row 326 | Loại: None   | Chỉ tiêu: None
+Row 327 | Loại: None   | Chỉ tiêu: None
+Row 328 | Loại: None   | Chỉ tiêu: None
+Row 329 | Loại: None   | Chỉ tiêu: None
+Row 330 | Loại: None   | Chỉ tiêu: None
+Row 331 | Loại: None   | Chỉ tiêu: None
+Row 332 | Loại: None   | Chỉ tiêu: None
+Row 333 | Loại: None   | Chỉ tiêu: None
+Row 334 | Loại: None   | Chỉ tiêu: None
+Row 335 | Loại: None   | Chỉ tiêu: None
+Row 336 | Loại: None   | Chỉ tiêu: None
+Row 337 | Loại: None   | Chỉ tiêu: None
+Row 338 | Loại: None   | Chỉ tiêu: None
+Row 339 | Loại: None   | Chỉ tiêu: None
+Row 340 | Loại: None   | Chỉ tiêu: None
+Row 341 | Loại: None   | Chỉ tiêu: None
+Row 342 | Loại: None   | Chỉ tiêu: None
+Row 343 | Loại: None   | Chỉ tiêu: None
+Row 344 | Loại: None   | Chỉ tiêu: None
+Row 345 | Loại: None   | Chỉ tiêu: None
+Row 346 | Loại: None   | Chỉ tiêu: None
+Row 347 | Loại: None   | Chỉ tiêu: None
+Row 348 | Loại: None   | Chỉ tiêu: None
+Row 349 | Loại: None   | Chỉ tiêu: None
+Row 350 | Loại: None   | Chỉ tiêu: None
+Row 351 | Loại: None   | Chỉ tiêu: None
+Row 352 | Loại: None   | Chỉ tiêu: None
+Row 353 | Loại: None   | Chỉ tiêu: None
+Row 354 | Loại: None   | Chỉ tiêu: None
+Row 355 | Loại: None   | Chỉ tiêu: None
+Row 356 | Loại: None   | Chỉ tiêu: None
+Row 357 | Loại: None   | Chỉ tiêu: None
+Row 358 | Loại: None   | Chỉ tiêu: None
+Row 359 | Loại: None   | Chỉ tiêu: None
+Row 360 | Loại: None   | Chỉ tiêu: None
+Row 361 | Loại: None   | Chỉ tiêu: None
+Row 362 | Loại: None   | Chỉ tiêu: None
+Row 363 | Loại: None   | Chỉ tiêu: None
+Row 364 | Loại: None   | Chỉ tiêu: None
+Row 365 | Loại: None   | Chỉ tiêu: None
+Row 366 | Loại: None   | Chỉ tiêu: None
+Row 367 | Loại: None   | Chỉ tiêu: None
+Row 368 | Loại: None   | Chỉ tiêu: None
+Row 369 | Loại: None   | Chỉ tiêu: None
+Row 370 | Loại: None   | Chỉ tiêu: None
+Row 371 | Loại: None   | Chỉ tiêu: None
+Row 372 | Loại: None   | Chỉ tiêu: None
+Row 373 | Loại: None   | Chỉ tiêu: None
+Row 374 | Loại: None   | Chỉ tiêu: None
+Row 375 | Loại: None   | Chỉ tiêu: None
+Row 376 | Loại: None   | Chỉ tiêu: None
+Row 377 | Loại: None   | Chỉ tiêu: None
+Row 378 | Loại: None   | Chỉ tiêu: None
+Row 379 | Loại: None   | Chỉ tiêu: None
+Row 380 | Loại: None   | Chỉ tiêu: None
+Row 381 | Loại: None   | Chỉ tiêu: None
+Row 382 | Loại: None   | Chỉ tiêu: None
+Row 383 | Loại: None   | Chỉ tiêu: None
+Row 384 | Loại: None   | Chỉ tiêu: None
+Row 385 | Loại: None   | Chỉ tiêu: None
+Row 386 | Loại: None   | Chỉ tiêu: None
+Row 387 | Loại: None   | Chỉ tiêu: None
+Row 388 | Loại: None   | Chỉ tiêu: None
+Row 389 | Loại: None   | Chỉ tiêu: None
+Row 390 | Loại: None   | Chỉ tiêu: None
+Row 391 | Loại: None   | Chỉ tiêu: None
+Row 392 | Loại: None   | Chỉ tiêu: None
+Row 393 | Loại: None   | Chỉ tiêu: None
+Row 394 | Loại: None   | Chỉ tiêu: None
+Row 395 | Loại: None   | Chỉ tiêu: None
+Row 396 | Loại: None   | Chỉ tiêu: None
+Row 397 | Loại: None   | Chỉ tiêu: None
+Row 398 | Loại: None   | Chỉ tiêu: None
+Row 399 | Loại: None   | Chỉ tiêu: None
+Row 400 | Loại: None   | Chỉ tiêu: None
+Row 401 | Loại: None   | Chỉ tiêu: None
+Row 402 | Loại: None   | Chỉ tiêu: None
+Row 403 | Loại: None   | Chỉ tiêu: None
+Row 404 | Loại: None   | Chỉ tiêu: None
+Row 405 | Loại: None   | Chỉ tiêu: None
+Row 406 | Loại: None   | Chỉ tiêu: None
+Row 407 | Loại: None   | Chỉ tiêu: None
+Row 408 | Loại: None   | Chỉ tiêu: None
+Row 409 | Loại: None   | Chỉ tiêu: None
+Row 410 | Loại: None   | Chỉ tiêu: None
+Row 411 | Loại: None   | Chỉ tiêu: None
+Row 412 | Loại: None   | Chỉ tiêu: None
+Row 413 | Loại: None   | Chỉ tiêu: None
+Row 414 | Loại: None   | Chỉ tiêu: None
+Row 415 | Loại: None   | Chỉ tiêu: None
+Row 416 | Loại: None   | Chỉ tiêu: None
+Row 417 | Loại: None   | Chỉ tiêu: None
+Row 418 | Loại: None   | Chỉ tiêu: None
+Row 419 | Loại: None   | Chỉ tiêu: None
+Row 420 | Loại: None   | Chỉ tiêu: None
+Row 421 | Loại: None   | Chỉ tiêu: None
+Row 422 | Loại: None   | Chỉ tiêu: None
+Row 423 | Loại: None   | Chỉ tiêu: None
+Row 424 | Loại: None   | Chỉ tiêu: None
+Row 425 | Loại: None   | Chỉ tiêu: None
+Row 426 | Loại: None   | Chỉ tiêu: None
+Row 427 | Loại: None   | Chỉ tiêu: None
+Row 428 | Loại: None   | Chỉ tiêu: None
+Row 429 | Loại: None   | Chỉ tiêu: None
+Row 430 | Loại: None   | Chỉ tiêu: None
+Row 431 | Loại: None   | Chỉ tiêu: None
+Row 432 | Loại: None   | Chỉ tiêu: None
+Row 433 | Loại: None   | Chỉ tiêu: None
+Row 434 | Loại: None   | Chỉ tiêu: None
+Row 435 | Loại: None   | Chỉ tiêu: None
+Row 436 | Loại: None   | Chỉ tiêu: None
+Row 437 | Loại: None   | Chỉ tiêu: None
+Row 438 | Loại: None   | Chỉ tiêu: None
+Row 439 | Loại: None   | Chỉ tiêu: None
+Row 440 | Loại: None   | Chỉ tiêu: None
+Row 441 | Loại: None   | Chỉ tiêu: None
+Row 442 | Loại: None   | Chỉ tiêu: None
+Row 443 | Loại: None   | Chỉ tiêu: None
+Row 444 | Loại: None   | Chỉ tiêu: None
+Row 445 | Loại: None   | Chỉ tiêu: None
+Row 446 | Loại: None   | Chỉ tiêu: None
+Row 447 | Loại: None   | Chỉ tiêu: None
+Row 448 | Loại: None   | Chỉ tiêu: None
+Row 449 | Loại: None   | Chỉ tiêu: None
+Row 450 | Loại: None   | Chỉ tiêu: None
+Row 451 | Loại: None   | Chỉ tiêu: None
+Row 452 | Loại: None   | Chỉ tiêu: None
+Row 453 | Loại: None   | Chỉ tiêu: None
+Row 454 | Loại: None   | Chỉ tiêu: None
+Row 455 | Loại: None   | Chỉ tiêu: None
+Row 456 | Loại: None   | Chỉ tiêu: None
+Row 457 | Loại: None   | Chỉ tiêu: None
+Row 458 | Loại: None   | Chỉ tiêu: None
+Row 459 | Loại: None   | Chỉ tiêu: None
+Row 460 | Loại: None   | Chỉ tiêu: None
+Row 461 | Loại: None   | Chỉ tiêu: None
+Row 462 | Loại: None   | Chỉ tiêu: None
+Row 463 | Loại: None   | Chỉ tiêu: None
+Row 464 | Loại: None   | Chỉ tiêu: None
+Row 465 | Loại: None   | Chỉ tiêu: None
+Row 466 | Loại: None   | Chỉ tiêu: None
+Row 467 | Loại: None   | Chỉ tiêu: None
+Row 468 | Loại: None   | Chỉ tiêu: None
+Row 469 | Loại: None   | Chỉ tiêu: None
+Row 470 | Loại: None   | Chỉ tiêu: None
+Row 471 | Loại: None   | Chỉ tiêu: None
+Row 472 | Loại: None   | Chỉ tiêu: None
+Row 473 | Loại: None   | Chỉ tiêu: None
+Row 474 | Loại: None   | Chỉ tiêu: None
+Row 475 | Loại: None   | Chỉ tiêu: None
+Row 476 | Loại: None   | Chỉ tiêu: None
+Row 477 | Loại: None   | Chỉ tiêu: None
+Row 478 | Loại: None   | Chỉ tiêu: None
+Row 479 | Loại: None   | Chỉ tiêu: None
+Row 480 | Loại: None   | Chỉ tiêu: None
+Row 481 | Loại: None   | Chỉ tiêu: None
+Row 482 | Loại: None   | Chỉ tiêu: None
+Row 483 | Loại: None   | Chỉ tiêu: None
+Row 484 | Loại: None   | Chỉ tiêu: None
+Row 485 | Loại: None   | Chỉ tiêu: None
+Row 486 | Loại: None   | Chỉ tiêu: None
+Row 487 | Loại: None   | Chỉ tiêu: None
+Row 488 | Loại: None   | Chỉ tiêu: None
+Row 489 | Loại: None   | Chỉ tiêu: None
+Row 490 | Loại: None   | Chỉ tiêu: None
+Row 491 | Loại: None   | Chỉ tiêu: None
+Row 492 | Loại: None   | Chỉ tiêu: None
+Row 493 | Loại: None   | Chỉ tiêu: None
+Row 494 | Loại: None   | Chỉ tiêu: None
+Row 495 | Loại: None   | Chỉ tiêu: None
+Row 496 | Loại: None   | Chỉ tiêu: None
+Row 497 | Loại: None   | Chỉ tiêu: None
+Row 498 | Loại: None   | Chỉ tiêu: None
+Row 499 | Loại: None   | Chỉ tiêu: None
+Row 500 | Loại: None   | Chỉ tiêu: None
+Row 501 | Loại: None   | Chỉ tiêu: None
+Row 502 | Loại: None   | Chỉ tiêu: None
+Row 503 | Loại: None   | Chỉ tiêu: None
+Row 504 | Loại: None   | Chỉ tiêu: None
+Row 505 | Loại: None   | Chỉ tiêu: None
+Row 506 | Loại: None   | Chỉ tiêu: None
+Row 507 | Loại: None   | Chỉ tiêu: None
+Row 508 | Loại: None   | Chỉ tiêu: None
+Row 509 | Loại: None   | Chỉ tiêu: None
+Row 510 | Loại: None   | Chỉ tiêu: None
+Row 511 | Loại: None   | Chỉ tiêu: None
+Row 512 | Loại: None   | Chỉ tiêu: None
+Row 513 | Loại: None   | Chỉ tiêu: None
+Row 514 | Loại: None   | Chỉ tiêu: None
+Row 515 | Loại: None   | Chỉ tiêu: None
+Row 516 | Loại: None   | Chỉ tiêu: None
+Row 517 | Loại: None   | Chỉ tiêu: None
+Row 518 | Loại: None   | Chỉ tiêu: None
+Row 519 | Loại: None   | Chỉ tiêu: None
+Row 520 | Loại: None   | Chỉ tiêu: None
+Row 521 | Loại: None   | Chỉ tiêu: None
+Row 522 | Loại: None   | Chỉ tiêu: None
+Row 523 | Loại: None   | Chỉ tiêu: None
+Row 524 | Loại: None   | Chỉ tiêu: None
+Row 525 | Loại: None   | Chỉ tiêu: None
+Row 526 | Loại: None   | Chỉ tiêu: None
+Row 527 | Loại: None   | Chỉ tiêu: None
+Row 528 | Loại: None   | Chỉ tiêu: None
+Row 529 | Loại: None   | Chỉ tiêu: None
+Row 530 | Loại: None   | Chỉ tiêu: None
+Row 531 | Loại: None   | Chỉ tiêu: None
+Row 532 | Loại: None   | Chỉ tiêu: None
+Row 533 | Loại: None   | Chỉ tiêu: None
+Row 534 | Loại: None   | Chỉ tiêu: None
+Row 535 | Loại: None   | Chỉ tiêu: None
+Row 536 | Loại: None   | Chỉ tiêu: None
+Row 537 | Loại: None   | Chỉ tiêu: None
+Row 538 | Loại: None   | Chỉ tiêu: None
+Row 539 | Loại: None   | Chỉ tiêu: None
+Row 540 | Loại: None   | Chỉ tiêu: None
+Row 541 | Loại: None   | Chỉ tiêu: None
+Row 542 | Loại: None   | Chỉ tiêu: None
+Row 543 | Loại: None   | Chỉ tiêu: None
+Row 544 | Loại: None   | Chỉ tiêu: None
+Row 545 | Loại: None   | Chỉ tiêu: None
+Row 546 | Loại: None   | Chỉ tiêu: None
+Row 547 | Loại: None   | Chỉ tiêu: None
+Row 548 | Loại: None   | Chỉ tiêu: None
+Row 549 | Loại: None   | Chỉ tiêu: None
+Row 550 | Loại: None   | Chỉ tiêu: None
+Row 551 | Loại: None   | Chỉ tiêu: None
+Row 552 | Loại: None   | Chỉ tiêu: None
+Row 553 | Loại: None   | Chỉ tiêu: None
+Row 554 | Loại: None   | Chỉ tiêu: None
+Row 555 | Loại: None   | Chỉ tiêu: None
+Row 556 | Loại: None   | Chỉ tiêu: None
+Row 557 | Loại: None   | Chỉ tiêu: None
+Row 558 | Loại: None   | Chỉ tiêu: None
+Row 559 | Loại: None   | Chỉ tiêu: None
+Row 560 | Loại: None   | Chỉ tiêu: None
+Row 561 | Loại: None   | Chỉ tiêu: None
+Row 562 | Loại: None   | Chỉ tiêu: None
+Row 563 | Loại: None   | Chỉ tiêu: None
+Row 564 | Loại: None   | Chỉ tiêu: None
+Row 565 | Loại: None   | Chỉ tiêu: None
+Row 566 | Loại: None   | Chỉ tiêu: None
+Row 567 | Loại: None   | Chỉ tiêu: None
+Row 568 | Loại: None   | Chỉ tiêu: None
+Row 569 | Loại: None   | Chỉ tiêu: None
+Row 570 | Loại: None   | Chỉ tiêu: None
+Row 571 | Loại: None   | Chỉ tiêu: None
+Row 572 | Loại: None   | Chỉ tiêu: None
+Row 573 | Loại: None   | Chỉ tiêu: None
+Row 574 | Loại: None   | Chỉ tiêu: None
+Row 575 | Loại: None   | Chỉ tiêu: None
+Row 576 | Loại: None   | Chỉ tiêu: None
+Row 577 | Loại: None   | Chỉ tiêu: None
+Row 578 | Loại: None   | Chỉ tiêu: None
+Row 579 | Loại: None   | Chỉ tiêu: None
+Row 580 | Loại: None   | Chỉ tiêu: None
+Row 581 | Loại: None   | Chỉ tiêu: None
+Row 582 | Loại: None   | Chỉ tiêu: None
+Row 583 | Loại: None   | Chỉ tiêu: None
+Row 584 | Loại: None   | Chỉ tiêu: None
+Row 585 | Loại: None   | Chỉ tiêu: None
+Row 586 | Loại: None   | Chỉ tiêu: None
+Row 587 | Loại: None   | Chỉ tiêu: None
+Row 588 | Loại: None   | Chỉ tiêu: None
+Row 589 | Loại: None   | Chỉ tiêu: None
+Row 590 | Loại: None   | Chỉ tiêu: None
+Row 591 | Loại: None   | Chỉ tiêu: None
+Row 592 | Loại: None   | Chỉ tiêu: None
+Row 593 | Loại: None   | Chỉ tiêu: None
+Row 594 | Loại: None   | Chỉ tiêu: None
+Row 595 | Loại: None   | Chỉ tiêu: None
+Row 596 | Loại: None   | Chỉ tiêu: None
+Row 597 | Loại: None   | Chỉ tiêu: None
+Row 598 | Loại: None   | Chỉ tiêu: None
+Row 599 | Loại: None   | Chỉ tiêu: None
+Row 600 | Loại: None   | Chỉ tiêu: None
+Row 601 | Loại: None   | Chỉ tiêu: None
+Row 602 | Loại: None   | Chỉ tiêu: None
+Row 603 | Loại: None   | Chỉ tiêu: None
+Row 604 | Loại: None   | Chỉ tiêu: None
+Row 605 | Loại: None   | Chỉ tiêu: None
+Row 606 | Loại: None   | Chỉ tiêu: None
+Row 607 | Loại: None   | Chỉ tiêu: None
+Row 608 | Loại: None   | Chỉ tiêu: None
+Row 609 | Loại: None   | Chỉ tiêu: None
+Row 610 | Loại: None   | Chỉ tiêu: None
+Row 611 | Loại: None   | Chỉ tiêu: None
+Row 612 | Loại: None   | Chỉ tiêu: None
+Row 613 | Loại: None   | Chỉ tiêu: None
+Row 614 | Loại: None   | Chỉ tiêu: None
+Row 615 | Loại: None   | Chỉ tiêu: None
+Row 616 | Loại: None   | Chỉ tiêu: None
+Row 617 | Loại: None   | Chỉ tiêu: None
+Row 618 | Loại: None   | Chỉ tiêu: None
+Row 619 | Loại: None   | Chỉ tiêu: None
+Row 620 | Loại: None   | Chỉ tiêu: None
+Row 621 | Loại: None   | Chỉ tiêu: None
+Row 622 | Loại: None   | Chỉ tiêu: None
+Row 623 | Loại: None   | Chỉ tiêu: None
+Row 624 | Loại: None   | Chỉ tiêu: None
+Row 625 | Loại: None   | Chỉ tiêu: None
+Row 626 | Loại: None   | Chỉ tiêu: None
+Row 627 | Loại: None   | Chỉ tiêu: None
+Row 628 | Loại: None   | Chỉ tiêu: None
+Row 629 | Loại: None   | Chỉ tiêu: None
+Row 630 | Loại: None   | Chỉ tiêu: None
+Row 631 | Loại: None   | Chỉ tiêu: None
+Row 632 | Loại: None   | Chỉ tiêu: None
+Row 633 | Loại: None   | Chỉ tiêu: None
+Row 634 | Loại: None   | Chỉ tiêu: None
+Row 635 | Loại: None   | Chỉ tiêu: None
+Row 636 | Loại: None   | Chỉ tiêu: None
+Row 637 | Loại: None   | Chỉ tiêu: None
+Row 638 | Loại: None   | Chỉ tiêu: None
+Row 639 | Loại: None   | Chỉ tiêu: None
+Row 640 | Loại: None   | Chỉ tiêu: None
+Row 641 | Loại: None   | Chỉ tiêu: None
+Row 642 | Loại: None   | Chỉ tiêu: None
+Row 643 | Loại: None   | Chỉ tiêu: None
+Row 644 | Loại: None   | Chỉ tiêu: None
+Row 645 | Loại: None   | Chỉ tiêu: None
+Row 646 | Loại: None   | Chỉ tiêu: None
+Row 647 | Loại: None   | Chỉ tiêu: None
+Row 648 | Loại: None   | Chỉ tiêu: None
+Row 649 | Loại: None   | Chỉ tiêu: None
+Row 650 | Loại: None   | Chỉ tiêu: None
+Row 651 | Loại: None   | Chỉ tiêu: None
+Row 652 | Loại: None   | Chỉ tiêu: None
+Row 653 | Loại: None   | Chỉ tiêu: None
+Row 654 | Loại: None   | Chỉ tiêu: None
+Row 655 | Loại: None   | Chỉ tiêu: None
+Row 656 | Loại: None   | Chỉ tiêu: None
+Row 657 | Loại: None   | Chỉ tiêu: None
+Row 658 | Loại: None   | Chỉ tiêu: None
+Row 659 | Loại: None   | Chỉ tiêu: None
+Row 660 | Loại: None   | Chỉ tiêu: None
+Row 661 | Loại: None   | Chỉ tiêu: None
+Row 662 | Loại: None   | Chỉ tiêu: None
+Row 663 | Loại: None   | Chỉ tiêu: None
+Row 664 | Loại: None   | Chỉ tiêu: None
+Row 665 | Loại: None   | Chỉ tiêu: None
+Row 666 | Loại: None   | Chỉ tiêu: None
+Row 667 | Loại: None   | Chỉ tiêu: None
+Row 668 | Loại: None   | Chỉ tiêu: None
+Row 669 | Loại: None   | Chỉ tiêu: None
+Row 670 | Loại: None   | Chỉ tiêu: None
+Row 671 | Loại: None   | Chỉ tiêu: None
+Row 672 | Loại: None   | Chỉ tiêu: None
+Row 673 | Loại: None   | Chỉ tiêu: None
+Row 674 | Loại: None   | Chỉ tiêu: None
+Row 675 | Loại: None   | Chỉ tiêu: None
+Row 676 | Loại: None   | Chỉ tiêu: None
+Row 677 | Loại: None   | Chỉ tiêu: None
+Row 678 | Loại: None   | Chỉ tiêu: None
+Row 679 | Loại: None   | Chỉ tiêu: None
+Row 680 | Loại: None   | Chỉ tiêu: None
+Row 681 | Loại: None   | Chỉ tiêu: None
+Row 682 | Loại: None   | Chỉ tiêu: None
+Row 683 | Loại: None   | Chỉ tiêu: None
+Row 684 | Loại: None   | Chỉ tiêu: None
+Row 685 | Loại: None   | Chỉ tiêu: None
+Row 686 | Loại: None   | Chỉ tiêu: None
+Row 687 | Loại: None   | Chỉ tiêu: None
+Row 688 | Loại: None   | Chỉ tiêu: None
+Row 689 | Loại: None   | Chỉ tiêu: None
+Row 690 | Loại: None   | Chỉ tiêu: None
+Row 691 | Loại: None   | Chỉ tiêu: None
+Row 692 | Loại: None   | Chỉ tiêu: None
+Row 693 | Loại: None   | Chỉ tiêu: None
+Row 694 | Loại: None   | Chỉ tiêu: None
+Row 695 | Loại: None   | Chỉ tiêu: None
+Row 696 | Loại: None   | Chỉ tiêu: None
+Row 697 | Loại: None   | Chỉ tiêu: None
+Row 698 | Loại: None   | Chỉ tiêu: None
+Row 699 | Loại: None   | Chỉ tiêu: None
+Row 700 | Loại: None   | Chỉ tiêu: None
+Row 701 | Loại: None   | Chỉ tiêu: None
+Row 702 | Loại: None   | Chỉ tiêu: None
+Row 703 | Loại: None   | Chỉ tiêu: None
+Row 704 | Loại: None   | Chỉ tiêu: None
+Row 705 | Loại: None   | Chỉ tiêu: None
+Row 706 | Loại: None   | Chỉ tiêu: None
+Row 707 | Loại: None   | Chỉ tiêu: None
+Row 708 | Loại: None   | Chỉ tiêu: None
+Row 709 | Loại: None   | Chỉ tiêu: None
+Row 710 | Loại: None   | Chỉ tiêu: None
+Row 711 | Loại: None   | Chỉ tiêu: None
+Row 712 | Loại: None   | Chỉ tiêu: None
+Row 713 | Loại: None   | Chỉ tiêu: None
+Row 714 | Loại: None   | Chỉ tiêu: None
+Row 715 | Loại: None   | Chỉ tiêu: None
+Row 716 | Loại: None   | Chỉ tiêu: None
+Row 717 | Loại: None   | Chỉ tiêu: None
+Row 718 | Loại: None   | Chỉ tiêu: None
+Row 719 | Loại: None   | Chỉ tiêu: None
+Row 720 | Loại: None   | Chỉ tiêu: None
+Row 721 | Loại: None   | Chỉ tiêu: None
+Row 722 | Loại: None   | Chỉ tiêu: None
+Row 723 | Loại: None   | Chỉ tiêu: None
+Row 724 | Loại: None   | Chỉ tiêu: None
+Row 725 | Loại: None   | Chỉ tiêu: None
+Row 726 | Loại: None   | Chỉ tiêu: None
+Row 727 | Loại: None   | Chỉ tiêu: None
+Row 728 | Loại: None   | Chỉ tiêu: None
+Row 729 | Loại: None   | Chỉ tiêu: None
+Row 730 | Loại: None   | Chỉ tiêu: None
+Row 731 | Loại: None   | Chỉ tiêu: None
+Row 732 | Loại: None   | Chỉ tiêu: None
+Row 733 | Loại: None   | Chỉ tiêu: None
+Row 734 | Loại: None   | Chỉ tiêu: None
+Row 735 | Loại: None   | Chỉ tiêu: None
+Row 736 | Loại: None   | Chỉ tiêu: None
+Row 737 | Loại: None   | Chỉ tiêu: None
+Row 738 | Loại: None   | Chỉ tiêu: None
+Row 739 | Loại: None   | Chỉ tiêu: None
+Row 740 | Loại: None   | Chỉ tiêu: None
+Row 741 | Loại: None   | Chỉ tiêu: None
+Row 742 | Loại: None   | Chỉ tiêu: None
+Row 743 | Loại: None   | Chỉ tiêu: None
+Row 744 | Loại: None   | Chỉ tiêu: None
+Row 745 | Loại: None   | Chỉ tiêu: None
+Row 746 | Loại: None   | Chỉ tiêu: None
+Row 747 | Loại: None   | Chỉ tiêu: None
+Row 748 | Loại: None   | Chỉ tiêu: None
+Row 749 | Loại: None   | Chỉ tiêu: None
+Row 750 | Loại: None   | Chỉ tiêu: None
+Row 751 | Loại: None   | Chỉ tiêu: None
+Row 752 | Loại: None   | Chỉ tiêu: None
+Row 753 | Loại: None   | Chỉ tiêu: None
+Row 754 | Loại: None   | Chỉ tiêu: None
+Row 755 | Loại: None   | Chỉ tiêu: None
+Row 756 | Loại: None   | Chỉ tiêu: None
+Row 757 | Loại: None   | Chỉ tiêu: None
+Row 758 | Loại: None   | Chỉ tiêu: None
+Row 759 | Loại: None   | Chỉ tiêu: None
+Row 760 | Loại: None   | Chỉ tiêu: None
+Row 761 | Loại: None   | Chỉ tiêu: None
+Row 762 | Loại: None   | Chỉ tiêu: None
+Row 763 | Loại: None   | Chỉ tiêu: None
+Row 764 | Loại: None   | Chỉ tiêu: None
+Row 765 | Loại: None   | Chỉ tiêu: None
+Row 766 | Loại: None   | Chỉ tiêu: None
+Row 767 | Loại: None   | Chỉ tiêu: None
+Row 768 | Loại: None   | Chỉ tiêu: None
+Row 769 | Loại: None   | Chỉ tiêu: None
+Row 770 | Loại: None   | Chỉ tiêu: None
+Row 771 | Loại: None   | Chỉ tiêu: None
+Row 772 | Loại: None   | Chỉ tiêu: None
+Row 773 | Loại: None   | Chỉ tiêu: None
+Row 774 | Loại: None   | Chỉ tiêu: None
+Row 775 | Loại: None   | Chỉ tiêu: None
+Row 776 | Loại: None   | Chỉ tiêu: None
+Row 777 | Loại: None   | Chỉ tiêu: None
+Row 778 | Loại: None   | Chỉ tiêu: None
+Row 779 | Loại: None   | Chỉ tiêu: None
+Row 780 | Loại: None   | Chỉ tiêu: None
+Row 781 | Loại: None   | Chỉ tiêu: None
+Row 782 | Loại: None   | Chỉ tiêu: None
+Row 783 | Loại: None   | Chỉ tiêu: None
+Row 784 | Loại: None   | Chỉ tiêu: None
+Row 785 | Loại: None   | Chỉ tiêu: None
+Row 786 | Loại: None   | Chỉ tiêu: None
+Row 787 | Loại: None   | Chỉ tiêu: None
+Row 788 | Loại: None   | Chỉ tiêu: None
+Row 789 | Loại: None   | Chỉ tiêu: None
+Row 790 | Loại: None   | Chỉ tiêu: None
+Row 791 | Loại: None   | Chỉ tiêu: None
+Row 792 | Loại: None   | Chỉ tiêu: None
+Row 793 | Loại: None   | Chỉ tiêu: None
+Row 794 | Loại: None   | Chỉ tiêu: None
+Row 795 | Loại: None   | Chỉ tiêu: None
+Row 796 | Loại: None   | Chỉ tiêu: None
+Row 797 | Loại: None   | Chỉ tiêu: None
+Row 798 | Loại: None   | Chỉ tiêu: None
+Row 799 | Loại: None   | Chỉ tiêu: None
+Row 800 | Loại: None   | Chỉ tiêu: None
+Row 801 | Loại: None   | Chỉ tiêu: None
+Row 802 | Loại: None   | Chỉ tiêu: None
+Row 803 | Loại: None   | Chỉ tiêu: None
+Row 804 | Loại: None   | Chỉ tiêu: None
+Row 805 | Loại: None   | Chỉ tiêu: None
+Row 806 | Loại: None   | Chỉ tiêu: None
+Row 807 | Loại: None   | Chỉ tiêu: None
+Row 808 | Loại: None   | Chỉ tiêu: None
+Row 809 | Loại: None   | Chỉ tiêu: None
+Row 810 | Loại: None   | Chỉ tiêu: None
+Row 811 | Loại: None   | Chỉ tiêu: None
+Row 812 | Loại: None   | Chỉ tiêu: None
+Row 813 | Loại: None   | Chỉ tiêu: None
+Row 814 | Loại: None   | Chỉ tiêu: None
+Row 815 | Loại: None   | Chỉ tiêu: None
+Row 816 | Loại: None   | Chỉ tiêu: None
+Row 817 | Loại: None   | Chỉ tiêu: None
+Row 818 | Loại: None   | Chỉ tiêu: None
+Row 819 | Loại: None   | Chỉ tiêu: None
+Row 820 | Loại: None   | Chỉ tiêu: None
+Row 821 | Loại: None   | Chỉ tiêu: None
+Row 822 | Loại: None   | Chỉ tiêu: None
+Row 823 | Loại: None   | Chỉ tiêu: None
+Row 824 | Loại: None   | Chỉ tiêu: None
+Row 825 | Loại: None   | Chỉ tiêu: None
+Row 826 | Loại: None   | Chỉ tiêu: None
+Row 827 | Loại: None   | Chỉ tiêu: None
+Row 828 | Loại: None   | Chỉ tiêu: None
+Row 829 | Loại: None   | Chỉ tiêu: None
+Row 830 | Loại: None   | Chỉ tiêu: None
+Row 831 | Loại: None   | Chỉ tiêu: None
+Row 832 | Loại: None   | Chỉ tiêu: None
+Row 833 | Loại: None   | Chỉ tiêu: None
+Row 834 | Loại: None   | Chỉ tiêu: None
+Row 835 | Loại: None   | Chỉ tiêu: None
+Row 836 | Loại: None   | Chỉ tiêu: None
+Row 837 | Loại: None   | Chỉ tiêu: None
+Row 838 | Loại: None   | Chỉ tiêu: None
+Row 839 | Loại: None   | Chỉ tiêu: None
+Row 840 | Loại: None   | Chỉ tiêu: None
+Row 841 | Loại: None   | Chỉ tiêu: None
+Row 842 | Loại: None   | Chỉ tiêu: None
+Row 843 | Loại: None   | Chỉ tiêu: None
+Row 844 | Loại: None   | Chỉ tiêu: None
+Row 845 | Loại: None   | Chỉ tiêu: None
+Row 846 | Loại: None   | Chỉ tiêu: None
+Row 847 | Loại: None   | Chỉ tiêu: None
+Row 848 | Loại: None   | Chỉ tiêu: None
+Row 849 | Loại: None   | Chỉ tiêu: None
+Row 850 | Loại: None   | Chỉ tiêu: None
+Row 851 | Loại: None   | Chỉ tiêu: None
+Row 852 | Loại: None   | Chỉ tiêu: None
+Row 853 | Loại: None   | Chỉ tiêu: None
+Row 854 | Loại: None   | Chỉ tiêu: None
+Row 855 | Loại: None   | Chỉ tiêu: None
+Row 856 | Loại: None   | Chỉ tiêu: None
+Row 857 | Loại: None   | Chỉ tiêu: None
+Row 858 | Loại: None   | Chỉ tiêu: None
+Row 859 | Loại: None   | Chỉ tiêu: None
+Row 860 | Loại: None   | Chỉ tiêu: None
+Row 861 | Loại: None   | Chỉ tiêu: None
+Row 862 | Loại: None   | Chỉ tiêu: None
+Row 863 | Loại: None   | Chỉ tiêu: None
+Row 864 | Loại: None   | Chỉ tiêu: None
+Row 865 | Loại: None   | Chỉ tiêu: None
+Row 866 | Loại: None   | Chỉ tiêu: None
+Row 867 | Loại: None   | Chỉ tiêu: None
+Row 868 | Loại: None   | Chỉ tiêu: None
+Row 869 | Loại: None   | Chỉ tiêu: None
+Row 870 | Loại: None   | Chỉ tiêu: None
+Row 871 | Loại: None   | Chỉ tiêu: None
+Row 872 | Loại: None   | Chỉ tiêu: None
+Row 873 | Loại: None   | Chỉ tiêu: None
+Row 874 | Loại: None   | Chỉ tiêu: None
+Row 875 | Loại: None   | Chỉ tiêu: None
+Row 876 | Loại: None   | Chỉ tiêu: None
+Row 877 | Loại: None   | Chỉ tiêu: None
+Row 878 | Loại: None   | Chỉ tiêu: None
+Row 879 | Loại: None   | Chỉ tiêu: None
+Row 880 | Loại: None   | Chỉ tiêu: None
+Row 881 | Loại: None   | Chỉ tiêu: None
+Row 882 | Loại: None   | Chỉ tiêu: None
+Row 883 | Loại: None   | Chỉ tiêu: None
+Row 884 | Loại: None   | Chỉ tiêu: None
+Row 885 | Loại: None   | Chỉ tiêu: None
+Row 886 | Loại: None   | Chỉ tiêu: None
+Row 887 | Loại: None   | Chỉ tiêu: None
+Row 888 | Loại: None   | Chỉ tiêu: None
+Row 889 | Loại: None   | Chỉ tiêu: None
+Row 890 | Loại: None   | Chỉ tiêu: None
+Row 891 | Loại: None   | Chỉ tiêu: None
+Row 892 | Loại: None   | Chỉ tiêu: None
+Row 893 | Loại: None   | Chỉ tiêu: None
+Row 894 | Loại: None   | Chỉ tiêu: None
+Row 895 | Loại: None   | Chỉ tiêu: None
+Row 896 | Loại: None   | Chỉ tiêu: None
+Row 897 | Loại: None   | Chỉ tiêu: None
+Row 898 | Loại: None   | Chỉ tiêu: None
+Row 899 | Loại: None   | Chỉ tiêu: None
+Row 900 | Loại: None   | Chỉ tiêu: None
+Row 901 | Loại: None   | Chỉ tiêu: None
+Row 902 | Loại: None   | Chỉ tiêu: None
+Row 903 | Loại: None   | Chỉ tiêu: None
+Row 904 | Loại: None   | Chỉ tiêu: None
+Row 905 | Loại: None   | Chỉ tiêu: None
+Row 906 | Loại: None   | Chỉ tiêu: None
+Row 907 | Loại: None   | Chỉ tiêu: None
+Row 908 | Loại: None   | Chỉ tiêu: None
+Row 909 | Loại: None   | Chỉ tiêu: None
+Row 910 | Loại: None   | Chỉ tiêu: None
+Row 911 | Loại: None   | Chỉ tiêu: None
+Row 912 | Loại: None   | Chỉ tiêu: None
+Row 913 | Loại: None   | Chỉ tiêu: None
+Row 914 | Loại: None   | Chỉ tiêu: None
+Row 915 | Loại: None   | Chỉ tiêu: None
+Row 916 | Loại: None   | Chỉ tiêu: None
+Row 917 | Loại: None   | Chỉ tiêu: None
+Row 918 | Loại: None   | Chỉ tiêu: None
+Row 919 | Loại: None   | Chỉ tiêu: None
+Row 920 | Loại: None   | Chỉ tiêu: None
+Row 921 | Loại: None   | Chỉ tiêu: None
+Row 922 | Loại: None   | Chỉ tiêu: None
+Row 923 | Loại: None   | Chỉ tiêu: None
+Row 924 | Loại: None   | Chỉ tiêu: None
+Row 925 | Loại: None   | Chỉ tiêu: None
+Row 926 | Loại: None   | Chỉ tiêu: None
+Row 927 | Loại: None   | Chỉ tiêu: None
+Row 928 | Loại: None   | Chỉ tiêu: None
+Row 929 | Loại: None   | Chỉ tiêu: None
+Row 930 | Loại: None   | Chỉ tiêu: None
+Row 931 | Loại: None   | Chỉ tiêu: None
+Row 932 | Loại: None   | Chỉ tiêu: None
+Row 933 | Loại: None   | Chỉ tiêu: None
+Row 934 | Loại: None   | Chỉ tiêu: None
+Row 935 | Loại: None   | Chỉ tiêu: None
+Row 936 | Loại: None   | Chỉ tiêu: None
+Row 937 | Loại: None   | Chỉ tiêu: None
+Row 938 | Loại: None   | Chỉ tiêu: None
+Row 939 | Loại: None   | Chỉ tiêu: None
+Row 940 | Loại: None   | Chỉ tiêu: None
+Row 941 | Loại: None   | Chỉ tiêu: None
+Row 942 | Loại: None   | Chỉ tiêu: None
+Row 943 | Loại: None   | Chỉ tiêu: None
+Row 944 | Loại: None   | Chỉ tiêu: None
+Row 945 | Loại: None   | Chỉ tiêu: None
+Row 946 | Loại: None   | Chỉ tiêu: None
+Row 947 | Loại: None   | Chỉ tiêu: None
+Row 948 | Loại: None   | Chỉ tiêu: None
+Row 949 | Loại: None   | Chỉ tiêu: None
+Row 950 | Loại: None   | Chỉ tiêu: None
+Row 951 | Loại: None   | Chỉ tiêu: None
+Row 952 | Loại: None   | Chỉ tiêu: None
+Row 953 | Loại: None   | Chỉ tiêu: None
+Row 954 | Loại: None   | Chỉ tiêu: None
+Row 955 | Loại: None   | Chỉ tiêu: None
+Row 956 | Loại: None   | Chỉ tiêu: None
+Row 957 | Loại: None   | Chỉ tiêu: None
+Row 958 | Loại: None   | Chỉ tiêu: None
+Row 959 | Loại: None   | Chỉ tiêu: None
+Row 960 | Loại: None   | Chỉ tiêu: None
+Row 961 | Loại: None   | Chỉ tiêu: None
+Row 962 | Loại: None   | Chỉ tiêu: None
+Row 963 | Loại: None   | Chỉ tiêu: None
+Row 964 | Loại: None   | Chỉ tiêu: None
+Row 965 | Loại: None   | Chỉ tiêu: None
+Row 966 | Loại: None   | Chỉ tiêu: None
+Row 967 | Loại: None   | Chỉ tiêu: None
+Row 968 | Loại: None   | Chỉ tiêu: None
+Row 969 | Loại: None   | Chỉ tiêu: None
+Row 970 | Loại: None   | Chỉ tiêu: None
+Row 971 | Loại: None   | Chỉ tiêu: None
+Row 972 | Loại: None   | Chỉ tiêu: None
+Row 973 | Loại: None   | Chỉ tiêu: None
+Row 974 | Loại: None   | Chỉ tiêu: None
+Row 975 | Loại: None   | Chỉ tiêu: None
+Row 976 | Loại: None   | Chỉ tiêu: None
+Row 977 | Loại: None   | Chỉ tiêu: None
+Row 978 | Loại: None   | Chỉ tiêu: None
+Row 979 | Loại: None   | Chỉ tiêu: None
+Row 980 | Loại: None   | Chỉ tiêu: None
+Row 981 | Loại: None   | Chỉ tiêu: None
+Row 982 | Loại: None   | Chỉ tiêu: None
+Row 983 | Loại: None   | Chỉ tiêu: None
+Row 984 | Loại: None   | Chỉ tiêu: None
+Row 985 | Loại: None   | Chỉ tiêu: None
+Row 986 | Loại: None   | Chỉ tiêu: None
+Row 987 | Loại: None   | Chỉ tiêu: None
+Row 988 | Loại: None   | Chỉ tiêu: None
+Row 989 | Loại: None   | Chỉ tiêu: None
+Row 990 | Loại: None   | Chỉ tiêu: None
+Row 991 | Loại: None   | Chỉ tiêu: None
+Row 992 | Loại: None   | Chỉ tiêu: None
+Row 993 | Loại: None   | Chỉ tiêu: None
+Row 994 | Loại: None   | Chỉ tiêu: None
+Row 995 | Loại: None   | Chỉ tiêu: None
+=== SHEET: Đối chiếu dữ liệu ===
+Headers: ['Báo cáo', 'Chỉ tiêu (Tiếng Việt)', 'Năm 2025', 'Năm 2024', None]
+
+Row   1 | Loại: Báo cáo | Chỉ tiêu: Chỉ tiêu (Tiếng Việt)
+Row   2 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Tổng lợi nhuận/lỗ trước thuế
+Row   3 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí thuế TNDN hiện hành
+Row   4 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí thuế TNDN hoãn lại
+Row   5 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí thuế thu nhập doanh nghiệp
+Row   6 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lợi nhuận sau thuế
+Row   7 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lợi ích của cổ đông thiểu số
+Row   8 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Cổ đông của Công ty mẹ
+Row   9 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi cơ bản trên cổ phiếu (VND)
+Row  10 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Thu nhập lãi và các khoản thu nhập tương tự
+Row  11 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí lãi và các chi phí tương tự
+Row  12 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Thu nhập lãi thuần
+Row  13 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Thu nhập từ dịch vụ
+Row  14 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí dịch vụ
+Row  15 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi/Lỗ thuần từ hoạt động dịch vụ
+Row  16 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi/(lỗ) thuần từ hoạt động kinh doanh ngoại hối và vàng
+Row  17 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi/(lỗ) thuần từ mua bán chứng khoán kinh doanh
+Row  18 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi/(lỗ) thuần từ mua bán chứng khoán đầu tư
+Row  19 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Thu nhập khác
+Row  20 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí khác
+Row  21 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lãi/(lỗ) thuần từ hoạt động khác
+Row  22 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Thu nhập từ cổ tức
+Row  23 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Tổng thu nhập hoạt động
+Row  24 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Chi phí quản lý doanh nghiệp
+Row  25 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Lợi nhuận thuần hoạt động trước khi trích lập dự phòng tổn thất tín dụng
+Row  26 | Loại: Kết quả kinh doanh (P&L) | Chỉ tiêu: Trích lập dự phòng tổn thất tín dụng
+Row  27 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền mặt, vàng bạc, đá quý
+Row  28 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tài sản cố định
+Row  29 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tài sản cố định hữu hình
+Row  30 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Nguyên giá TSCĐ vô hình
+Row  31 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tài sản cố định vô hình
+Row  32 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Hao mòn TSCĐ vô hình
+Row  33 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Góp vốn, đầu tư dài hạn
+Row  34 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Đầu tư dài hạn khác
+Row  35 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: TỔNG TÀI SẢN
+Row  36 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: TỔNG NỢ PHẢI TRẢ
+Row  37 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: VỐN CHỦ SỞ HỮU
+Row  38 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Vốn điều lệ
+Row  39 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Thặng dư vốn cổ phần
+Row  40 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Lợi nhuận chưa phân phối
+Row  41 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU
+Row  42 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền gửi tại Ngân hàng nhà nước Việt Nam
+Row  43 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền gửi tại các TCTD khác và cho vay các TCTD khác
+Row  44 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Chứng khoán kinh doanh
+Row  45 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Chứng khoán kinh doanh
+Row  46 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Dự phòng giảm giá chứng khoán kinh doanh
+Row  47 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cho vay khách hàng
+Row  48 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cho vay khách hàng
+Row  49 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Dự phòng rủi ro cho vay khách hàng
+Row  50 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Chứng khoán đầu tư
+Row  51 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Chứng khoán đầu tư sẵn sàng để bán
+Row  52 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Chứng khoán đầu tư giữ đến ngày đáo hạn
+Row  53 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Dự phòng giảm giá chứng khoán đầu tư
+Row  54 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tài sản Có khác
+Row  55 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản nợ chính phủ và NHNN Việt Nam
+Row  56 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền gửi của các tổ chức tín dụng khác
+Row  57 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền gửi của khách hàng
+Row  58 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các công cụ tài chính phái sinh và các khoản nợ tài chính khác
+Row  59 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Vốn tài trợ, uỷ thác đầu tư của Chính phủ và các tổ chức tín dụng khác
+Row  60 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Phát hành giấy tờ có giá
+Row  61 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản phải trả và công nợ khác
+Row  62 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Vốn của tổ chức tín dụng
+Row  63 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Quỹ của tổ chức tín dụng
+Row  64 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Bảo lãnh khác
+Row  65 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết giao dịch hối đoái
+Row  66 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết mua ngoại tệ
+Row  67 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết bán ngoại tệ
+Row  68 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết giao dịch hoán đổi
+Row  69 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết trong nghiệp vụ L/C
+Row  70 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cam kết khác
+Row  71 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Lợi ích của cổ đông thiểu số
+Row  72 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tiền gửi tại các TCTD khác
+Row  73 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Cho vay các TCTD khác
+Row  74 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Mua nợ
+Row  75 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Dự phòng rủi ro hoạt động mua nợ
+Row  76 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản phải thu
+Row  77 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản lãi và phí phải thu
+Row  78 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Tài sản thuế TNDN hoãn lại
+Row  79 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Trong đó: Lợi thế thương mại
+Row  80 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản dự phòng rủi ro cho các tài sản Có nội bảng khác
+Row  81 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Vay các tổ chức tín dụng khác
+Row  82 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Các khoản lãi, phí phải trả
+Row  83 | Loại: Cân đối kế toán (Balance Sheet) | Chỉ tiêu: Thuế TNDN hoãn lại phải trả
+Row  84 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Lưu chuyển tiền thuần từ hoạt động kinh doanh trước những thay đổi về tài sản và vốn lưu động
+Row  85 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Lưu chuyển tiền thuần từ các hoạt động sản xuất kinh doanh
+Row  86 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Mua sắm TSCĐ
+Row  87 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền thu được từ thanh lý, nhượng bán tài sản cố định
+Row  88 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền thu cổ tức và lợi nhuận được chia từ các khoản đầu tư góp vốn dài hạn
+Row  89 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Lưu chuyển tiền thuần từ hoạt động đầu tư
+Row  90 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng vốn cổ phần từ góp vốn và/hoặc phát hành cổ phiếu
+Row  91 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Cổ tức trả cho cổ đông, lợi nhuận đã chia
+Row  92 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Lưu chuyển tiền thuần trong kỳ
+Row  93 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền và các khoản tương đương tiền tài thời điểm đầu kỳ
+Row  94 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền và các khoản tương đương tiền tại thời điểm cuối kỳ
+Row  95 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền thuế thu nhập thực nộp trong kỳ
+Row  96 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/giảm các khoản tiền gửi và cho vay các tổ chức tín dụng khác
+Row  97 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/giảm các khoản về kinh doanh chứng khoán
+Row  98 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/giảm các khoản cho vay khách hàng
+Row  99 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/giảm nguồn dự phòng để bù đắp tổn thất các khoản
+Row 100 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/giảm khác về tài sản hoạt động
+Row 101 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) các khoản nợ chính phủ và NHNN
+Row 102 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) các khoản tiền gửi và vay các TCTD khác
+Row 103 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) tiền gửi của khách hàng
+Row 104 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) các công cụ tài chính phái sinh và các khoản nợ tài chính khác
+Row 105 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) vốn tài trợ, uỷ thác đầu tư của chính phủ và các TCTD khác
+Row 106 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) phát hành giấy tờ có giá
+Row 107 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tăng/(Giảm) khác về công nợ hoạt động
+Row 108 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Lưu chuyển tiền thuần từ hoạt động kinh doanh trước thuế thu nhập DN
+Row 109 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền chi từ thanh lý, nhượng bán TSCĐ
+Row 110 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Thu nhập lãi và các khoản thu nhập tương tự nhận được
+Row 111 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Chi phí lãi và các chi phí tương tự đã trả
+Row 112 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Thu nhập từ hoạt động dịch vụ nhận được
+Row 113 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Thu nhập từ hoạt động kinh doanh chứng khoán
+Row 114 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Thu nhập khác
+Row 115 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền chi trả cho nhân viên và hoạt động quản lý, cộng cụ
+Row 116 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Tiền thu các khoản nợ đã được xử lý, xóa, bù đắp bằng nguồn rủi ro
+Row 117 | Loại: Lưu chuyển tiền tệ (Cash Flow) | Chỉ tiêu: Chênh lệch số tiền thực thu/thực chi từ hoạt động kinh doanh
