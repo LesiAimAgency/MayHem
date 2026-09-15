@@ -293,19 +293,41 @@ class FinancialReportController extends Controller
         }
 
         // 3. Record Audit Log with verified actor
-        $logId = 'AUDIT_' . time() . '_' . rand(100, 999);
+        $isRollback = $request->boolean('is_rollback') || $request->input('action') === 'ROLLBACK';
+        $logId = ($isRollback ? 'ROLLBACK_' : 'AUDIT_') . time() . '_' . rand(100, 999);
         try {
-            AuditLog::create([
-                'log_id' => $logId,
-                'user_role' => $userRole,
-                'bank' => $bank,
-                'field' => $field,
-                'year' => $year,
-                'old_value' => $oldVal,
-                'new_value' => $newVal,
-                'action' => 'UPDATE',
-                'note' => "Cập nhật số liệu sau kiểm toán cho {$bank} năm {$year}"
-            ]);
+            if ($isRollback) {
+                // Mark any active UPDATE logs for this metric as ROLLED_BACK
+                AuditLog::where('bank', $bank)
+                    ->where('field', $field)
+                    ->where('year', $year)
+                    ->where('action', 'UPDATE')
+                    ->update(['action' => 'ROLLED_BACK']);
+
+                AuditLog::create([
+                    'log_id' => $logId,
+                    'user_role' => $userRole,
+                    'bank' => $bank,
+                    'field' => $field,
+                    'year' => $year,
+                    'old_value' => $oldVal,
+                    'new_value' => $newVal,
+                    'action' => 'ROLLBACK',
+                    'note' => "Phục hồi số liệu về {$newVal}"
+                ]);
+            } else {
+                AuditLog::create([
+                    'log_id' => $logId,
+                    'user_role' => $userRole,
+                    'bank' => $bank,
+                    'field' => $field,
+                    'year' => $year,
+                    'old_value' => $oldVal,
+                    'new_value' => $newVal,
+                    'action' => 'UPDATE',
+                    'note' => "Cập nhật số liệu sau kiểm toán cho {$bank} năm {$year}"
+                ]);
+            }
         } catch (\Throwable $e) {}
 
         return response()->json([

@@ -27,6 +27,7 @@ import { CustomFilterBuilder } from '../components/custom-filter-builder.js';
 import { renderBackupModal } from '../components/backup-modal.js';
 import { renderAuditHistoryModal } from '../components/audit-history-modal.js';
 import { renderAnnualUpdateModal } from '../components/annual-update-modal.js';
+import { renderEditMetricModal } from '../components/edit-metric-modal.js';
 import { initAdminDrawer, openAdminDrawer } from '../components/admin-drawer.js';
 
 export class DashboardApp {
@@ -113,6 +114,9 @@ export class DashboardApp {
 
   processData(jsonData) {
     this.rawJson = jsonData;
+    if (!dataVersioning.getBaseline()) {
+      dataVersioning.setBaseline(jsonData);
+    }
     this.mappedData = mapFinancialData(jsonData);
     const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
     this.allRecords = allRecords;
@@ -160,6 +164,9 @@ export class DashboardApp {
     renderHeader(this.containerHeader, {
       onOpenAdminDrawer: () => {
         openAdminDrawer();
+      },
+      onOpenEditMetricModal: () => {
+        this.openEditMetricModal();
       },
       onRefreshData: () => {
         this.refreshData();
@@ -254,13 +261,13 @@ export class DashboardApp {
       if (bTab === tab) {
         btn.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition shadow-sm';
       } else {
-        btn.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/60 transition';
+        btn.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 transition shadow-2xs';
       }
     });
 
     this.renderCurrentView();
 
-    // When switching to Single Report tab, trigger background AJAX sync for the selected bank
+    // When switching to Single Report tab, trigger background sync for the selected bank
     if (tab === 'single') {
       this.loadSingleBankData(this.selectedSingleBank).then(() => {
         if (this.activeTab === 'single') {
@@ -273,7 +280,7 @@ export class DashboardApp {
   async loadSingleBankData(bankCode) {
     if (!bankCode) return;
     this.isLoadingSingle = true;
-    updateHeaderStatus('loading', `Đang tải số liệu BCTC ${bankCode} qua AJAX...`);
+    updateHeaderStatus('loading', `Đang tải số liệu BCTC ${bankCode}...`);
 
     try {
       const apiBase = (typeof window !== 'undefined' && window.LARAVEL_API_BASE)
@@ -317,14 +324,14 @@ export class DashboardApp {
           this.fieldMetaMap = fieldMetaMap;
           this.currentFilteredRecords = [...allRecords];
 
-          updateHeaderStatus('success', `Đã đồng bộ AJAX số liệu ${bankCode} (${json.total_indicators || json.records.length} chỉ tiêu)`);
-          showToast(`Đã nạp thành công số liệu BCTC ${bankCode} qua AJAX!`, 'success');
+          updateHeaderStatus('success', `Đã đồng bộ số liệu ${bankCode} (${json.total_indicators || json.records.length} chỉ tiêu)`);
+          showToast(`Đã nạp thành công số liệu BCTC ${bankCode}!`, 'success');
         }
       } else {
-        console.warn(`[AJAX] Không thể nạp factsheet cho mã ${bankCode}: HTTP ${res.status}`);
+        console.warn(`Không thể nạp factsheet cho mã ${bankCode}: HTTP ${res.status}`);
       }
     } catch (err) {
-      console.warn(`[AJAX] Lỗi khi nạp factsheet cho mã ${bankCode}:`, err);
+      console.warn(`Lỗi khi nạp factsheet cho mã ${bankCode}:`, err);
     } finally {
       this.isLoadingSingle = false;
     }
@@ -395,6 +402,27 @@ export class DashboardApp {
     showToast(`Đã cập nhật ${bank} - ${field} (${yStr}) = ${newValue}. Đã lưu vết vào Nhật Ký Kiểm Toán!`, 'success');
   }
 
+  openEditMetricModal(options = {}) {
+    this.containerFormulaModal.innerHTML = '';
+    renderEditMetricModal(this.containerFormulaModal, {
+      banks: this.mappedData.banks,
+      years: this.mappedData.years,
+      allRecords: this.allRecords,
+      fieldMetaMap: this.fieldMetaMap,
+      initialBank: options.bank || this.selectedSingleBank || (this.mappedData.banks[0] || 'VCB'),
+      initialField: options.field || '',
+      initialYear: options.year || this.filterState.endYear || (this.mappedData.years[this.mappedData.years.length - 1] || '2025'),
+      onSave: async (payload) => {
+        await this.updateMetricValue(payload);
+        this.renderCurrentView();
+      },
+      onOpenAuditLog: () => {
+        this.switchTab('audit');
+      },
+      onClose: () => {}
+    });
+  }
+
   async rollbackMetricValue(entry) {
     if (!entry || entry.oldValue === null || entry.oldValue === undefined) {
       showToast('Bản ghi này không có giá trị cũ để phục hồi.', 'error');
@@ -428,24 +456,31 @@ export class DashboardApp {
     this.fieldMetaMap = fieldMetaMap;
     this.currentFilteredRecords = [...allRecords];
 
-    // 5. Sync rollback to Backend API
-    try {
-      await fetch('/api/v1/financial-reports/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
-        body: JSON.stringify({
-          bank,
-          field,
-          year: yStr,
-          value: oldValue
-        })
-      });
-    } catch (e) {
+    // 5. Sync rollback to Backend API asynchronously in background (do not block UI)
+    fetch('/api/v1/financial-reports/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
+      body: JSON.stringify({
+        bank,
+        field,
+        year: yStr,
+        value: oldValue,
+        is_rollback: true,
+        action: 'ROLLBACK'
+      })
+    }).catch(e => {
       console.warn('[Rollback] Không thể đồng bộ phục hồi về máy chủ:', e.message);
-    }
+    });
 
     this.applyFilterAndSort();
-    this.renderCurrentView();
+
+    // Re-render underlying views only if not currently in audit modal to prevent tearing
+    if (this.activeTab === 'matrix') {
+      this.renderTableComponent();
+    } else if (this.activeTab === 'single') {
+      this.renderCurrentView();
+    }
+
     showToast(`Đã phục hồi thành công số liệu ${bank} - ${field} (${yStr}) về ${oldValue}!`, 'success');
   }
 
@@ -500,6 +535,9 @@ export class DashboardApp {
           fieldMetaMap: this.fieldMetaMap,
           selectedBank: this.selectedSingleBank,
           isLoading: this.isLoadingSingle,
+          onOpenEditMetric: (opts) => {
+            this.openEditMetricModal(opts);
+          },
           onSelectBank: async (b) => {
             if (this.selectedSingleBank === b && !this.isLoadingSingle) return;
             this.selectedSingleBank = b;
@@ -508,7 +546,7 @@ export class DashboardApp {
 
             await this.loadSingleBankData(b);
             if (this.activeTab === 'single') {
-              this.renderCurrentView(); // Re-render with new data from AJAX
+              this.renderCurrentView();
             }
           },
           onBackToMain: () => {
@@ -562,16 +600,27 @@ export class DashboardApp {
             await this.rollbackMetricValue(entry);
           },
           onResetBaseline: () => {
-            dataVersioning.resetToBaseline(this.allRecords);
-            const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
-            this.allRecords = allRecords;
-            this.fieldMetaMap = fieldMetaMap;
-            this.currentFilteredRecords = [...allRecords];
-            this.applyFilterAndSort();
-            showToast('Đã phục hồi toàn bộ dữ liệu về trạng thái ban đầu', 'success');
+            const baseline = dataVersioning.getBaseline() || this.rawJson;
+            if (baseline) {
+              const freshCopy = JSON.parse(JSON.stringify(baseline));
+              this.processData(freshCopy);
+              dataVersioning.recordChange({
+                bank: 'ALL',
+                field: 'TAT_CA_CHI_TIEU',
+                year: 'ALL',
+                oldValue: null,
+                newValue: null,
+                userRole: auth.getUser()?.name || 'Super Admin',
+                note: 'Khôi phục toàn bộ dữ liệu 29 ngân hàng về nguyên bản gốc ban đầu (Reset Baseline)'
+              });
+              this.applyFilterAndSort();
+              showToast('Đã phục hồi toàn bộ dữ liệu 29 ngân hàng về trạng thái gốc ban đầu!', 'success');
+            } else {
+              showToast('Không tìm thấy dữ liệu gốc để phục hồi.', 'error');
+            }
           },
           onOpenEdit: () => {
-            this.switchTab('annual');
+            this.openEditMetricModal();
           },
           onClose: () => {
             this.switchTab('matrix');
@@ -637,18 +686,18 @@ export class DashboardApp {
   renderTableComponent() {
     if (!auth.isLoggedIn()) {
       this.containerTable.innerHTML = `
-        <div class="py-14 px-6 text-center max-w-xl mx-auto rounded-2xl bg-gradient-to-b from-slate-900/90 to-slate-950/95 border border-red-500/40 shadow-2xl backdrop-blur-xl my-8 flex flex-col items-center gap-4">
-          <div class="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
+        <div class="py-14 px-6 text-center max-w-xl mx-auto rounded-2xl bg-white border border-rose-200 shadow-sm my-8 flex flex-col items-center gap-4 text-slate-800">
+          <div class="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-2xs">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           </div>
           <div>
-            <span class="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/30">Admin System MayHem</span>
-            <h3 class="text-lg sm:text-xl font-black text-white mt-2">Dữ Liệu Báo Cáo Tài Chính Đang Bị Khóa</h3>
-            <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">Admin System MayHem</span>
+            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mt-2">Dữ Liệu Báo Cáo Tài Chính Đang Bị Khóa</h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
               Hệ thống yêu cầu đăng nhập tài khoản Quản trị MayHem ở bảng bên phải để xác thực phân quyền xem, lọc và xuất dữ liệu 29 ngân hàng.
             </p>
           </div>
-          <button id="btnTableUnlockMayHem" type="button" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-red-500/25 border border-red-400/30 transition flex items-center gap-2">
+          <button id="btnTableUnlockMayHem" type="button" class="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-2xs transition flex items-center gap-2 cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
             <span>Mở Bảng Đăng Nhập Quản Trị MayHem (Bên Phải)</span>
           </button>
@@ -741,6 +790,9 @@ export class DashboardApp {
       topBannerHtml: bannerHtml,
       onSort: (year) => {
         this.handleSort(year);
+      },
+      onEditMetric: (opts) => {
+        this.openEditMetricModal(opts);
       }
     });
 
