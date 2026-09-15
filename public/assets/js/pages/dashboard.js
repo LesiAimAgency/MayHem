@@ -424,19 +424,24 @@ export class DashboardApp {
   }
 
   async rollbackMetricValue(entry) {
-    if (!entry || entry.oldValue === null || entry.oldValue === undefined) {
-      showToast('Bản ghi này không có giá trị cũ để phục hồi.', 'error');
+    if (!entry) return;
+
+    const { bank, field, year } = entry;
+    const yStr = String(year);
+    const targetVal = (entry.oldValue !== null && entry.oldValue !== undefined)
+      ? entry.oldValue
+      : (entry.old_value !== null && entry.old_value !== undefined ? entry.old_value : entry.newValue);
+
+    if (targetVal === null || targetVal === undefined) {
+      showToast('Bản ghi này không có giá trị để phục hồi.', 'error');
       return;
     }
-
-    const { bank, field, year, oldValue, newValue } = entry;
-    const yStr = String(year);
 
     // 1. Revert in allRecords
     const rec = this.allRecords.find(r => r.bank === bank && r.field === field);
     if (rec && rec.values) {
-      rec.values[yStr] = oldValue;
-      rec[yStr] = oldValue;
+      rec.values[yStr] = targetVal;
+      rec[yStr] = targetVal;
     }
 
     // 2. Revert in mappedData.bankFinancials
@@ -444,7 +449,7 @@ export class DashboardApp {
       if (!this.mappedData.bankFinancials[bank][yStr]) {
         this.mappedData.bankFinancials[bank][yStr] = {};
       }
-      this.mappedData.bankFinancials[bank][yStr][field] = oldValue;
+      this.mappedData.bankFinancials[bank][yStr][field] = targetVal;
     }
 
     // 3. Rollback in dataVersioning
@@ -464,7 +469,7 @@ export class DashboardApp {
         bank,
         field,
         year: yStr,
-        value: oldValue,
+        value: targetVal,
         is_rollback: true,
         action: 'ROLLBACK'
       })
@@ -473,15 +478,66 @@ export class DashboardApp {
     });
 
     this.applyFilterAndSort();
+    this.renderTableComponent();
 
-    // Re-render underlying views only if not currently in audit modal to prevent tearing
-    if (this.activeTab === 'matrix') {
+    showToast(`Đã phục hồi thành công số liệu ${bank} - ${field} (${yStr}) về ${formatNumber(targetVal)}!`, 'success');
+  }
+
+  async resetToOriginalBaseline() {
+    updateHeaderStatus('loading', 'Đang khôi phục dữ liệu gốc 29 ngân hàng...');
+    try {
+      // 1. Call backend API to restore pristine JSON and MySQL
+      let freshData = null;
+      try {
+        const res = await fetch('/api/v1/financial-reports/reset-baseline', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data) freshData = json.data;
+        }
+      } catch (e) {}
+
+      // Fallback: fetch original pristine JSON file directly
+      if (!freshData) {
+        try {
+          const fileRes = await fetch('./assets/data/BaoCaoTaiChinh_NganHang_30ChiTieu.json');
+          if (fileRes.ok) {
+            freshData = await fileRes.json();
+          }
+        } catch (e) {}
+      }
+
+      if (freshData) {
+        this.processData(freshData);
+        dataVersioning.setBaseline(freshData);
+      } else {
+        const baseline = dataVersioning.getBaseline() || this.rawJson;
+        if (baseline) {
+          this.processData(JSON.parse(JSON.stringify(baseline)));
+        }
+      }
+
+      dataVersioning.recordChange({
+        bank: 'ALL',
+        field: 'TAT_CA_CHI_TIEU',
+        year: 'ALL',
+        oldValue: null,
+        newValue: null,
+        userRole: auth.getUser()?.name || 'Super Admin',
+        action: 'RESET_BASELINE',
+        note: 'Khôi phục toàn bộ ma trận số liệu 29 ngân hàng về nguyên bản ban đầu (Reset Baseline)'
+      });
+
+      this.applyFilterAndSort();
       this.renderTableComponent();
-    } else if (this.activeTab === 'single') {
-      this.renderCurrentView();
+      updateHeaderStatus('success', `Đã khôi phục hoàn nguyên 29 ngân hàng về nguyên bản`);
+      showToast('Đã phục hồi toàn bộ dữ liệu 29 ngân hàng về trạng thái gốc ban đầu thành công!', 'success');
+    } catch (err) {
+      console.error('[ResetBaseline] Error:', err);
+      showToast('Lỗi khi khôi phục dữ liệu gốc: ' + err.message, 'error');
     }
-
-    showToast(`Đã phục hồi thành công số liệu ${bank} - ${field} (${yStr}) về ${oldValue}!`, 'success');
   }
 
   hydrateFullHistory(fullDataset) {
@@ -596,28 +652,12 @@ export class DashboardApp {
       case 'audit':
         this.containerFormulaModal.innerHTML = '';
         renderAuditHistoryModal(this.containerFormulaModal, {
+          allRecords: this.allRecords,
           onRollback: async (entry) => {
             await this.rollbackMetricValue(entry);
           },
-          onResetBaseline: () => {
-            const baseline = dataVersioning.getBaseline() || this.rawJson;
-            if (baseline) {
-              const freshCopy = JSON.parse(JSON.stringify(baseline));
-              this.processData(freshCopy);
-              dataVersioning.recordChange({
-                bank: 'ALL',
-                field: 'TAT_CA_CHI_TIEU',
-                year: 'ALL',
-                oldValue: null,
-                newValue: null,
-                userRole: auth.getUser()?.name || 'Super Admin',
-                note: 'Khôi phục toàn bộ dữ liệu 29 ngân hàng về nguyên bản gốc ban đầu (Reset Baseline)'
-              });
-              this.applyFilterAndSort();
-              showToast('Đã phục hồi toàn bộ dữ liệu 29 ngân hàng về trạng thái gốc ban đầu!', 'success');
-            } else {
-              showToast('Không tìm thấy dữ liệu gốc để phục hồi.', 'error');
-            }
+          onResetBaseline: async () => {
+            await this.resetToOriginalBaseline();
           },
           onOpenEdit: () => {
             this.openEditMetricModal();

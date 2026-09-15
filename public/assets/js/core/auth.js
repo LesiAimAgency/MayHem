@@ -343,6 +343,14 @@ class AuthManager {
     return this.can('canManageUsers');
   }
 
+  canManageAuditLog() {
+    return this.can('canManageAuditLog') || this.isAdmin();
+  }
+
+  isAdmin() {
+    return Boolean(this.currentUser && (this.currentUser.role === 'admin' || this.currentRole === ROLE_SUPERADMIN));
+  }
+
   onAuthChange(fn) {
     this.listeners.push(fn);
   }
