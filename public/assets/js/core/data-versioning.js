@@ -76,6 +76,56 @@ class DataVersioningManager {
     return entry;
   }
 
+  recordEdit({ bank, field, year, oldVal, newVal, oldValue, newValue, userRole, note }) {
+    return this.recordChange({
+      bank,
+      field,
+      year: String(year),
+      oldValue: (oldValue !== undefined) ? oldValue : (oldVal !== undefined ? oldVal : null),
+      newValue: (newValue !== undefined) ? newValue : (newVal !== undefined ? newVal : null),
+      userRole: userRole || auth.getUser()?.name || auth.getRoleMeta().name,
+      note: note || 'Cập nhật số liệu sau kiểm toán'
+    });
+  }
+
+  async fetchRemoteAuditLogs() {
+    try {
+      const res = await fetch('/api/v1/audit-logs', {
+        headers: { 'Accept': 'application/json', ...auth.getAuthHeaders() }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.status === 'success' && Array.isArray(json.data)) {
+          json.data.forEach(item => {
+            const exists = this.auditLog.some(e => e.id === item.log_id || e.id === String(item.id) || (e.bank === item.bank && e.field === item.field && String(e.year) === String(item.year) && Math.abs(new Date(e.timestamp) - new Date(item.created_at)) < 2000));
+            if (!exists && item.bank && item.field) {
+              this.auditLog.push({
+                id: item.log_id || ('audit_' + item.id),
+                dbId: item.id,
+                log_id: item.log_id,
+                timestamp: item.created_at || new Date().toISOString(),
+                formattedTime: item.created_at ? new Date(item.created_at).toLocaleString('vi-VN') : new Date().toLocaleString('vi-VN'),
+                userRole: item.user_role || 'Verified Auditor',
+                bank: item.bank,
+                field: item.field,
+                year: String(item.year),
+                oldValue: item.old_value !== null && item.old_value !== undefined ? Number(item.old_value) : null,
+                newValue: item.new_value !== null && item.new_value !== undefined ? Number(item.new_value) : null,
+                action: item.action || 'UPDATE',
+                note: item.note || ''
+              });
+            }
+          });
+          this.auditLog.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          this.saveAuditLog();
+        }
+      }
+    } catch (e) {
+      console.warn('[AuditLog] Remote audit logs unreachable:', e.message);
+    }
+    return this.auditLog;
+  }
+
   getAuditLog() {
     return this.auditLog;
   }

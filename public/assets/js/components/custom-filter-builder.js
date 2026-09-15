@@ -336,9 +336,22 @@ export class CustomFilterBuilder {
     this.industryAverages = {};
     this.calculateIndustryAverages();
 
+    // Enrich baseline criteria that lack numerical values in displayValue
+    BENCHMARK_CRITERIA_CATALOG.forEach(crit => {
+      if ((crit.mode === 'industry_avg_higher' || crit.mode === 'industry_avg_lower') && (!crit.displayValue || !/\d/.test(crit.displayValue))) {
+        crit.displayValue = this.computeBenchmarkDisplayLabel(crit.field, crit.mode, crit.timeScope);
+      }
+    });
+
     // Clean dynamic initial conditions (zero hardcoded ticks)
     this.conditions = Array.isArray(options.initialConditions)
-      ? options.initialConditions.map(c => ({ ...c }))
+      ? options.initialConditions.map(c => {
+          const item = { ...c };
+          if ((item.mode === 'industry_avg_higher' || item.mode === 'industry_avg_lower') && (!item.displayValue || !/\d/.test(item.displayValue))) {
+            item.displayValue = this.computeBenchmarkDisplayLabel(item.field, item.mode, item.timeScope);
+          }
+          return item;
+        })
       : [];
 
     this.catalogOverrides = {};
@@ -354,6 +367,80 @@ export class CustomFilterBuilder {
         this.onManagedFiltersUpdated();
       }
     });
+  }
+
+  getBenchmarkAvgValue(fieldName, timeScope = 'latest') {
+    if (!fieldName || !this.industryAverages) return null;
+    const fieldAvgs = this.industryAverages[fieldName];
+    if (!fieldAvgs) return null;
+
+    if (timeScope === '10y_consecutive') {
+      const tenYears = this.getTenConsecutiveYears();
+      const validVals = [];
+      tenYears.forEach(y => {
+        const v = fieldAvgs[y];
+        if (v !== null && v !== undefined && !isNaN(v)) {
+          validVals.push(v);
+        }
+      });
+      if (validVals.length > 0) {
+        return validVals.reduce((a, b) => a + b, 0) / validVals.length;
+      }
+    }
+
+    const latestYear = this.getLatestYear();
+    const latestVal = fieldAvgs[latestYear];
+    if (latestVal !== null && latestVal !== undefined && !isNaN(latestVal)) {
+      return latestVal;
+    }
+
+    // Fallback to any valid year
+    if (Array.isArray(this.years)) {
+      for (let i = this.years.length - 1; i >= 0; i--) {
+        const v = fieldAvgs[this.years[i]];
+        if (v !== null && v !== undefined && !isNaN(v)) return v;
+      }
+    }
+    return null;
+  }
+
+  formatBenchmarkValue(fieldName, numVal) {
+    if (numVal === null || numVal === undefined || isNaN(numVal)) return '';
+    const isPct = this.isPercentField(fieldName);
+    if (isPct) {
+      const pct = (Math.abs(numVal) <= 1) ? (numVal * 100) : numVal;
+      return `${pct.toFixed(2)}%`;
+    }
+    const meta = this.fieldMetaMap ? this.fieldMetaMap[fieldName] : null;
+    if (meta && meta.type === 'decimal') {
+      return Number(numVal).toFixed(2);
+    }
+    const lower = String(fieldName).toLowerCase();
+    if (lower.includes('debt') || lower.includes('equity') || lower.includes('lần') || Math.abs(numVal) < 100) {
+      return Number(numVal).toFixed(2);
+    }
+    return Math.round(numVal).toLocaleString('vi-VN');
+  }
+
+  computeBenchmarkDisplayLabel(fieldName, mode, timeScope = 'latest') {
+    const num = this.getBenchmarkAvgValue(fieldName, timeScope);
+    const formatted = this.formatBenchmarkValue(fieldName, num);
+    const op = (mode === 'industry_avg_higher') ? '>' : '<';
+    const scopeSuffix = (timeScope === '10y_consecutive') ? 'TB 10N' : 'TB Ngành';
+    if (!formatted) {
+      return (mode === 'industry_avg_higher') ? `> TB Ngành` : `< TB Ngành`;
+    }
+    return `${op} ${formatted} (${scopeSuffix})`;
+  }
+
+  resolveCriterionDisplayValue(item) {
+    if (!item) return '';
+    if (item.mode === 'industry_avg_higher' || item.mode === 'industry_avg_lower') {
+      if (!item.displayValue || !/\d/.test(item.displayValue)) {
+        return this.computeBenchmarkDisplayLabel(item.field, item.mode, item.timeScope);
+      }
+    }
+    return item.displayValue || '';
   }
 
   isPercentField(fieldName) {
@@ -996,13 +1083,20 @@ export class CustomFilterBuilder {
 
             <div class="grid grid-cols-2 gap-2.5">
               <div>
-                <label class="block font-semibold text-slate-700 mb-1">Nhãn hiển thị (VD: 15%, &gt; TB)</label>
-                <input type="text" id="editCritDisplayVal" placeholder="VD: 15.0%" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 outline-none focus:bg-white focus:border-blue-500 font-mono" />
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block font-semibold text-slate-700 text-xs">Nhãn hiển thị (VD: 15%, &gt; TB)</label>
+                  <span id="lblBenchmarkStatBadge" class="text-[10px] font-mono font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200 hidden"></span>
+                </div>
+                <input type="text" id="editCritDisplayVal" placeholder="VD: 15.0%" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 outline-none focus:bg-white focus:border-blue-500 font-mono text-xs font-bold" />
+                <div id="rowBenchmarkHelper" class="mt-1.5 flex items-center justify-between text-[11px] text-blue-700 bg-blue-50/90 px-2 py-1 rounded border border-blue-200/70 font-mono hidden">
+                  <span id="lblBenchmarkDetailText">📊 TB ngành: <strong id="lblBenchmarkDetailVal" class="text-blue-900">-</strong></span>
+                  <button type="button" id="btnSyncBenchmarkToLabel" class="text-[10px] bg-blue-600 hover:bg-blue-500 text-white font-bold px-2 py-0.5 rounded shadow-2xs transition">Điền số liệu vào nhãn</button>
+                </div>
               </div>
 
               <div>
-                <label class="block font-semibold text-slate-700 mb-1">Khung thời gian</label>
-                <select id="editCritScope" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 outline-none focus:bg-white focus:border-blue-500">
+                <label class="block font-semibold text-slate-700 mb-1 text-xs">Khung thời gian</label>
+                <select id="editCritScope" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 text-slate-800 outline-none focus:bg-white focus:border-blue-500 text-xs">
                   <option value="latest">Năm gần nhất</option>
                   <option value="10y_consecutive">10 năm liên tiếp</option>
                 </select>
@@ -1042,9 +1136,24 @@ export class CustomFilterBuilder {
       const override = this.catalogOverrides[item.id] || {};
 
       const currentOp = activeCond ? activeCond.operator : (override.operator || item.operator || '<=');
-      const currentDisplayVal = activeCond ? activeCond.displayValue : (override.displayValue || item.displayValue || '');
       const currentMode = activeCond ? activeCond.mode : (override.mode || item.mode);
       const scopeLabel = item.timeScope === '10y_consecutive' ? '10 năm liên tiếp' : 'Năm gần nhất';
+
+      // Dynamically resolve benchmark display value with real numbers
+      let rawDisplayVal = activeCond ? activeCond.displayValue : (override.displayValue || item.displayValue || '');
+      if (currentMode === 'industry_avg_higher' || currentMode === 'industry_avg_lower') {
+        if (!rawDisplayVal || !/\d/.test(rawDisplayVal)) {
+          rawDisplayVal = this.computeBenchmarkDisplayLabel(item.field, currentMode, item.timeScope);
+        }
+      }
+      const currentDisplayVal = rawDisplayVal;
+
+      const benchmarkVal = (currentMode === 'industry_avg_higher' || currentMode === 'industry_avg_lower')
+        ? this.getBenchmarkAvgValue(item.field, item.timeScope)
+        : null;
+      const formattedBenchmarkAvg = (benchmarkVal !== null && benchmarkVal !== undefined)
+        ? this.formatBenchmarkValue(item.field, benchmarkVal)
+        : null;
 
       const safeId = escapeHtml(item.id);
       const safeName = escapeHtml(item.name || item.field);
@@ -1052,7 +1161,7 @@ export class CustomFilterBuilder {
       const safeCategory = escapeHtml(item.category || 'Chuẩn hóa');
       const safeScope = escapeHtml(scopeLabel);
       const safeDisplayVal = escapeHtml(currentDisplayVal);
-      const safeItemDisplayVal = escapeHtml(item.displayValue || '');
+      const safeItemDisplayVal = escapeHtml(currentDisplayVal || item.displayValue || '');
 
       return `
         <div class="catalog-card p-2.5 rounded-lg border text-xs flex flex-col justify-between gap-2 transition ${isAdded ? 'bg-blue-50/90 border-blue-400 shadow-2xs' : 'bg-white border-slate-200 hover:border-slate-300 shadow-2xs'}" data-crit-id="${safeId}">
@@ -1089,11 +1198,16 @@ export class CustomFilterBuilder {
                 <input type="text" class="catalog-val-input bg-slate-50 border border-slate-300 text-slate-800 text-[11px] rounded px-2 py-1 w-20 font-mono font-bold outline-none focus:border-blue-500" data-crit-id="${safeId}" value="${safeDisplayVal}" placeholder="VD: <10%" title="Nhập số liệu hoặc kèm toán tử" />
               </div>
             ` : (item.mode === 'industry_avg_higher' || item.mode === 'industry_avg_lower') ? `
-              <div class="flex items-center gap-1 flex-1 min-w-0">
-                <select class="catalog-benchmark-select bg-purple-50 border border-purple-200 text-purple-700 text-[11px] rounded px-1.5 py-1 font-mono font-bold outline-none focus:border-purple-500 cursor-pointer" data-crit-id="${safeId}">
-                  <option value="industry_avg_higher" ${currentMode === 'industry_avg_higher' ? 'selected' : ''}>&gt; TB Ngành</option>
-                  <option value="industry_avg_lower" ${currentMode === 'industry_avg_lower' ? 'selected' : ''}>&lt; TB Ngành</option>
+              <div class="flex items-center gap-1.5 flex-1 min-w-0">
+                <select class="catalog-benchmark-select bg-purple-50 border border-purple-200 text-purple-700 text-[11px] rounded px-1.5 py-1 font-mono font-bold outline-none focus:border-purple-500 cursor-pointer flex-1 truncate" data-crit-id="${safeId}" title="Tùy chọn so sánh với trung bình ngành">
+                  <option value="industry_avg_higher" ${currentMode === 'industry_avg_higher' ? 'selected' : ''}>&gt; ${formattedBenchmarkAvg || 'TB'} (TB Ngành)</option>
+                  <option value="industry_avg_lower" ${currentMode === 'industry_avg_lower' ? 'selected' : ''}>&lt; ${formattedBenchmarkAvg || 'TB'} (TB Ngành)</option>
                 </select>
+                ${formattedBenchmarkAvg ? `
+                  <span class="text-[10px] font-mono font-bold text-purple-800 bg-purple-100/80 border border-purple-200 px-1 py-0.5 rounded shrink-0" title="Số liệu TB ngành tính từ BCTC thực tế">
+                    TB: ${formattedBenchmarkAvg}
+                  </span>
+                ` : ''}
               </div>
             ` : `
               <div class="text-[11px] text-slate-500 font-mono flex-1 truncate">
@@ -1125,19 +1239,31 @@ export class CustomFilterBuilder {
     }
 
     return this.conditions.map(cond => {
+      let condDisplayVal = cond.displayValue || '';
+      if (cond.mode === 'industry_avg_higher' || cond.mode === 'industry_avg_lower') {
+        if (!condDisplayVal || !/\d/.test(condDisplayVal)) {
+          condDisplayVal = this.computeBenchmarkDisplayLabel(cond.field, cond.mode, cond.timeScope);
+        }
+      }
+
       const dynamicName = (cond.mode === 'threshold')
-        ? `${cond.field} ${cond.operator || '>='} ${cond.displayValue}`
-        : (cond.mode === 'industry_avg_higher')
-          ? `${cond.field} > TB Ngành`
-          : (cond.mode === 'industry_avg_lower')
-            ? `${cond.field} < TB Ngành`
-            : (cond.name || `${cond.field} ${cond.displayValue}`);
+        ? `${cond.field} ${cond.operator || '>='} ${condDisplayVal}`
+        : (cond.mode === 'industry_avg_higher' || cond.mode === 'industry_avg_lower')
+          ? `${cond.field} ${condDisplayVal}`
+          : (cond.name || `${cond.field} ${condDisplayVal}`);
+
+      const condBenchmarkVal = (cond.mode === 'industry_avg_higher' || cond.mode === 'industry_avg_lower')
+        ? this.getBenchmarkAvgValue(cond.field, cond.timeScope)
+        : null;
+      const formattedCondAvg = (condBenchmarkVal !== null && condBenchmarkVal !== undefined)
+        ? this.formatBenchmarkValue(cond.field, condBenchmarkVal)
+        : null;
 
       const safeCondId = escapeHtml(cond.id);
       const safeField = escapeHtml(cond.field);
       const safeCategory = escapeHtml(cond.category || 'Tùy biến');
       const safeDynamicName = escapeHtml(dynamicName);
-      const safeDisplayVal = escapeHtml(cond.displayValue || '');
+      const safeDisplayVal = escapeHtml(condDisplayVal);
 
       return `
         <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200 text-xs gap-3 flex-wrap lg:flex-nowrap shadow-2xs" data-cond-id="${safeCondId}">
@@ -1164,8 +1290,8 @@ export class CustomFilterBuilder {
               <input type="text" class="cond-val-input bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded px-2.5 py-1 w-24 font-mono font-bold outline-none focus:border-blue-500" data-cond-id="${safeCondId}" value="${safeDisplayVal}" placeholder="VD: <10%" />
             ` : (cond.mode === 'industry_avg_higher' || cond.mode === 'industry_avg_lower') ? `
               <select class="cond-benchmark-select bg-purple-50 border border-purple-200 text-purple-700 text-xs rounded px-2 py-1 font-mono font-bold outline-none focus:border-purple-500 cursor-pointer" data-cond-id="${safeCondId}">
-                <option value="industry_avg_higher" ${cond.mode === 'industry_avg_higher' ? 'selected' : ''}>&gt; TB Ngành</option>
-                <option value="industry_avg_lower" ${cond.mode === 'industry_avg_lower' ? 'selected' : ''}>&lt; TB Ngành</option>
+                <option value="industry_avg_higher" ${cond.mode === 'industry_avg_higher' ? 'selected' : ''}>&gt; ${formattedCondAvg || 'TB'} (TB Ngành)</option>
+                <option value="industry_avg_lower" ${cond.mode === 'industry_avg_lower' ? 'selected' : ''}>&lt; ${formattedCondAvg || 'TB'} (TB Ngành)</option>
               </select>
             ` : `
               <span class="text-xs font-mono text-slate-700 px-2 py-1 rounded bg-slate-100 border border-slate-200">${safeDisplayVal}</span>
@@ -1225,24 +1351,93 @@ export class CustomFilterBuilder {
     const btnResetAllCriteria = container.querySelector('#btnResetAllCriteria');
 
     const rowEditThresholdControls = container.querySelector('#rowEditThresholdControls');
-    const toggleModeControls = (mode) => {
-      if (!rowEditThresholdControls) return;
+    const rowBenchmarkHelper = container.querySelector('#rowBenchmarkHelper');
+    const lblBenchmarkStatBadge = container.querySelector('#lblBenchmarkStatBadge');
+    const lblBenchmarkDetailVal = container.querySelector('#lblBenchmarkDetailVal');
+    const btnSyncBenchmarkToLabel = container.querySelector('#btnSyncBenchmarkToLabel');
+
+    const updateModalBenchmarkInfo = () => {
+      const mode = editCritMode ? editCritMode.value : 'threshold';
+      const field = editCritField ? editCritField.value : '';
+      const scope = editCritScope ? editCritScope.value : 'latest';
+
+      if (mode === 'industry_avg_higher' || mode === 'industry_avg_lower') {
+        if (rowEditThresholdControls) rowEditThresholdControls.classList.add('hidden');
+        const num = this.getBenchmarkAvgValue(field, scope);
+        const formatted = this.formatBenchmarkValue(field, num);
+
+        if (rowBenchmarkHelper) {
+          rowBenchmarkHelper.classList.remove('hidden');
+          if (lblBenchmarkDetailVal) {
+            lblBenchmarkDetailVal.textContent = formatted
+              ? `${formatted} (${scope === '10y_consecutive' ? '10 năm liên tiếp' : 'Năm ' + this.getLatestYear()})`
+              : 'Chưa có số liệu BCTC';
+          }
+        }
+        if (lblBenchmarkStatBadge) {
+          lblBenchmarkStatBadge.classList.remove('hidden');
+          lblBenchmarkStatBadge.textContent = formatted ? `TB: ${formatted}` : '';
+        }
+      } else {
+        if (rowEditThresholdControls) rowEditThresholdControls.classList.remove('hidden');
+        if (rowBenchmarkHelper) rowBenchmarkHelper.classList.add('hidden');
+        if (lblBenchmarkStatBadge) lblBenchmarkStatBadge.classList.add('hidden');
+      }
+    };
+
+    const toggleModeControls = (mode, autoFill = true) => {
+      updateModalBenchmarkInfo();
+      if (!editCritDisplayVal) return;
+
+      const field = editCritField ? editCritField.value : '';
+      const scope = editCritScope ? editCritScope.value : 'latest';
+
       if (mode === 'threshold') {
-        rowEditThresholdControls.classList.remove('hidden');
-        if (editCritDisplayVal && (!editCritDisplayVal.value || editCritDisplayVal.value.includes('TB Ngành'))) {
+        if (autoFill && (!editCritDisplayVal.value || editCritDisplayVal.value.includes('TB Ngành') || editCritDisplayVal.value.includes('TB 10N'))) {
           editCritDisplayVal.value = editCritVal.value ? String(editCritVal.value) : '';
         }
       } else {
-        rowEditThresholdControls.classList.add('hidden');
-        if (editCritDisplayVal) {
-          editCritDisplayVal.value = (mode === 'industry_avg_higher') ? '> TB Ngành' : '< TB Ngành';
+        // Auto compute real numeric label with benchmark number
+        if (autoFill || !editCritDisplayVal.value || editCritDisplayVal.value.trim() === '< TB Ngành' || editCritDisplayVal.value.trim() === '> TB Ngành' || editCritDisplayVal.value.trim() === '< TB Ngành (10 năm)' || editCritDisplayVal.value.trim() === '> TB Ngành (10 năm)' || !/\d/.test(editCritDisplayVal.value)) {
+          editCritDisplayVal.value = this.computeBenchmarkDisplayLabel(field, mode, scope);
         }
       }
     };
 
+    if (btnSyncBenchmarkToLabel) {
+      btnSyncBenchmarkToLabel.addEventListener('click', () => {
+        const mode = editCritMode ? editCritMode.value : 'industry_avg_lower';
+        const field = editCritField ? editCritField.value : '';
+        const scope = editCritScope ? editCritScope.value : 'latest';
+        if (editCritDisplayVal) {
+          editCritDisplayVal.value = this.computeBenchmarkDisplayLabel(field, mode, scope);
+        }
+      });
+    }
+
     if (editCritMode) {
       editCritMode.addEventListener('change', () => {
-        toggleModeControls(editCritMode.value);
+        toggleModeControls(editCritMode.value, true);
+      });
+    }
+
+    if (editCritField) {
+      editCritField.addEventListener('change', () => {
+        const mode = editCritMode ? editCritMode.value : 'threshold';
+        if (mode === 'industry_avg_higher' || mode === 'industry_avg_lower') {
+          toggleModeControls(mode, true);
+        } else {
+          updateModalBenchmarkInfo();
+        }
+      });
+    }
+
+    if (editCritScope) {
+      editCritScope.addEventListener('change', () => {
+        const mode = editCritMode ? editCritMode.value : 'threshold';
+        if (mode === 'industry_avg_higher' || mode === 'industry_avg_lower') {
+          toggleModeControls(mode, true);
+        }
       });
     }
 
@@ -1269,9 +1464,20 @@ export class CustomFilterBuilder {
         editCritMode.value = crit.mode || 'threshold';
         editCritOp.value = crit.operator || '>=';
         editCritVal.value = (crit.value !== undefined) ? crit.value : '';
-        editCritDisplayVal.value = crit.displayValue || '';
         editCritScope.value = crit.timeScope || 'latest';
-        toggleModeControls(editCritMode.value);
+
+        if (crit.mode === 'industry_avg_higher' || crit.mode === 'industry_avg_lower') {
+          // If displayValue lacks numerical data, automatically populate with the real calculated benchmark number
+          if (!crit.displayValue || crit.displayValue.trim() === '< TB Ngành' || crit.displayValue.trim() === '> TB Ngành' || crit.displayValue.trim() === '< TB Ngành (10 năm)' || crit.displayValue.trim() === '> TB Ngành (10 năm)' || !/\d/.test(crit.displayValue)) {
+            editCritDisplayVal.value = this.computeBenchmarkDisplayLabel(crit.field, crit.mode, crit.timeScope);
+          } else {
+            editCritDisplayVal.value = crit.displayValue;
+          }
+        } else {
+          editCritDisplayVal.value = crit.displayValue || '';
+        }
+
+        toggleModeControls(editCritMode.value, false);
         btnDeleteCriteriaItem.classList.remove('hidden');
       } else {
         // Create new
@@ -1287,7 +1493,7 @@ export class CustomFilterBuilder {
         editCritVal.value = '';
         editCritDisplayVal.value = '';
         editCritScope.value = 'latest';
-        toggleModeControls('threshold');
+        toggleModeControls('threshold', false);
         btnDeleteCriteriaItem.classList.add('hidden');
       }
 
@@ -1732,7 +1938,7 @@ export class CustomFilterBuilder {
         const c = this.conditions.find(x => x.id === id);
         if (c) {
           c.mode = sel.value;
-          c.displayValue = (sel.value === 'industry_avg_higher') ? '> TB Ngành' : '< TB Ngành';
+          c.displayValue = this.computeBenchmarkDisplayLabel(c.field, sel.value, c.timeScope);
           c.name = `${c.field} ${c.displayValue}`;
           if (this.catalogOverrides[c.id]) {
             this.catalogOverrides[c.id].mode = sel.value;
@@ -1760,6 +1966,10 @@ export class CustomFilterBuilder {
             c.timeScope = 'single_year';
             c.year = val;
           }
+          if (c.mode === 'industry_avg_higher' || c.mode === 'industry_avg_lower') {
+            c.displayValue = this.computeBenchmarkDisplayLabel(c.field, c.mode, c.timeScope);
+            c.name = `${c.field} ${c.displayValue}`;
+          }
           updateUI();
         }
       });
@@ -1778,8 +1988,11 @@ export class CustomFilterBuilder {
             const override = this.catalogOverrides[cId] || {};
             const op = override.operator || item.operator || '<=';
             const val = (override.value !== undefined) ? override.value : item.value;
-            const disp = override.displayValue || item.displayValue;
             const mode = override.mode || item.mode;
+            let disp = override.displayValue || item.displayValue;
+            if ((mode === 'industry_avg_higher' || mode === 'industry_avg_lower') && (!disp || !/\d/.test(disp))) {
+              disp = this.computeBenchmarkDisplayLabel(item.field, mode, item.timeScope);
+            }
 
             this.conditions.push({
               ...item,
@@ -1787,7 +2000,7 @@ export class CustomFilterBuilder {
               value: val,
               displayValue: disp,
               mode: mode,
-              name: (mode === 'threshold') ? `${item.field} ${op} ${disp}` : item.name,
+              name: (mode === 'threshold') ? `${item.field} ${op} ${disp}` : `${item.field} ${disp}`,
               enabled: true
             });
           }
@@ -1854,14 +2067,19 @@ export class CustomFilterBuilder {
     container.querySelectorAll('.catalog-benchmark-select').forEach(sel => {
       sel.addEventListener('change', () => {
         const cId = sel.getAttribute('data-crit-id');
+        const item = BENCHMARK_CRITERIA_CATALOG.find(c => c.id === cId);
         if (!this.catalogOverrides[cId]) this.catalogOverrides[cId] = {};
         this.catalogOverrides[cId].mode = sel.value;
-        this.catalogOverrides[cId].displayValue = (sel.value === 'industry_avg_higher') ? '> TB Ngành' : '< TB Ngành';
+
+        const fieldName = item ? item.field : '';
+        const timeScope = item ? item.timeScope : 'latest';
+        const newDisplay = this.computeBenchmarkDisplayLabel(fieldName, sel.value, timeScope);
+        this.catalogOverrides[cId].displayValue = newDisplay;
 
         const c = this.conditions.find(x => x.id === cId);
         if (c) {
           c.mode = sel.value;
-          c.displayValue = this.catalogOverrides[cId].displayValue;
+          c.displayValue = newDisplay;
           c.name = `${c.field} ${c.displayValue}`;
           updateUI();
         }

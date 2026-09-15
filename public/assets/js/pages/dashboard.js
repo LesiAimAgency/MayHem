@@ -42,6 +42,7 @@ export class DashboardApp {
 
     this.activeTab = 'matrix'; // 'matrix' | 'single' | 'compare' | 'filter_builder' | 'backup' | 'audit' | 'annual'
     this.selectedSingleBank = 'VCB';
+    this.isLoadingSingle = false;
     this.filterBuilderInstance = null;
 
     // Custom Financial Filter state
@@ -258,6 +259,194 @@ export class DashboardApp {
     });
 
     this.renderCurrentView();
+
+    // When switching to Single Report tab, trigger background AJAX sync for the selected bank
+    if (tab === 'single') {
+      this.loadSingleBankData(this.selectedSingleBank).then(() => {
+        if (this.activeTab === 'single') {
+          this.renderCurrentView();
+        }
+      });
+    }
+  }
+
+  async loadSingleBankData(bankCode) {
+    if (!bankCode) return;
+    this.isLoadingSingle = true;
+    updateHeaderStatus('loading', `Đang tải số liệu BCTC ${bankCode} qua AJAX...`);
+
+    try {
+      const apiBase = (typeof window !== 'undefined' && window.LARAVEL_API_BASE)
+        ? window.LARAVEL_API_BASE.replace(/\/+$/, '')
+        : '';
+      const url = `${apiBase}/api/v1/financial-reports/${encodeURIComponent(bankCode)}`;
+      const res = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json.status === 'success' && Array.isArray(json.records) && json.records.length > 0) {
+          const years = (json.years || this.mappedData.years).map(y => String(y));
+
+          if (!this.mappedData.bankFinancials[bankCode]) {
+            this.mappedData.bankFinancials[bankCode] = {};
+          }
+          years.forEach(y => {
+            if (!this.mappedData.bankFinancials[bankCode][y]) {
+              this.mappedData.bankFinancials[bankCode][y] = {};
+            }
+          });
+
+          json.records.forEach(row => {
+            const f = row['Chỉ tiêu'] || row.field;
+            const vals = row.values || {};
+            if (f) {
+              years.forEach(y => {
+                const rawVal = (vals[y] !== undefined) ? vals[y] : row[y];
+                if (rawVal !== undefined) {
+                  this.mappedData.bankFinancials[bankCode][y][f] = (rawVal === null || rawVal === '') ? null : Number(rawVal);
+                }
+              });
+            }
+          });
+
+          // Re-generate all 46 metrics for accuracy across all tabs & single factsheet
+          const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
+          this.allRecords = allRecords;
+          this.fieldMetaMap = fieldMetaMap;
+          this.currentFilteredRecords = [...allRecords];
+
+          updateHeaderStatus('success', `Đã đồng bộ AJAX số liệu ${bankCode} (${json.total_indicators || json.records.length} chỉ tiêu)`);
+          showToast(`Đã nạp thành công số liệu BCTC ${bankCode} qua AJAX!`, 'success');
+        }
+      } else {
+        console.warn(`[AJAX] Không thể nạp factsheet cho mã ${bankCode}: HTTP ${res.status}`);
+      }
+    } catch (err) {
+      console.warn(`[AJAX] Lỗi khi nạp factsheet cho mã ${bankCode}:`, err);
+    } finally {
+      this.isLoadingSingle = false;
+    }
+  }
+
+  async updateMetricValue(payload) {
+    const { bank, field, year, newValue, note = 'Cập nhật số liệu sau kiểm toán' } = payload;
+    const yStr = String(year);
+
+    // 1. Update in allRecords
+    const rec = this.allRecords.find(r => r.bank === bank && r.field === field);
+    let oldVal = null;
+    if (rec && rec.values) {
+      oldVal = rec.values[yStr];
+      rec.values[yStr] = newValue;
+      rec[yStr] = newValue;
+    }
+
+    // 2. Update in mappedData.bankFinancials
+    if (this.mappedData && this.mappedData.bankFinancials && this.mappedData.bankFinancials[bank]) {
+      if (!this.mappedData.bankFinancials[bank][yStr]) {
+        this.mappedData.bankFinancials[bank][yStr] = {};
+      }
+      this.mappedData.bankFinancials[bank][yStr][field] = newValue;
+    }
+
+    // 3. Record in local dataVersioning audit log
+    const auditEntry = dataVersioning.recordChange({
+      bank,
+      field,
+      year: yStr,
+      oldValue: oldVal,
+      newValue,
+      userRole: auth.getUser()?.name || auth.getRoleMeta().name || 'Super Admin',
+      note
+    });
+
+    // 4. Re-calculate all 46 metrics for matrix & single factsheet
+    const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
+    this.allRecords = allRecords;
+    this.fieldMetaMap = fieldMetaMap;
+    this.currentFilteredRecords = [...allRecords];
+
+    // 5. Call Backend API with Auth Token
+    try {
+      const res = await fetch('/api/v1/financial-reports/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
+        body: JSON.stringify({
+          bank,
+          field,
+          year: yStr,
+          value: newValue
+        })
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.audit_log_id && auditEntry) {
+          auditEntry.log_id = json.audit_log_id;
+          dataVersioning.saveAuditLog();
+        }
+      }
+    } catch (e) {
+      console.warn('[Audit] Không thể đồng bộ thay đổi về máy chủ:', e.message);
+    }
+
+    this.applyFilterAndSort();
+    showToast(`Đã cập nhật ${bank} - ${field} (${yStr}) = ${newValue}. Đã lưu vết vào Nhật Ký Kiểm Toán!`, 'success');
+  }
+
+  async rollbackMetricValue(entry) {
+    if (!entry || entry.oldValue === null || entry.oldValue === undefined) {
+      showToast('Bản ghi này không có giá trị cũ để phục hồi.', 'error');
+      return;
+    }
+
+    const { bank, field, year, oldValue, newValue } = entry;
+    const yStr = String(year);
+
+    // 1. Revert in allRecords
+    const rec = this.allRecords.find(r => r.bank === bank && r.field === field);
+    if (rec && rec.values) {
+      rec.values[yStr] = oldValue;
+      rec[yStr] = oldValue;
+    }
+
+    // 2. Revert in mappedData.bankFinancials
+    if (this.mappedData && this.mappedData.bankFinancials && this.mappedData.bankFinancials[bank]) {
+      if (!this.mappedData.bankFinancials[bank][yStr]) {
+        this.mappedData.bankFinancials[bank][yStr] = {};
+      }
+      this.mappedData.bankFinancials[bank][yStr][field] = oldValue;
+    }
+
+    // 3. Rollback in dataVersioning
+    dataVersioning.rollbackEntry(entry.id || entry.log_id, this.allRecords);
+
+    // 4. Re-calculate all 46 metrics
+    const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
+    this.allRecords = allRecords;
+    this.fieldMetaMap = fieldMetaMap;
+    this.currentFilteredRecords = [...allRecords];
+
+    // 5. Sync rollback to Backend API
+    try {
+      await fetch('/api/v1/financial-reports/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
+        body: JSON.stringify({
+          bank,
+          field,
+          year: yStr,
+          value: oldValue
+        })
+      });
+    } catch (e) {
+      console.warn('[Rollback] Không thể đồng bộ phục hồi về máy chủ:', e.message);
+    }
+
+    this.applyFilterAndSort();
+    this.renderCurrentView();
+    showToast(`Đã phục hồi thành công số liệu ${bank} - ${field} (${yStr}) về ${oldValue}!`, 'success');
   }
 
   hydrateFullHistory(fullDataset) {
@@ -310,8 +499,17 @@ export class DashboardApp {
           allRecords: this.allRecords,
           fieldMetaMap: this.fieldMetaMap,
           selectedBank: this.selectedSingleBank,
-          onSelectBank: (b) => {
+          isLoading: this.isLoadingSingle,
+          onSelectBank: async (b) => {
+            if (this.selectedSingleBank === b && !this.isLoadingSingle) return;
             this.selectedSingleBank = b;
+            this.isLoadingSingle = true;
+            this.renderCurrentView(); // Immediate UI feedback with selected bank and loading badge
+
+            await this.loadSingleBankData(b);
+            if (this.activeTab === 'single') {
+              this.renderCurrentView(); // Re-render with new data from AJAX
+            }
           },
           onBackToMain: () => {
             this.switchTab('matrix');
@@ -360,15 +558,20 @@ export class DashboardApp {
       case 'audit':
         this.containerFormulaModal.innerHTML = '';
         renderAuditHistoryModal(this.containerFormulaModal, {
-          onRollback: (entry) => {
-            dataVersioning.rollbackEntry(entry.id, this.allRecords);
-            this.applyFilterAndSort();
-            showToast(`Đã hoàn tác thay đổi cho ${entry.bank} - ${entry.field} (${entry.year})`);
+          onRollback: async (entry) => {
+            await this.rollbackMetricValue(entry);
           },
           onResetBaseline: () => {
             dataVersioning.resetToBaseline(this.allRecords);
+            const { allRecords, fieldMetaMap } = generateAllFinancialRecords(this.mappedData);
+            this.allRecords = allRecords;
+            this.fieldMetaMap = fieldMetaMap;
+            this.currentFilteredRecords = [...allRecords];
             this.applyFilterAndSort();
-            showToast('Đã phục hồi toàn bộ dữ liệu về trạng thái ban đầu');
+            showToast('Đã phục hồi toàn bộ dữ liệu về trạng thái ban đầu', 'success');
+          },
+          onOpenEdit: () => {
+            this.switchTab('annual');
           },
           onClose: () => {
             this.switchTab('matrix');
@@ -382,6 +585,7 @@ export class DashboardApp {
           banks: this.mappedData.banks,
           years: this.mappedData.years,
           rawFields: this.mappedData.rawFields,
+          allRecords: this.allRecords,
           onAddNewYear: async (newYear) => {
             if (!this.mappedData.years.includes(newYear)) {
               this.mappedData.years.push(newYear);
@@ -390,12 +594,14 @@ export class DashboardApp {
               this.allRecords.forEach(r => {
                 if (r.values) r.values[newYear] = null;
               });
-              dataVersioning.recordEdit({
+              dataVersioning.recordChange({
                 bank: 'ALL',
                 field: 'KHUNG_NAM',
                 year: newYear,
-                oldVal: null,
-                newVal: newYear
+                oldValue: null,
+                newValue: newYear,
+                userRole: auth.getUser()?.name || 'Super Admin',
+                note: `Mở rộng niên độ thêm năm ${newYear}`
               });
               
               // Call Backend API with Auth Token
@@ -412,36 +618,10 @@ export class DashboardApp {
             }
           },
           onUpdateValue: async (payload) => {
-            const { bank, field, year, newValue } = payload;
-            const rec = this.allRecords.find(r => r.bank === bank && r.field === field);
-            if (rec && rec.values) {
-              const oldVal = rec.values[year];
-              rec.values[year] = newValue;
-              dataVersioning.recordEdit({
-                bank,
-                field,
-                year,
-                oldVal,
-                newVal: newValue
-              });
-
-              // Call Backend API with Auth Token (Audit Non-Repudiation)
-              try {
-                await fetch('/api/v1/financial-reports/update', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
-                  body: JSON.stringify({
-                    bank,
-                    field,
-                    year: String(year),
-                    value: newValue
-                  })
-                });
-              } catch (e) {}
-
-              this.applyFilterAndSort();
-              showToast(`Đã cập nhật số liệu ${bank} - ${field} năm ${year}: ${newValue}`, 'success');
-            }
+            await this.updateMetricValue(payload);
+          },
+          onOpenAuditLog: () => {
+            this.switchTab('audit');
           },
           onClose: () => {
             this.switchTab('matrix');

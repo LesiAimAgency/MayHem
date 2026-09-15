@@ -63,7 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/screener/industries/reset', [ScreenerController::class, 'resetIndustries']);
     });
 
-    // 5. Individual Bank Factsheet (Constrained to 3-4 letter ticker symbol)
+    // 5. Individual Bank Factsheet (Supports all tickers e.g. VCB, TCB, OceanBank)
     Route::get('/financial-reports/{ticker}', [FinancialReportController::class, 'getBankFactsheet'])
-        ->where('ticker', '^[A-Za-z]{3,4}$');
+        ->where('ticker', '^[A-Za-z0-9_]{3,15}$');
 });
