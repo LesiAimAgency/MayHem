@@ -15,6 +15,7 @@ export function renderSingleCompanyReport(container, options = {}) {
     allRecords = [],
     fieldMetaMap = {},
     selectedBank = 'VCB',
+    isLoading = false,
     onSelectBank = () => {},
     onBackToMain = () => {}
   } = options;
@@ -41,29 +42,64 @@ export function renderSingleCompanyReport(container, options = {}) {
   const npatGrowth = getVal('Tăng trưởng lãi ròng sau CĐ thiểu số');
 
   container.innerHTML = `
-    <div class="flex flex-col gap-5 w-full">
+    <div class="flex flex-col gap-5 w-full ${isLoading ? 'opacity-70 transition-opacity' : 'transition-opacity'}">
       
       <!-- Factsheet Control Bar -->
-      <div class="flex items-center justify-between flex-wrap gap-3 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-sm">
-        <div class="flex items-center gap-3">
-          <button id="btnBackFromSingle" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            <span>Về Bảng Tổng Hợp</span>
-          </button>
+      <div class="flex flex-col gap-3 p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-3 flex-wrap">
+            <button id="btnBackFromSingle" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+              <span>Về Bảng Tổng Hợp</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-400">Chọn Ngân Hàng:</span>
+              <select id="selSingleBank" class="bg-slate-800 border border-slate-700 text-slate-100 text-xs font-mono font-bold rounded-lg px-3 py-1.5 outline-none focus:border-blue-500 cursor-pointer">
+                ${banks.map(b => `<option value="${b}" ${b === currentBank ? 'selected="selected"' : ''}>${getBankDisplayName(b)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
 
           <div class="flex items-center gap-2">
-            <span class="text-xs font-semibold text-slate-400">Chọn Ngân Hàng:</span>
-            <select id="selSingleBank" class="bg-slate-800 border border-slate-700 text-slate-100 text-xs font-mono font-bold rounded-lg px-3 py-1.5 outline-none focus:border-blue-500">
-              ${banks.map(b => `<option value="${b}" ${b === currentBank ? 'selected' : ''}>${getBankDisplayName(b)}</option>`).join('')}
-            </select>
+            <!-- AJAX Status Indicator Badge -->
+            <div id="singleReportAjaxBadge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border transition ${
+              isLoading
+                ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse'
+                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+            }">
+              <span class="w-2 h-2 rounded-full ${isLoading ? 'bg-amber-400 animate-ping' : 'bg-emerald-400'}"></span>
+              <span id="singleReportAjaxText">${isLoading ? `Đang nạp AJAX (${currentBank})...` : `Đã nạp AJAX (${currentBank})`}</span>
+            </div>
+
+            <button id="btnExportSingleExcel" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium ${auth.canExport() ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'} transition shadow-sm">
+              ${ICONS.DOWNLOAD}
+              <span>Tải Báo Cáo Excel (${currentBank})</span>
+            </button>
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button id="btnExportSingleExcel" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium ${auth.canExport() ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'} transition shadow-sm">
-            ${ICONS.DOWNLOAD}
-            <span>Tải Báo Cáo Excel (${currentBank})</span>
-          </button>
+        <!-- Interactive Quick Bank Selection Chips -->
+        <div class="flex items-center gap-1.5 flex-wrap pt-2.5 border-t border-slate-800/80">
+          <span class="text-[11px] font-semibold text-slate-400 mr-1 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Bấm chọn ngân hàng:
+          </span>
+          ${banks.map(b => {
+            const isSel = (b === currentBank);
+            return `
+              <button type="button" 
+                class="single-bank-chip px-2.5 py-1 rounded-md text-xs font-mono font-bold transition cursor-pointer ${
+                  isSel 
+                    ? 'bg-blue-600 text-white shadow-xs ring-2 ring-blue-400/50' 
+                    : 'bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60'
+                }" 
+                data-bank="${b}"
+                ${isSel ? 'aria-pressed="true"' : 'aria-pressed="false"'}>
+                ${b}
+              </button>
+            `;
+          }).join('')}
         </div>
       </div>
 
@@ -177,11 +213,25 @@ export function renderSingleCompanyReport(container, options = {}) {
   const btnBack = container.querySelector('#btnBackFromSingle');
   const btnExport = container.querySelector('#btnExportSingleExcel');
 
-  selBank.addEventListener('change', () => {
-    onSelectBank(selBank.value);
+  if (selBank) {
+    selBank.addEventListener('change', () => {
+      onSelectBank(selBank.value);
+    });
+  }
+
+  // Bind quick bank chips click
+  container.querySelectorAll('.single-bank-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      const bCode = chip.getAttribute('data-bank');
+      if (bCode) {
+        if (selBank) selBank.value = bCode;
+        onSelectBank(bCode);
+      }
+    });
   });
 
-  btnBack.addEventListener('click', onBackToMain);
+  if (btnBack) btnBack.addEventListener('click', onBackToMain);
 
   btnExport.addEventListener('click', () => {
     if (!auth.canExport()) {

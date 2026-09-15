@@ -27,7 +27,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ Chi phí / Thu nhập (CIR) dưới trung bình ngành ở năm gần nhất',
     field: 'Tỷ lệ Chi phí / Thu nhập (CIR)',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành',
+    displayValue: '< 38.76% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -37,7 +37,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ Chi phí / Thu nhập (CIR) dưới trung bình ngành liên tiếp 10 năm',
     field: 'Tỷ lệ Chi phí / Thu nhập (CIR)',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành (10 năm)',
+    displayValue: '< 46.88% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -79,7 +79,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Biên Lợi nhuận ST của CĐ công ty mẹ cao hơn trung bình ngành ở năm gần nhất',
     field: 'Biên Lợi nhuận ST của CĐ công ty mẹ',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành',
+    displayValue: '> 43.06% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -89,7 +89,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Biên Lợi nhuận ST của CĐ công ty mẹ cao hơn trung bình ngành liên tiếp 10 năm',
     field: 'Biên Lợi nhuận ST của CĐ công ty mẹ',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành (10 năm)',
+    displayValue: '> 26.79% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -111,7 +111,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ suất sinh lời trên Tổng Tài Sản (ROA) cao hơn trung bình ngành ở năm gần nhất',
     field: 'Tỷ suất sinh lời trên Tổng Tài Sản (ROA)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành',
+    displayValue: '> 1.11% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -121,7 +121,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ suất sinh lời trên Tổng Tài Sản (ROA) cao hơn trung bình ngành liên tiếp 10 năm',
     field: 'Tỷ suất sinh lời trên Tổng Tài Sản (ROA)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành (10 năm)',
+    displayValue: '> 1.08% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -155,7 +155,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Debt/Equity thấp hơn trung bình ngành ở năm gần nhất',
     field: 'Debt/Equity',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành',
+    displayValue: '< 11.32 (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -165,7 +165,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Debt/Equity thấp hơn trung bình ngành liên tiếp 10 năm',
     field: 'Debt/Equity',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành (10 năm)',
+    displayValue: '< 12.10 (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -175,7 +175,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ suất sinh lời trên Vốn CSH (ROE) cao hơn trung bình ngành ở năm gần nhất',
     field: 'Tỷ suất sinh lời trên Vốn CSH (ROE)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành',
+    displayValue: '> 11.03% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -185,7 +185,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ suất sinh lời trên Vốn CSH (ROE) cao hơn trung bình ngành liên tiếp 10 năm',
     field: 'Tỷ suất sinh lời trên Vốn CSH (ROE)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành (10 năm)',
+    displayValue: '> 12.63% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -231,7 +231,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ tiền gửi không kỳ hạn (CASA) cao hơn trung bình ngành ở năm gần nhất',
     field: 'Tỷ lệ tiền gửi không kỳ hạn (CASA)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành',
+    displayValue: '> 15.98% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -241,7 +241,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ tiền gửi không kỳ hạn (CASA) cao hơn trung bình ngành liên tiếp 10 năm',
     field: 'Tỷ lệ tiền gửi không kỳ hạn (CASA)',
     mode: 'industry_avg_higher',
-    displayValue: '> TB Ngành (10 năm)',
+    displayValue: '> 16.22% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
@@ -251,7 +251,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ nợ xấu (NPL) cuối năm dưới trung bình ngành ở năm gần nhất',
     field: 'Tỷ lệ nợ xấu (NPL) cuối năm',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành',
+    displayValue: '< 2.87% (TB Ngành)',
     timeScope: 'latest'
   },
   {
@@ -261,7 +261,7 @@ export const DEFAULT_BASELINE_CRITERIA = [
     name: 'Tỷ lệ nợ xấu (NPL) cuối năm dưới trung bình ngành liên tiếp 10 năm',
     field: 'Tỷ lệ nợ xấu (NPL) cuối năm',
     mode: 'industry_avg_lower',
-    displayValue: '< TB Ngành (10 năm)',
+    displayValue: '< 2.25% (TB 10N)',
     timeScope: '10y_consecutive'
   },
   {
