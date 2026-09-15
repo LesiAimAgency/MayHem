@@ -56,11 +56,14 @@ Route::prefix('v1')->group(function () {
         Route::put('/auth/users/{id}/role', [AuthController::class, 'updateRole']);
         Route::delete('/auth/users/{id}', [AuthController::class, 'destroy']);
         Route::post('/financial-reports/new-year', [FinancialReportController::class, 'addNewYear']);
+        Route::post('/financial-reports/reset-baseline', [FinancialReportController::class, 'resetBaseline']);
         Route::post('/backup/restore', [BackupController::class, 'restoreSnapshot']);
         Route::delete('/screener/criteria/{id}', [ScreenerController::class, 'destroyCriterion']);
         Route::post('/screener/criteria/reset', [ScreenerController::class, 'resetCriteria']);
         Route::delete('/screener/industries/{id}', [ScreenerController::class, 'destroyIndustry']);
         Route::post('/screener/industries/reset', [ScreenerController::class, 'resetIndustries']);
+        Route::delete('/audit-logs', [FinancialReportController::class, 'clearAuditLogs']);
+        Route::delete('/audit-logs/{id}', [FinancialReportController::class, 'destroyAuditLog']);
     });
 
     // 5. Individual Bank Factsheet (Supports all tickers e.g. VCB, TCB, OceanBank)

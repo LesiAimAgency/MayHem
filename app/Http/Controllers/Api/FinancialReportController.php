@@ -379,6 +379,72 @@ class FinancialReportController extends Controller
     }
 
     /**
+     * POST /api/v1/financial-reports/reset-baseline
+     * Restores pristine baseline dataset for all 29 banks from assets/data.
+     */
+    public function resetBaseline(Request $request)
+    {
+        $authUser = $request->attributes->get('auth_user');
+        $userRole = $authUser ? ($authUser['name'] . ' (' . strtoupper($authUser['role']) . ')') : 'Super Admin';
+
+        // 1. Locate original pristine JSON dataset
+        $pristinePath = public_path('assets/data/BaoCaoTaiChinh_NganHang_30ChiTieu.json');
+        if (!File::exists($pristinePath)) {
+            $pristinePath = public_path('BaoCaoTaiChinh_NganHang_30ChiTieu.json');
+        }
+
+        if (!File::exists($pristinePath)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không tìm thấy file dữ liệu gốc nguyên bản của hệ thống.'
+            ], 404);
+        }
+
+        $pristineContent = File::get($pristinePath);
+        $dataset = json_decode($pristineContent, true);
+
+        // 2. Overwrite working JSON files with pristine data
+        $workingPaths = [
+            dirname(base_path()) . DIRECTORY_SEPARATOR . 'BaoCaoTaiChinh_NganHang_30ChiTieu.json',
+            base_path('BaoCaoTaiChinh_NganHang_30ChiTieu.json'),
+            public_path('BaoCaoTaiChinh_NganHang_30ChiTieu.json')
+        ];
+
+        foreach ($workingPaths as $wPath) {
+            try {
+                if (File::exists(dirname($wPath))) {
+                    File::put($wPath, $pristineContent);
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        // 3. Mark all previous active audit logs as ROLLED_BACK
+        try {
+            AuditLog::where('action', '!=', 'RESET_BASELINE')
+                ->update(['action' => 'ROLLED_BACK']);
+
+            AuditLog::create([
+                'log_id' => 'RESET_' . time() . '_' . rand(100, 999),
+                'user_role' => $userRole,
+                'bank' => 'ALL',
+                'field' => 'TAT_CA_CHI_TIEU',
+                'year' => 'ALL',
+                'old_value' => null,
+                'new_value' => null,
+                'action' => 'RESET_BASELINE',
+                'note' => 'Khôi phục toàn bộ ma trận số liệu 29 ngân hàng về nguyên bản ban đầu'
+            ]);
+        } catch (\Throwable $e) {}
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Đã khôi phục toàn bộ ma trận số liệu 29 ngân hàng về nguyên bản ban đầu thành công.',
+            'actor' => $userRole,
+            'data' => $dataset
+        ]);
+    }
+
+    /**
      * GET /api/v1/audit-logs
      * Returns all audit history logs for verification & rollback.
      */
@@ -393,6 +459,75 @@ class FinancialReportController extends Controller
             'status' => 'success',
             'count' => $logs->count(),
             'data' => $logs
+        ]);
+    }
+
+    /**
+     * DELETE /api/v1/audit-logs
+     * Clears all audit logs (Super Admin only).
+     */
+    public function clearAuditLogs(Request $request)
+    {
+        $authUser = $request->attributes->get('auth_user');
+        $userRole = $authUser ? ($authUser['name'] . ' (' . strtoupper($authUser['role']) . ')') : 'Super Admin';
+
+        try {
+            AuditLog::truncate();
+
+            // Record a pristine entry marking the clear operation
+            AuditLog::create([
+                'log_id' => 'CLEAR_' . time(),
+                'user_role' => $userRole,
+                'bank' => 'ALL',
+                'field' => 'LICH_SU_KIEM_TOAN',
+                'year' => date('Y'),
+                'action' => 'CLEAR_LOGS',
+                'note' => "Đã dọn dẹp và khởi tạo lại toàn bộ nhật ký kiểm toán bởi {$userRole}"
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không thể xóa nhật ký kiểm toán: ' . $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Đã xóa toàn bộ nhật ký kiểm toán thành công.',
+            'actor' => $userRole
+        ]);
+    }
+
+    /**
+     * DELETE /api/v1/audit-logs/{id}
+     * Deletes a specific audit log record (Super Admin only).
+     */
+    public function destroyAuditLog(Request $request, $id)
+    {
+        $log = null;
+        try {
+            $log = AuditLog::where('id', $id)->orWhere('log_id', $id)->first();
+        } catch (\Throwable $e) {}
+
+        if (!$log) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không tìm thấy bản ghi kiểm toán để xóa.'
+            ], 404);
+        }
+
+        try {
+            $log->delete();
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không thể xóa bản ghi: ' . $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Đã xóa bản ghi kiểm toán thành công.'
         ]);
     }
 

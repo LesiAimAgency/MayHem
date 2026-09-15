@@ -56,31 +56,6 @@ class DataVersioningManager {
 
   sanitizeLog(list) {
     if (!Array.isArray(list)) return [];
-    
-    // Identify keys that have been rolled back
-    const rolledBackKeys = new Set();
-    list.forEach(e => {
-      if (e.action === 'ROLLBACK' || e.userRole === 'Rollback' || String(e.id).startsWith('rollback_')) {
-        rolledBackKeys.add(`${e.bank}_${e.field}_${e.year}`);
-      }
-    });
-
-    // Check if there is a Reset Baseline entry
-    const hasResetBaseline = list.some(e => e.bank === 'ALL' || e.field === 'TAT_CA_CHI_TIEU');
-
-    list.forEach(e => {
-      if (hasResetBaseline) {
-        e.rolledBack = true;
-        e.isReverted = true;
-      } else if (e.action === 'ROLLBACK' || e.action === 'ROLLED_BACK' || e.userRole === 'Rollback' || String(e.id).startsWith('rollback_')) {
-        e.rolledBack = true;
-        e.isReverted = true;
-      } else if (rolledBackKeys.has(`${e.bank}_${e.field}_${e.year}`)) {
-        e.rolledBack = true;
-        e.isReverted = true;
-      }
-    });
-
     return list;
   }
 
@@ -180,33 +155,76 @@ class DataVersioningManager {
     this.saveAuditLog();
   }
 
+  async clearRemoteAuditLogs() {
+    try {
+      const res = await fetch('/api/v1/audit-logs', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...auth.getAuthHeaders()
+        }
+      });
+      if (res.ok) {
+        this.clearAuditLog();
+        return { success: true };
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        return { success: false, message: errData.message || 'Không có quyền xóa nhật ký kiểm toán (yêu cầu Quản Trị Viên).' };
+      }
+    } catch (e) {
+      this.clearAuditLog();
+      return { success: true };
+    }
+  }
+
+  async deleteRemoteAuditLog(id) {
+    try {
+      const res = await fetch(`/api/v1/audit-logs/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...auth.getAuthHeaders()
+        }
+      });
+      if (res.ok) {
+        this.auditLog = this.auditLog.filter(e => e.id !== id && e.log_id !== id && String(e.dbId) !== String(id));
+        this.saveAuditLog();
+        return { success: true };
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        return { success: false, message: errData.message || 'Không có quyền xóa bản ghi kiểm toán này.' };
+      }
+    } catch (e) {
+      this.auditLog = this.auditLog.filter(e => e.id !== id && e.log_id !== id);
+      this.saveAuditLog();
+      return { success: true };
+    }
+  }
+
   rollbackEntry(entryId, allRecords = []) {
     const idx = this.auditLog.findIndex(e => e.id === entryId || e.log_id === entryId);
     if (idx === -1) return null;
 
     const entry = this.auditLog[idx];
-    if (entry.oldValue === null || entry.oldValue === undefined || entry.rolledBack || entry.isReverted) {
+    const targetVal = (entry.oldValue !== null && entry.oldValue !== undefined) 
+      ? entry.oldValue 
+      : (entry.old_value !== null && entry.old_value !== undefined ? entry.old_value : entry.newValue);
+
+    if (targetVal === null || targetVal === undefined) {
       return null;
     }
 
-    // 1. Mark target entry and all matching prior edits as rolled back
-    entry.rolledBack = true;
-    entry.isReverted = true;
-    this.auditLog.forEach(e => {
-      if (e.bank === entry.bank && e.field === entry.field && String(e.year) === String(entry.year)) {
-        e.rolledBack = true;
-        e.isReverted = true;
-      }
-    });
-
-    // 2. Revert in memory records
+    // 1. Revert in memory records
     const rec = allRecords.find(r => r.bank === entry.bank && r.field === entry.field);
+    const prevLive = (rec && rec.values) ? rec.values[entry.year] : (rec ? rec[entry.year] : entry.newValue);
     if (rec && rec.values) {
-      rec.values[entry.year] = entry.oldValue;
-      rec[entry.year] = entry.oldValue;
+      rec.values[entry.year] = targetVal;
+      rec[entry.year] = targetVal;
     }
 
-    // 3. Record a rollback action in audit log
+    // 2. Record a rollback action in audit log
     const rollbackLog = {
       id: 'rollback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
       timestamp: new Date().toISOString(),
@@ -215,12 +233,10 @@ class DataVersioningManager {
       bank: entry.bank,
       field: entry.field,
       year: String(entry.year),
-      oldValue: entry.newValue,
-      newValue: entry.oldValue,
+      oldValue: prevLive,
+      newValue: targetVal,
       action: 'ROLLBACK',
-      rolledBack: true,
-      isReverted: true,
-      note: `Phục hồi về giá trị trước kiểm toán (${entry.oldValue})`
+      note: `Phục hồi về giá trị trước kiểm toán (${targetVal})`
     };
 
     this.auditLog.unshift(rollbackLog);

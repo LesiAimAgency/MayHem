@@ -224,4 +224,72 @@ class SecurityHardeningTest extends TestCase
 
         $response->assertStatus(429);
     }
+
+    /**
+     * Test 8: Audit Log Deletion RBAC.
+     * Only role 'admin' can clear or delete audit logs.
+     * Staff & Editor return 403. Unauthenticated returns 401.
+     */
+    public function test_only_super_admin_can_clear_audit_logs(): void
+    {
+        $log = AuditLog::create([
+            'log_id' => 'TEST_LOG_1',
+            'user_role' => 'Test User',
+            'bank' => 'VCB',
+            'field' => 'LoiNhuanSauThue',
+            'year' => '2024',
+            'old_value' => 100,
+            'new_value' => 150,
+            'action' => 'UPDATE',
+            'note' => 'Test audit record'
+        ]);
+
+        // 1. Unauthenticated -> 401
+        $this->deleteJson('/api/v1/audit-logs')
+            ->assertStatus(401);
+
+        // 2. Staff -> 403 Forbidden
+        $staffToken = 'staff_token_' . time();
+        Cache::put("mayhem_token_{$staffToken}", [
+            'id' => 3,
+            'name' => 'Staff Tester',
+            'email' => 'staff@mayhem.vn',
+            'role' => 'staff'
+        ], now()->addHour());
+
+        $this->withHeaders(['Authorization' => "Bearer {$staffToken}"])
+            ->deleteJson('/api/v1/audit-logs')
+            ->assertStatus(403);
+
+        // 3. Editor -> 403 Forbidden
+        $editorToken = 'editor_token_' . time();
+        Cache::put("mayhem_token_{$editorToken}", [
+            'id' => 2,
+            'name' => 'Editor Tester',
+            'email' => 'editor@mayhem.vn',
+            'role' => 'editor'
+        ], now()->addHour());
+
+        $this->withHeaders(['Authorization' => "Bearer {$editorToken}"])
+            ->deleteJson('/api/v1/audit-logs')
+            ->assertStatus(403);
+
+        // 4. Admin -> 200 OK
+        $adminToken = 'admin_token_' . time();
+        Cache::put("mayhem_token_{$adminToken}", [
+            'id' => 1,
+            'name' => 'Super Admin',
+            'email' => 'admin@mayhem.vn',
+            'role' => 'admin'
+        ], now()->addHour());
+
+        $res = $this->withHeaders(['Authorization' => "Bearer {$adminToken}"])
+            ->deleteJson('/api/v1/audit-logs');
+
+        $res->assertStatus(200)
+            ->assertJson([
+                'status' => 'success'
+            ]);
+    }
 }
+
