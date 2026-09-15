@@ -1,7 +1,7 @@
 /**
  * assets/js/components/company-comparison.js
  * Multi-Company Comparative Analysis Report & Chart View.
- * Rule: Zero mock data. 100% real data. Zero emoji.
+ * Rule: Zero mock data. 100% real data. Zero emoji. 100% Clean Light Mode.
  */
 
 import { formatValue } from '../core/formatter.js';
@@ -12,8 +12,8 @@ import { CALC_FIELDS_LIST } from '../calculations/financial-calculations.js';
 let compChartInstance = null;
 
 const PALETTE = [
-  '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6',
-  '#06b6d4', '#f97316', '#14b8a6', '#6366f1', '#e11d48'
+  '#2563eb', '#16a34a', '#d97706', '#db2777', '#7c3aed',
+  '#0891b2', '#ea580c', '#0d9488', '#4f46e5', '#e11d48'
 ];
 
 export function renderCompanyComparison(container, options = {}) {
@@ -39,24 +39,24 @@ export function renderCompanyComparison(container, options = {}) {
       <div class="flex flex-col gap-5 w-full">
         
         <!-- Controls Bar -->
-        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-sm flex items-center justify-between flex-wrap gap-3">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs flex items-center justify-between flex-wrap gap-3">
           <div class="flex items-center gap-3 flex-wrap">
-            <button id="btnBackFromComp" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+            <button id="btnBackFromComp" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
               <span>Về Bảng Tổng Hợp</span>
             </button>
 
             <!-- Field Selector -->
             <div class="flex items-center gap-2">
-              <span class="text-xs font-semibold text-slate-400">Chọn Chỉ Tiêu So Sánh:</span>
-              <select id="selCompField" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-1.5 outline-none focus:border-blue-500 max-w-xs">
+              <span class="text-xs font-semibold text-slate-600">Chọn Chỉ Tiêu So Sánh:</span>
+              <select id="selCompField" class="bg-white border border-slate-300 text-slate-900 text-xs rounded-lg px-3 py-1.5 outline-none focus:border-blue-600 shadow-2xs max-w-xs cursor-pointer">
                 ${allFields.map(f => `<option value="${f}" ${f === currentField ? 'selected' : ''}>${f}</option>`).join('')}
               </select>
             </div>
           </div>
 
           <div class="flex items-center gap-2">
-            <button id="btnExportCompExcel" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium ${auth.canExport() ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'} transition shadow-sm">
+            <button id="btnExportCompExcel" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold ${auth.canExport() ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-2xs' : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'} transition">
               ${ICONS.DOWNLOAD}
               <span>Tải Báo Cáo So Sánh (Excel)</span>
             </button>
@@ -64,36 +64,43 @@ export function renderCompanyComparison(container, options = {}) {
         </div>
 
         <!-- Bank Checkbox Selection Bar -->
-        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2">
+        <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs flex flex-col gap-2">
           <div class="flex items-center justify-between flex-wrap gap-2">
-            <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Chọn các ngân hàng so sánh (${currentBanks.length}/${banks.length}):
             </span>
             <div class="flex items-center gap-2 text-xs">
-              <button id="btnCompSelectBig4" type="button" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] transition">
+              <button id="btnCompSelectBig4" type="button" class="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition cursor-pointer">
                 Top Big 4 (VCB, BID, CTG, MBB)
               </button>
-              <button id="btnCompSelectTMCP" type="button" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] transition">
+              <button id="btnCompSelectTMCP" type="button" class="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition cursor-pointer">
                 Top TMCP (TCB, VPB, ACB)
               </button>
             </div>
           </div>
 
-          <div class="flex items-center gap-2 flex-wrap">
-            ${banks.map(b => `
-              <label class="flex items-center gap-1.5 px-2 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-mono cursor-pointer hover:bg-slate-800 transition select-none" title="${getBankFullName(b)} (${getBankTradeName(b)})">
-                <input type="checkbox" class="cb-comp-bank rounded bg-slate-800 border-slate-700 text-blue-600 h-3.5 w-3.5" value="${b}" ${currentBanks.includes(b) ? 'checked' : ''} />
-                <span class="${currentBanks.includes(b) ? 'text-blue-400 font-bold' : 'text-slate-400'}">${b}</span>
-              </label>
-            `).join('')}
+          <div class="flex items-center gap-1.5 flex-wrap pt-1">
+            ${banks.map(b => {
+              const isChecked = currentBanks.includes(b);
+              return `
+                <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-mono cursor-pointer transition select-none ${
+                  isChecked 
+                    ? 'bg-blue-50 border-blue-300 text-blue-700 font-bold shadow-2xs' 
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                }" title="${getBankFullName(b)} (${getBankTradeName(b)})">
+                  <input type="checkbox" class="cb-comp-bank rounded border-slate-300 text-blue-600 h-3.5 w-3.5" value="${b}" ${isChecked ? 'checked' : ''} />
+                  <span>${b}</span>
+                </label>
+              `;
+            }).join('')}
           </div>
         </div>
 
         <!-- Comparative Chart Section -->
-        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Biểu Đồ So Sánh: ${currentField} Qua Các Năm</h3>
-            <span class="text-[11px] text-slate-400 font-mono">${currentBanks.join(', ')}</span>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs flex flex-col gap-2">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Biểu Đồ So Sánh: ${currentField} Qua Các Năm</h3>
+            <span class="text-xs text-slate-500 font-mono">${currentBanks.join(', ')}</span>
           </div>
           <div class="chart-container-inner" style="height: 340px;">
             <canvas id="compChartCanvas"></canvas>
@@ -101,10 +108,10 @@ export function renderCompanyComparison(container, options = {}) {
         </div>
 
         <!-- Comparative Table -->
-        <div class="financial-table-wrapper rounded-xl border border-slate-800 bg-slate-900/90 shadow-md">
-          <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
-            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Bảng Đối Chiếu Ngang: ${currentField}</h3>
-            <span class="text-xs text-slate-400 font-mono">Đơn vị: ${meta.unit || ''}</span>
+        <div class="financial-table-wrapper rounded-xl border border-slate-200 bg-white shadow-xs">
+          <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Bảng Đối Chiếu Ngang: ${currentField}</h3>
+            <span class="text-xs text-slate-500 font-mono font-medium">Đơn vị: ${meta.unit || ''}</span>
           </div>
 
           <table class="financial-table">
@@ -119,7 +126,7 @@ export function renderCompanyComparison(container, options = {}) {
                 const rec = allRecords.find(r => r.bank === b && r.field === currentField);
                 return `
                   <tr class="row-fill">
-                    <td class="col-sticky-bank" style="left: 0;"><span class="badge-bank-code">${b}</span></td>
+                    <td class="col-sticky-bank" style="left: 0;"><span class="badge-bank-code font-bold text-blue-700">${b}</span></td>
                     ${years.map(y => {
                       const val = rec && rec.values ? rec.values[y] : null;
                       return `<td>${formatValue(val, meta)}</td>`;
@@ -170,11 +177,11 @@ export function renderCompanyComparison(container, options = {}) {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: '#cbd5e1', font: { family: 'Inter', size: 11 } } }
+          legend: { labels: { color: '#334155', font: { family: 'Inter', size: 11, weight: 'bold' } } }
         },
         scales: {
-          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+          x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748b' } },
+          y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#64748b' } }
         }
       }
     });
@@ -187,9 +194,9 @@ export function renderCompanyComparison(container, options = {}) {
     const btnBig4 = container.querySelector('#btnCompSelectBig4');
     const btnTMCP = container.querySelector('#btnCompSelectTMCP');
 
-    btnBack.addEventListener('click', onBackToMain);
+    btnBack?.addEventListener('click', onBackToMain);
 
-    selField.addEventListener('change', () => {
+    selField?.addEventListener('change', () => {
       currentField = selField.value;
       renderInner();
     });
@@ -205,17 +212,17 @@ export function renderCompanyComparison(container, options = {}) {
       });
     });
 
-    btnBig4.addEventListener('click', () => {
+    btnBig4?.addEventListener('click', () => {
       currentBanks = ['VCB', 'BID', 'CTG', 'MBB'];
       renderInner();
     });
 
-    btnTMCP.addEventListener('click', () => {
+    btnTMCP?.addEventListener('click', () => {
       currentBanks = ['TCB', 'VPB', 'ACB', 'HDB', 'VIB'];
       renderInner();
     });
 
-    btnExport.addEventListener('click', () => {
+    btnExport?.addEventListener('click', () => {
       if (!auth.canExport()) {
         showToast('Tài khoản của bạn (Cấp 3) không có quyền tải file dữ liệu.');
         return;

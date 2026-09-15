@@ -62,9 +62,15 @@ export function renderHeader(container, handlers = {}) {
           </div>
 
           <!-- Soft Refresh Button -->
-          <button id="btnSoftRefreshData" type="button" class="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition shadow-2xs" title="Làm mới số liệu mới nhất từ máy chủ (Revalidate ETag)">
+          <button id="btnSoftRefreshData" type="button" class="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition shadow-2xs" title="Làm mới dữ liệu mới nhất">
             <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <span>Làm mới</span>
+          </button>
+
+          <!-- Edit Metric Button -->
+          <button id="btnOpenEditMetricModal" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-2xs" title="Chỉnh sửa số liệu báo cáo tài chính theo ngân hàng, chỉ tiêu và năm">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            <span>Chỉnh Sửa Số Liệu</span>
           </button>
 
           <!-- MayHem Admin System Trigger Button (Open Right Drawer) -->
@@ -110,7 +116,7 @@ export function renderHeader(container, handlers = {}) {
             Lọc Điều Kiện (NH)
           </button>
           <button type="button" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 transition shadow-2xs" data-tab="backup">
-            Sao Lưu & API
+            Sao Lưu Dữ Liệu
           </button>
           <button type="button" class="nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 transition shadow-2xs" data-tab="audit">
             Lịch Sử Kiểm Toán
@@ -205,14 +211,19 @@ export function renderHeader(container, handlers = {}) {
     btnToggleFormula.addEventListener('click', handlers.onToggleFormulaDrawer);
   }
 
+  const btnOpenEditMetric = container.querySelector('#btnOpenEditMetricModal');
+  if (btnOpenEditMetric && handlers.onOpenEditMetricModal) {
+    btnOpenEditMetric.addEventListener('click', handlers.onOpenEditMetricModal);
+  }
+
   // Navigation tab clicks
   container.querySelectorAll('.nav-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetTab = btn.getAttribute('data-tab');
       container.querySelectorAll('.nav-tab-btn').forEach(b => {
-        b.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/60 transition';
+        b.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 transition shadow-2xs';
       });
-      btn.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition shadow-sm';
+      btn.className = 'nav-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition shadow-2xs';
 
       if (handlers.onNavTabChange) {
         handlers.onNavTabChange(targetTab);

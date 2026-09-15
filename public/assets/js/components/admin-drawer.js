@@ -274,32 +274,32 @@ function renderLoggedInState(user, roleMeta) {
 
     <!-- User Management Section (Super Admin Only) -->
     ${isSuperAdmin ? `
-      <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Quản Trị Người Dùng & Phân Quyền (3 Cấp)</h4>
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Quản Trị Người Dùng & Phân Quyền (3 Cấp)</h4>
           </div>
-          <button id="btnToggleAddUserForm" type="button" class="text-[11px] font-bold text-blue-400 hover:text-blue-300 transition">
+          <button id="btnToggleAddUserForm" type="button" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 transition cursor-pointer">
             + Tạo tài khoản
           </button>
         </div>
 
         <!-- Add User Form (Collapsible) -->
-        <form id="formAddMayHemUser" class="hidden p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-2.5">
+        <form id="formAddMayHemUser" class="hidden p-3 rounded-lg bg-white border border-slate-200 space-y-2.5 shadow-2xs">
           <div class="grid grid-cols-1 gap-2">
-            <input type="text" id="newUserName" required placeholder="Họ và tên..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-500" />
-            <input type="email" id="newUserEmail" required placeholder="Email đăng nhập..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-500" />
-            <input type="password" id="newUserPass" required placeholder="Mật khẩu..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-500 font-mono" />
-            <select id="newUserRole" class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-500">
+            <input type="text" id="newUserName" required placeholder="Họ và tên..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 focus:bg-white" />
+            <input type="email" id="newUserEmail" required placeholder="Email đăng nhập..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 focus:bg-white" />
+            <input type="password" id="newUserPass" required placeholder="Mật khẩu..." class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 focus:bg-white font-mono" />
+            <select id="newUserRole" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-blue-600 focus:bg-white">
               <option value="staff">Cấp 3: Staff (Nhập/sửa dữ liệu - KHÓA TẢI EXCEL)</option>
               <option value="editor">Cấp 2: Editor (Nhập/sửa dữ liệu - ĐƯỢC TẢI EXCEL)</option>
               <option value="admin">Cấp 1: Super Admin (Toàn quyền quản trị cao nhất)</option>
             </select>
           </div>
           <div class="flex justify-end gap-2 pt-1">
-            <button id="btnCancelAddUser" type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs">Hủy</button>
-            <button type="submit" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold">Lưu tài khoản</button>
+            <button id="btnCancelAddUser" type="button" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold cursor-pointer">Hủy</button>
+            <button type="submit" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold shadow-2xs cursor-pointer">Lưu tài khoản</button>
           </div>
         </form>
 
@@ -311,19 +311,19 @@ function renderLoggedInState(user, roleMeta) {
     ` : ''}
 
     <!-- Quick Switch Account (Chuyển vai trò thử nghiệm) -->
-    <div class="pt-4 border-t border-slate-800">
+    <div class="pt-4 border-t border-slate-200">
       <div class="flex items-center justify-between mb-2.5">
-        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Chuyển Đổi Vai Trò Nhanh</span>
+        <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Chuyển Đổi Vai Trò Nhanh</span>
         <span class="text-[10px] text-slate-500">Thử nghiệm kiểm soát phân quyền</span>
       </div>
       <div class="space-y-2">
         ${DEMO_USERS.map(u => `
-          <button type="button" class="btn-demo-quick-login w-full p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800 border ${u.email === user?.email ? 'border-red-500/60 bg-red-950/20' : 'border-slate-800'} transition text-left flex items-center justify-between" data-email="${u.email}" data-pass="${u.password}">
+          <button type="button" class="btn-demo-quick-login w-full p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border ${u.email === user?.email ? 'border-red-500 bg-red-50/50' : 'border-slate-200'} transition text-left flex items-center justify-between cursor-pointer" data-email="${u.email}" data-pass="${u.password}">
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-slate-200">${u.name}</span>
+              <span class="text-xs font-bold text-slate-800">${u.name}</span>
               <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${u.badgeClass}">${u.roleLabel}</span>
             </div>
-            ${u.email === user?.email ? '<span class="text-[11px] font-bold text-red-400">Đang chọn</span>' : '<span class="text-[11px] text-slate-500 hover:text-slate-300">Đổi vai trò</span>'}
+            ${u.email === user?.email ? '<span class="text-[11px] font-bold text-red-600">Đang chọn</span>' : '<span class="text-[11px] text-slate-500 hover:text-slate-800">Đổi vai trò</span>'}
           </button>
         `).join('')}
       </div>
@@ -461,25 +461,25 @@ function attachDrawerEvents(container, callbacks) {
         const json = await res.json();
         const users = json.data || [];
         userListContainer.innerHTML = users.map(u => `
-          <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between gap-2">
+          <div class="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-2 shadow-2xs">
             <div>
               <div class="flex items-center gap-1.5">
-                <span class="font-bold text-slate-200 text-xs">${u.name}</span>
+                <span class="font-bold text-slate-800 text-xs">${u.name}</span>
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                  u.role === 'admin' ? 'bg-rose-500/20 text-rose-300' :
-                  u.role === 'editor' ? 'bg-blue-500/20 text-blue-300' : 'bg-amber-500/20 text-amber-300'
+                  u.role === 'admin' ? 'bg-rose-50 text-rose-700 border border-rose-200' :
+                  u.role === 'editor' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
                 }">${u.role === 'admin' ? 'Cấp 1: Admin' : u.role === 'editor' ? 'Cấp 2: Editor (Export)' : 'Cấp 3: Staff (No Export)'}</span>
               </div>
               <span class="text-[11px] text-slate-500 font-mono">${u.email}</span>
             </div>
             <div class="flex items-center gap-1">
-              <select class="sel-user-role-change bg-slate-900 border border-slate-700 text-slate-200 text-[10px] rounded px-1.5 py-1 outline-none" data-user-id="${u.id}">
+              <select class="sel-user-role-change bg-slate-50 border border-slate-300 text-slate-800 text-[10px] rounded px-1.5 py-1 outline-none font-semibold cursor-pointer" data-user-id="${u.id}">
                 <option value="staff" ${u.role === 'staff' ? 'selected' : ''}>Cấp 3 (Staff)</option>
                 <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>Cấp 2 (Editor)</option>
                 <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Cấp 1 (Admin)</option>
               </select>
               ${u.id > 1 ? `
-                <button type="button" class="btn-delete-user text-rose-400 hover:text-rose-300 p-1 text-xs" data-user-id="${u.id}" title="Xóa tài khoản">
+                <button type="button" class="btn-delete-user text-rose-500 hover:text-rose-700 p-1 text-xs transition cursor-pointer" data-user-id="${u.id}" title="Xóa tài khoản">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </button>
               ` : ''}

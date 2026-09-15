@@ -3,7 +3,7 @@
  * Workflow dialog for Annual Data Update:
  * - Adding a new reporting year (e.g. 2026)
  * - Adjusting/Auditing prior year figures (e.g. 2025 post-audit changes)
- * Rule: Zero emoji. Clean SVGs only.
+ * Rule: Zero emoji. Clean SVGs only. 100% Clean Light Mode.
  */
 
 import { auth } from '../core/auth.js';
@@ -36,103 +36,103 @@ export function renderAnnualUpdateModal(container, options = {}) {
   };
 
   container.innerHTML = `
-    <div id="annualModalBackdrop" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div class="relative w-full max-w-2xl rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 flex flex-col gap-6 text-slate-200">
+    <div id="annualModalBackdrop" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+      <div class="relative w-full max-w-2xl rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 flex flex-col gap-6 text-slate-800">
         
         <!-- Header -->
-        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-2xs">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
             <div>
-              <h3 class="text-base font-bold text-white tracking-tight">Cập Nhật Số Liệu Định Kỳ BCTC</h3>
-              <p class="text-xs text-slate-400 mt-0.5">Quy trình mở rộng niên độ mới hoặc hiệu chỉnh số liệu sau kiểm toán</p>
+              <h3 class="text-base font-bold text-slate-900 tracking-tight">Cập Nhật Số Liệu Định Kỳ BCTC</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Quy trình mở rộng niên độ mới hoặc hiệu chỉnh số liệu sau kiểm toán</p>
             </div>
           </div>
-          <button id="btnCloseAnnualModal" type="button" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <button id="btnCloseAnnualModal" type="button" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
 
         <div class="flex flex-col gap-6 max-h-[75vh] overflow-y-auto pr-1">
           
-          <!-- Section 1: Add New Year (Level 1 Admin Only) -->
-          <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80 flex flex-col gap-3">
+          <!-- Section 1: Add New Year -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Bước 1: Mở rộng thêm niên độ mới</span>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">Super Admin Only</span>
+                <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">Bước 1: Mở rộng thêm niên độ mới</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-semibold">Dành cho Quản trị viên cấp cao</span>
               </div>
-              <p class="text-xs text-slate-400 mt-0.5">Khởi tạo cột năm tài chính mới cho toàn bộ 29 ngân hàng để bắt đầu nhập liệu BCTC mới.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Khởi tạo cột năm tài chính mới cho toàn bộ 29 ngân hàng để bắt đầu nhập liệu BCTC mới.</p>
             </div>
 
-            <div class="flex items-center justify-between flex-wrap gap-3 pt-2 border-t border-slate-700/50">
-              <div class="flex items-center gap-2 text-xs font-mono text-slate-300">
-                <span>Năm khởi tạo:</span>
-                <input type="number" id="inpNewYearValue" value="${nextYearCandidate}" class="bg-slate-900 border border-slate-700 text-slate-100 text-xs font-mono font-bold rounded-lg px-2.5 py-1.5 w-24 outline-none focus:border-blue-500" />
+            <div class="flex items-center justify-between flex-wrap gap-3 pt-2 border-t border-slate-200">
+              <div class="flex items-center gap-2 text-xs font-mono text-slate-700">
+                <span class="font-semibold">Năm khởi tạo:</span>
+                <input type="number" id="inpNewYearValue" value="${nextYearCandidate}" class="bg-white border border-slate-300 text-slate-900 text-xs font-mono font-bold rounded-lg px-2.5 py-1.5 w-24 outline-none focus:border-blue-600 shadow-2xs" />
               </div>
-              <button id="btnConfirmAddYear" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold ${auth.canAddYear() ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm' : 'bg-slate-700 text-slate-500 cursor-not-allowed'} transition flex items-center gap-2">
+              <button id="btnConfirmAddYear" type="button" class="px-4 py-2 rounded-lg text-xs font-semibold ${auth.canAddYear() ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-2xs' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 <span>Mở Rộng Thêm Năm</span>
               </button>
             </div>
           </div>
 
-          <!-- Section 2: Update Prior Year Figure (Admin & Editor) -->
-          <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80 flex flex-col gap-4">
+          <!-- Section 2: Update Prior Year Figure -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-4">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Bước 2: Cập nhật & Điều chỉnh số liệu sau kiểm toán</span>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">Lưu vết Audit Log</span>
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Bước 2: Cập nhật & Điều chỉnh số liệu sau kiểm toán</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">Lịch sử kiểm toán</span>
               </div>
-              <p class="text-xs text-slate-400 mt-0.5">Số liệu thường có thay đổi sau khi phát hành BCTC kiểm toán chính thức. Mọi thao tác sửa đổi sẽ được ghi nhận vào Nhật Ký Kiểm Toán (Audit Log) để Super Admin có thể kiểm soát và phục hồi khi cần.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Số liệu thường có thay đổi sau khi phát hành BCTC kiểm toán chính thức. Mọi thao tác sửa đổi sẽ được ghi nhận vào Nhật Ký Kiểm Toán để có thể kiểm soát và phục hồi khi cần.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               <div>
-                <label class="block text-[11px] text-slate-400 mb-1">Mã Ngân Hàng:</label>
-                <select id="selAuditBank" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 font-mono outline-none focus:border-blue-500">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Mã Ngân Hàng:</label>
+                <select id="selAuditBank" class="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-2 font-mono outline-none focus:border-blue-600 shadow-2xs">
                   ${banks.map(b => `<option value="${b}">${b} - ${getBankTradeName(b)}</option>`).join('')}
                 </select>
               </div>
 
               <div>
-                <label class="block text-[11px] text-slate-400 mb-1">Năm cần điều chỉnh:</label>
-                <select id="selAuditYear" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 font-mono outline-none focus:border-blue-500">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Năm cần điều chỉnh:</label>
+                <select id="selAuditYear" class="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-2 font-mono outline-none focus:border-blue-600 shadow-2xs">
                   ${years.map(y => `<option value="${y}" ${String(y) === priorYearCandidate ? 'selected' : ''}>${y}</option>`).join('')}
                 </select>
               </div>
 
               <div>
-                <label class="block text-[11px] text-slate-400 mb-1">Chỉ tiêu tài chính:</label>
-                <select id="selAuditField" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 outline-none focus:border-blue-500">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Chỉ tiêu tài chính:</label>
+                <select id="selAuditField" class="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-2 outline-none focus:border-blue-600 shadow-2xs">
                   ${rawFields.map(f => `<option value="${f.name}">${f.name}</option>`).join('')}
                 </select>
               </div>
             </div>
 
             <!-- Live Current Value Preview Box -->
-            <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 flex items-center justify-between flex-wrap gap-2 text-xs">
-              <span class="text-slate-400">Giá trị hiện tại trong hệ thống:</span>
-              <span id="lblCurrentAuditVal" class="font-mono font-bold text-blue-400 text-sm">--</span>
+            <div class="p-3 rounded-lg bg-white border border-slate-200 flex items-center justify-between flex-wrap gap-2 text-xs shadow-2xs">
+              <span class="text-slate-600 font-medium">Giá trị hiện tại trong hệ thống:</span>
+              <span id="lblCurrentAuditVal" class="font-mono font-bold text-blue-700 text-sm">--</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
               <div>
-                <label class="block text-[11px] text-slate-400 mb-1">Giá trị kiểm toán mới:</label>
-                <input type="text" id="inpAuditNewValue" placeholder="VD: 75500 hoặc 12.5" class="w-full bg-slate-900 border border-slate-700 text-slate-100 text-xs rounded-lg px-3 py-2 outline-none focus:border-emerald-500 font-mono" />
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Giá trị kiểm toán mới:</label>
+                <input type="text" id="inpAuditNewValue" placeholder="VD: 75500 hoặc 12.5" class="w-full bg-white border border-slate-300 text-slate-900 text-xs rounded-lg px-3 py-2 outline-none focus:border-emerald-600 font-mono shadow-2xs" />
               </div>
 
               <div>
-                <label class="block text-[11px] text-slate-400 mb-1">Ghi chú kiểm toán:</label>
-                <input type="text" id="inpAuditNote" placeholder="VD: Điều chỉnh sau kiểm toán KPMG" value="Điều chỉnh sau kiểm toán" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-500" />
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú kiểm toán:</label>
+                <input type="text" id="inpAuditNote" placeholder="VD: Điều chỉnh sau kiểm toán, BCTC chính thức" value="Điều chỉnh sau kiểm toán" class="w-full bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-600 shadow-2xs" />
               </div>
             </div>
 
-            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-800">
-              <span class="text-[11px] text-slate-500">Sau khi lưu, hệ thống sẽ tự động mở trang Nhật Ký Kiểm Toán (Audit Log) để đối chiếu.</span>
-              <button id="btnSaveAuditValue" type="button" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-200">
+              <span class="text-[11px] text-slate-500">Sau khi lưu, hệ thống sẽ tự động mở trang Nhật Ký Kiểm Toán để đối chiếu.</span>
+              <button id="btnSaveAuditValue" type="button" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-2xs flex items-center gap-1.5 cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span>Ghi Nhận & Xem Nhật Ký Kiểm Toán</span>
               </button>
@@ -142,13 +142,13 @@ export function renderAnnualUpdateModal(container, options = {}) {
         </div>
 
         <!-- Footer -->
-        <div class="px-6 py-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between flex-wrap gap-2">
-          <button id="btnJumpToAuditLog" type="button" class="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1">
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2">
+          <button id="btnJumpToAuditLog" type="button" class="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             <span>Mở trang Nhật Ký & Lịch Sử Kiểm Toán</span>
           </button>
 
-          <button id="btnConfirmCloseAnnual" type="button" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+          <button id="btnConfirmCloseAnnual" type="button" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
             Đóng
           </button>
         </div>

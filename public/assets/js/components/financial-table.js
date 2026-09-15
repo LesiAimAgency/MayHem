@@ -1,6 +1,6 @@
 /**
  * assets/js/components/financial-table.js
- * Renders the multi-year financial matrix table with sticky columns and sorting (Light Mode).
+ * Renders the multi-year financial matrix table with sticky columns, sorting and quick editing (Light Mode).
  * Rule: Zero mock data. Presentation only. Zero emoji.
  */
 
@@ -15,7 +15,8 @@ export function renderFinancialTable(container, options = {}) {
     sortYear = null,
     sortAsc = false,
     topBannerHtml = '',
-    onSort = () => {}
+    onSort = () => {},
+    onEditMetric = () => {}
   } = options;
 
   if (records.length === 0) {
@@ -38,6 +39,7 @@ export function renderFinancialTable(container, options = {}) {
       <table class="financial-table">
         <thead>
           <tr>
+            <th class="w-10 text-center">Sửa</th>
             <th class="col-sticky-loai">Loại</th>
             <th class="col-sticky-bank">Mã NH</th>
             <th class="col-sticky-field">Chỉ tiêu tài chính</th>
@@ -69,14 +71,27 @@ export function renderFinancialTable(container, options = {}) {
       : `<span>${item.field}</span>`;
 
     tableHtml += `
-      <tr class="${rowClass}">
+      <tr class="${rowClass} group hover:bg-slate-50/80 transition-colors">
+        <td class="w-10 text-center">
+          <button type="button" class="btn-table-edit-row p-1 rounded hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition cursor-pointer" data-bank="${item.bank}" data-field="${item.field}" title="Chỉnh sửa chỉ tiêu ${item.field} của ${item.bank}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </button>
+        </td>
         <td class="col-sticky-loai">${loaiBadge}</td>
         <td class="col-sticky-bank"><span class="badge-bank-code font-bold text-blue-700">${item.bank}</span></td>
         <td class="col-sticky-field" title="${item.field}">${fieldHtml}</td>
         ${showFormula ? `<td class="col-sticky-formula" title="${item.formula_desc || ''}">${item.formula_code || '-'}</td>` : ''}
         ${years.map(y => {
           const val = item.values ? item.values[y] : null;
-          return `<td>${formatValue(val, meta)}</td>`;
+          return `
+            <td class="cell-metric-value cursor-pointer hover:bg-blue-50/70 hover:font-bold transition" 
+                data-bank="${item.bank}" 
+                data-field="${item.field}" 
+                data-year="${y}" 
+                title="Bấm đúp hoặc bấm để sửa số liệu năm ${y}">
+              ${formatValue(val, meta)}
+            </td>
+          `;
         }).join('')}
       </tr>
     `;
@@ -95,6 +110,25 @@ export function renderFinancialTable(container, options = {}) {
     th.addEventListener('click', () => {
       const y = th.getAttribute('data-year');
       onSort(y);
+    });
+  });
+
+  // Attach quick edit button on rows
+  container.querySelectorAll('.btn-table-edit-row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const bank = btn.getAttribute('data-bank');
+      const field = btn.getAttribute('data-field');
+      onEditMetric({ bank, field });
+    });
+  });
+
+  // Attach cell click to edit that specific year directly
+  container.querySelectorAll('.cell-metric-value').forEach(cell => {
+    cell.addEventListener('dblclick', () => {
+      const bank = cell.getAttribute('data-bank');
+      const field = cell.getAttribute('data-field');
+      const year = cell.getAttribute('data-year');
+      onEditMetric({ bank, field, year });
     });
   });
 }

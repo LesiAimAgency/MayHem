@@ -18,8 +18,14 @@ class DataVersioningManager {
   }
 
   setBaseline(originalJson) {
-    if (!this.baselineJson && originalJson) {
-      this.baselineJson = JSON.parse(JSON.stringify(originalJson));
+    if (originalJson) {
+      if (!this.baselineJson) {
+        try {
+          this.baselineJson = JSON.parse(JSON.stringify(originalJson));
+        } catch (e) {
+          this.baselineJson = originalJson;
+        }
+      }
       try {
         sessionStorage.setItem(BASELINE_CACHE_KEY, JSON.stringify(originalJson));
       } catch (e) {}
@@ -41,10 +47,41 @@ class DataVersioningManager {
   loadAuditLog() {
     try {
       const saved = localStorage.getItem(AUDIT_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      const list = saved ? JSON.parse(saved) : [];
+      return this.sanitizeLog(list);
     } catch (e) {
       return [];
     }
+  }
+
+  sanitizeLog(list) {
+    if (!Array.isArray(list)) return [];
+    
+    // Identify keys that have been rolled back
+    const rolledBackKeys = new Set();
+    list.forEach(e => {
+      if (e.action === 'ROLLBACK' || e.userRole === 'Rollback' || String(e.id).startsWith('rollback_')) {
+        rolledBackKeys.add(`${e.bank}_${e.field}_${e.year}`);
+      }
+    });
+
+    // Check if there is a Reset Baseline entry
+    const hasResetBaseline = list.some(e => e.bank === 'ALL' || e.field === 'TAT_CA_CHI_TIEU');
+
+    list.forEach(e => {
+      if (hasResetBaseline) {
+        e.rolledBack = true;
+        e.isReverted = true;
+      } else if (e.action === 'ROLLBACK' || e.action === 'ROLLED_BACK' || e.userRole === 'Rollback' || String(e.id).startsWith('rollback_')) {
+        e.rolledBack = true;
+        e.isReverted = true;
+      } else if (rolledBackKeys.has(`${e.bank}_${e.field}_${e.year}`)) {
+        e.rolledBack = true;
+        e.isReverted = true;
+      }
+    });
+
+    return list;
   }
 
   saveAuditLog() {
@@ -54,7 +91,7 @@ class DataVersioningManager {
     this.notifyListeners();
   }
 
-  recordChange({ bank, field, year, oldValue, newValue, userRole = 'Editor', note = '' }) {
+  recordChange({ bank, field, year, oldValue, newValue, userRole = 'Editor', note = '', action = 'UPDATE' }) {
     const entry = {
       id: 'edit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
       timestamp: new Date().toISOString(),
@@ -65,7 +102,10 @@ class DataVersioningManager {
       year: String(year),
       oldValue,
       newValue,
-      note
+      note,
+      action,
+      rolledBack: (action === 'ROLLBACK' || bank === 'ALL'),
+      isReverted: (action === 'ROLLBACK' || bank === 'ALL')
     };
 
     this.auditLog.unshift(entry);
@@ -84,7 +124,8 @@ class DataVersioningManager {
       oldValue: (oldValue !== undefined) ? oldValue : (oldVal !== undefined ? oldVal : null),
       newValue: (newValue !== undefined) ? newValue : (newVal !== undefined ? newVal : null),
       userRole: userRole || auth.getUser()?.name || auth.getRoleMeta().name,
-      note: note || 'Cập nhật số liệu sau kiểm toán'
+      note: note || 'Cập nhật số liệu sau kiểm toán',
+      action: 'UPDATE'
     });
   }
 
@@ -99,6 +140,7 @@ class DataVersioningManager {
           json.data.forEach(item => {
             const exists = this.auditLog.some(e => e.id === item.log_id || e.id === String(item.id) || (e.bank === item.bank && e.field === item.field && String(e.year) === String(item.year) && Math.abs(new Date(e.timestamp) - new Date(item.created_at)) < 2000));
             if (!exists && item.bank && item.field) {
+              const isRollback = (item.action === 'ROLLBACK' || item.action === 'ROLLED_BACK');
               this.auditLog.push({
                 id: item.log_id || ('audit_' + item.id),
                 dbId: item.id,
@@ -112,10 +154,13 @@ class DataVersioningManager {
                 oldValue: item.old_value !== null && item.old_value !== undefined ? Number(item.old_value) : null,
                 newValue: item.new_value !== null && item.new_value !== undefined ? Number(item.new_value) : null,
                 action: item.action || 'UPDATE',
+                rolledBack: isRollback,
+                isReverted: isRollback,
                 note: item.note || ''
               });
             }
           });
+          this.sanitizeLog(this.auditLog);
           this.auditLog.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
           this.saveAuditLog();
         }
@@ -140,42 +185,58 @@ class DataVersioningManager {
     if (idx === -1) return null;
 
     const entry = this.auditLog[idx];
-    if (entry.oldValue === null || entry.oldValue === undefined) {
+    if (entry.oldValue === null || entry.oldValue === undefined || entry.rolledBack || entry.isReverted) {
       return null;
     }
 
-    // Revert in memory records
+    // 1. Mark target entry and all matching prior edits as rolled back
+    entry.rolledBack = true;
+    entry.isReverted = true;
+    this.auditLog.forEach(e => {
+      if (e.bank === entry.bank && e.field === entry.field && String(e.year) === String(entry.year)) {
+        e.rolledBack = true;
+        e.isReverted = true;
+      }
+    });
+
+    // 2. Revert in memory records
     const rec = allRecords.find(r => r.bank === entry.bank && r.field === entry.field);
     if (rec && rec.values) {
       rec.values[entry.year] = entry.oldValue;
       rec[entry.year] = entry.oldValue;
     }
 
-    // Record a rollback action in audit log
+    // 3. Record a rollback action in audit log
     const rollbackLog = {
       id: 'rollback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
       timestamp: new Date().toISOString(),
       formattedTime: new Date().toLocaleString('vi-VN'),
-      userRole: 'Super Admin',
+      userRole: auth.getUser()?.name || auth.getRoleMeta().name || 'Super Admin',
       bank: entry.bank,
       field: entry.field,
       year: String(entry.year),
       oldValue: entry.newValue,
       newValue: entry.oldValue,
-      note: `Hoàn tác về giá trị cũ theo yêu cầu bảo vệ dữ liệu (tham chiếu: ${entry.id || entry.log_id})`
+      action: 'ROLLBACK',
+      rolledBack: true,
+      isReverted: true,
+      note: `Phục hồi về giá trị trước kiểm toán (${entry.oldValue})`
     };
 
     this.auditLog.unshift(rollbackLog);
     this.saveAuditLog();
 
-    // Call remote API in background to sync with MySQL
-    try {
-      fetch(`/api/v1/audit-logs/${entry.id || entry.log_id}/rollback`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
-        body: JSON.stringify({ user_role: auth.getUser()?.role || 'Super Admin' })
-      }).catch(() => {});
-    } catch (e) {}
+    // Call remote API in background to sync with MySQL if entry has valid server ID
+    const targetId = entry.log_id || entry.dbId || (typeof entry.id === 'number' ? entry.id : null);
+    if (targetId) {
+      try {
+        fetch(`/api/v1/audit-logs/${targetId}/rollback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...auth.getAuthHeaders() },
+          body: JSON.stringify({ user_role: auth.getUser()?.role || 'Super Admin' })
+        }).catch(() => {});
+      } catch (e) {}
+    }
 
     return rollbackLog;
   }
@@ -186,10 +247,18 @@ class DataVersioningManager {
 
     // Reset table records
     baseline.table.forEach(baseRow => {
-      const live = allRecords.find(r => r.bank === baseRow['Ngân hàng'] && r.field === baseRow['Chỉ tiêu']);
+      const bBank = baseRow['Ngân hàng'] || baseRow['Mã Ngân Hàng'] || baseRow['bank'];
+      const bField = baseRow['Chỉ tiêu'] || baseRow['field'];
+      const live = allRecords.find(r => r.bank === bBank && r.field === bField);
       if (live && live.values && baseRow.values) {
         live.values = { ...baseRow.values };
       }
+    });
+
+    // Mark all prior edits as superseded / rolled back
+    this.auditLog.forEach(e => {
+      e.rolledBack = true;
+      e.isReverted = true;
     });
 
     this.recordChange({
@@ -198,7 +267,8 @@ class DataVersioningManager {
       year: 'ALL',
       oldValue: null,
       newValue: null,
-      userRole: 'Super Admin',
+      userRole: auth.getUser()?.name || 'Super Admin',
+      action: 'RESET_BASELINE',
       note: 'Khôi phục toàn bộ ma trận số liệu về nguyên bản ban đầu (Reset Baseline)'
     });
 
