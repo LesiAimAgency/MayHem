@@ -979,7 +979,7 @@ export class DashboardApp {
         item.loai,
         item.bank,
         item.field,
-        item.formula_code || ''
+        item.formula_desc || item.formula_code || ''
       ];
       effectiveYears.forEach(y => {
         const val = item.values ? item.values[y] : null;
