@@ -21,6 +21,10 @@ class CheckRoleMayHem
         $user = $request->attributes->get('auth_user');
 
         if (!$user) {
+            if (!$request->expectsJson() && !$request->is('api/*')) {
+                return redirect()->guest(route('login'));
+            }
+
             return response()->json([
                 'success' => false,
                 'status' => 'unauthorized',
@@ -42,6 +46,10 @@ class CheckRoleMayHem
         if (!in_array($userRole, $allowedRoles)) {
             $allowedStr = implode(', ', array_map('strtoupper', $allowedRoles));
             $currentStr = strtoupper($userRole);
+
+            if (!$request->expectsJson() && !$request->is('api/*')) {
+                return redirect()->route('reports.overview')->with('error', "Bạn không có quyền truy cập trang này (Yêu cầu quyền {$allowedStr}).");
+            }
 
             return response()->json([
                 'success' => false,

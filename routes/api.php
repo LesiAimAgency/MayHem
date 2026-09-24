@@ -1,72 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\FinancialReportController;
-use App\Http\Controllers\Api\ScreenerController;
-use App\Http\Controllers\Api\BackupController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SectorController;
+use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\ScreenerController;
+use App\Http\Controllers\Api\FinancialReportController;
+use App\Http\Controllers\Api\CustomFilterController;
+use App\Http\Controllers\Api\UserController;
 
 Route::prefix('v1')->group(function () {
-    // 0. Authentication Endpoints
+    // 1. Authentication
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-    Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('mayhem.auth');
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/me', [AuthController::class, 'me']);
 
-    // 1. Read-only Data Queries (Matrix, Companies, Factsheets, Presets, Criteria, Industries)
-    Route::get('/financial-reports/matrix', [FinancialReportController::class, 'getMatrix']);
-    Route::get('/companies', [FinancialReportController::class, 'getCompanies']);
-    Route::get('/screener/presets', [ScreenerController::class, 'getPresets']);
-    Route::get('/screener/filters', [ScreenerController::class, 'index']);
-    Route::get('/screener/criteria', [ScreenerController::class, 'getCriteria']);
-    Route::get('/screener/industries', [ScreenerController::class, 'getIndustries']);
-    Route::get('/screener/industries/{id}', [ScreenerController::class, 'getIndustry']);
+    // 2. Sectors & Companies
+    Route::get('/sectors', [SectorController::class, 'index']);
+    Route::get('/companies', [CompanyController::class, 'index']);
+    Route::get('/companies/{ticker}', [CompanyController::class, 'show'])->where('ticker', '^[A-Za-z0-9_]{3,10}$');
 
-    // 2. All Authenticated Users (Admin, Editor, Staff)
-    Route::middleware(['mayhem.auth'])->group(function () {
-        Route::get('/auth/users', [AuthController::class, 'users']);
-        Route::get('/audit-logs', [FinancialReportController::class, 'getAuditLogs']);
-        Route::post('/financial-reports/update', [FinancialReportController::class, 'updateMetricValue'])
-            ->middleware('mayhem.role:admin,editor,staff');
-        Route::post('/screener/filters', [ScreenerController::class, 'store'])
-            ->middleware('mayhem.role:admin,editor,staff');
-        Route::put('/screener/filters/{id}', [ScreenerController::class, 'update'])
-            ->middleware('mayhem.role:admin,editor,staff');
-        Route::post('/screener/save-filter', [ScreenerController::class, 'saveFilter'])
-            ->middleware('mayhem.role:admin,editor,staff');
-        Route::delete('/screener/filters/{id}', [ScreenerController::class, 'destroy'])
-            ->middleware('mayhem.role:admin,editor,staff');
-        Route::put('/screener/criteria/{id}', [ScreenerController::class, 'updateCriterion'])
-            ->middleware('mayhem.role:admin,editor,staff');
-    });
+    // 3. Screener & Filter Engine (Wireframe 1)
+    Route::post('/screener/filter', [ScreenerController::class, 'filter']);
+    Route::get('/screener/custom-filters', [CustomFilterController::class, 'index']);
+    Route::post('/screener/custom-filters', [CustomFilterController::class, 'store']);
+    Route::delete('/screener/custom-filters/{id}', [CustomFilterController::class, 'destroy'])->whereNumber('id');
 
-    // 3. Level 1 & Level 2 Only (Admin, Editor) - Strict Export, Rollback, Criteria Authoring & Industry Configs
-    Route::middleware(['mayhem.auth', 'mayhem.role:admin,editor'])->group(function () {
-        Route::get('/financial-reports/export-excel', [FinancialReportController::class, 'exportExcel']);
-        Route::post('/financial-reports/export-excel', [FinancialReportController::class, 'exportExcel']);
-        Route::post('/audit-logs/{id}/rollback', [FinancialReportController::class, 'rollbackLog']);
-        Route::get('/backup/export', [BackupController::class, 'exportSnapshot']);
-        Route::post('/screener/criteria', [ScreenerController::class, 'storeCriterion']);
-        Route::put('/screener/criteria/{id}', [ScreenerController::class, 'updateCriterion']);
-        Route::post('/screener/industries', [ScreenerController::class, 'storeIndustry']);
-        Route::put('/screener/industries/{id}', [ScreenerController::class, 'updateIndustry']);
-    });
+    // 4. Financial Reports Factsheet (Wireframe 2) & Comparison (Wireframe 3)
+    Route::get('/financial-reports/compare', [FinancialReportController::class, 'compare']);
+    Route::get('/financial-reports/{ticker}/export-csv', [FinancialReportController::class, 'exportCsv'])->where('ticker', '^[A-Za-z0-9_]{3,10}$');
+    Route::get('/financial-reports/{ticker}', [FinancialReportController::class, 'show'])->where('ticker', '^[A-Za-z0-9_]{3,10}$');
 
-    // 4. Super Admin Only (Role Level 1) - User Management, System Snapshot Restore, Expand Year, Criteria Reset, Industry Delete/Reset
+    // 5. Users Management (CRUD with Auth & Role Protection)
     Route::middleware(['mayhem.auth', 'mayhem.role:admin'])->group(function () {
-        Route::post('/auth/users', [AuthController::class, 'store']);
-        Route::put('/auth/users/{id}/role', [AuthController::class, 'updateRole']);
-        Route::delete('/auth/users/{id}', [AuthController::class, 'destroy']);
-        Route::post('/financial-reports/new-year', [FinancialReportController::class, 'addNewYear']);
-        Route::post('/financial-reports/reset-baseline', [FinancialReportController::class, 'resetBaseline']);
-        Route::post('/backup/restore', [BackupController::class, 'restoreSnapshot']);
-        Route::delete('/screener/criteria/{id}', [ScreenerController::class, 'destroyCriterion']);
-        Route::post('/screener/criteria/reset', [ScreenerController::class, 'resetCriteria']);
-        Route::delete('/screener/industries/{id}', [ScreenerController::class, 'destroyIndustry']);
-        Route::post('/screener/industries/reset', [ScreenerController::class, 'resetIndustries']);
-        Route::delete('/audit-logs', [FinancialReportController::class, 'clearAuditLogs']);
-        Route::delete('/audit-logs/{id}', [FinancialReportController::class, 'destroyAuditLog']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::get('/users/{id}', [UserController::class, 'show'])->whereNumber('id');
+        Route::put('/users/{id}', [UserController::class, 'update'])->whereNumber('id');
+        Route::patch('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->whereNumber('id');
+        Route::post('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->whereNumber('id');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->whereNumber('id');
     });
-
-    // 5. Individual Bank Factsheet (Supports all tickers e.g. VCB, TCB, OceanBank)
-    Route::get('/financial-reports/{ticker}', [FinancialReportController::class, 'getBankFactsheet'])
-        ->where('ticker', '^[A-Za-z0-9_]{3,15}$');
 });

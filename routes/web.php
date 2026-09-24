@@ -1,104 +1,83 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\PageController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - MayHem Financial Analytics
+|--------------------------------------------------------------------------
+| Chuẩn hóa hệ thống Router chuyên nghiệp:
+| - /tong-hop       : Báo Cáo Tổng Hợp & Sàng Lọc Cổ Phiếu
+| - /don-le/{ticker}: Báo Cáo Tài Chính Đơn Lẻ Đa Niên Độ
+| - /so-sanh        : Báo Cáo Đối Chiếu So Sánh Đa Chiều
+| - /users          : Quản Trị Người Dùng & Phân Quyền
+|--------------------------------------------------------------------------
+*/
 
+// Root redirect to default Overview page
+Route::get('/', function () {
+    return redirect()->route('reports.overview');
+});
 
+// Authentication (Public Routes)
 Route::get('/login', function (Request $request) {
+    $token = $request->cookie('mayhem_token');
+    if (($token && Cache::has("mayhem_token_{$token}")) || Auth::check()) {
+        return redirect()->route('reports.overview');
+    }
     return view('auth.login');
 })->name('login');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/', function (Request $request) {
+Route::get('/logout', function (Request $request) {
     $token = $request->cookie('mayhem_token');
-    if ($token && (Cache::has("mayhem_token_{$token}") || str_starts_with($token, 'mayhem_demo_') || str_starts_with($token, 'mayhem_local_'))) {
-        return view('dashboard');
+    if ($token) {
+        Cache::forget("mayhem_token_{$token}");
     }
-    
-    // Auto router default is login
-    return redirect('/login');
-});
-
-Route::get('/logout', function () {
-    return redirect('/login')->withCookie(cookie()->forget('mayhem_token'));
+    Auth::logout();
+    if ($request->hasSession()) {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    }
+    return redirect('/login')->withoutCookie('mayhem_token');
 })->name('logout');
 
-Route::get('/demo-avg', function () {
-    $reports = \App\Models\FinancialReportJSON::all();
-    $table = [];
-    foreach ($reports as $report) {
-        if (is_array($report->raw_data)) {
-            foreach ($report->raw_data as $row) {
-                // Đảm bảo có mã ngân hàng để track nếu cần
-                $row['bank'] = $report->ticker;
-                $table[] = $row;
-            }
-        }
-    }
-    $years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-    
-    $targetIndicators = [
-        'Tỷ lệ Chi phí / Thu nhập (CIR)',
-        'Biên lãi vận hành (trước DPRR)',
-        'Biên lợi nhuận trước thuế',
-        'Biên Lợi nhuận ST của CĐ công ty mẹ',
-        'Tỷ suất sinh lời trên Tổng Tài Sản (ROA)',
-        'Debt/Equity',
-        'Tỷ suất sinh lời trên Vốn CSH (ROE)',
-        'Tỷ lệ tiền gửi không kỳ hạn (CASA)',
-        'Tỷ lệ nợ xấu (NPL) cuối năm'
-    ];
-    
-    $yearlySums = [];
-    $yearlyCounts = [];
-    
-    foreach ($table as $row) {
-        $field = $row['Chỉ tiêu'] ?? ($row['field'] ?? '');
-        if (in_array($field, $targetIndicators)) {
-            if (!isset($yearlySums[$field])) {
-                $yearlySums[$field] = array_fill_keys($years, 0);
-                $yearlyCounts[$field] = array_fill_keys($years, 0);
-            }
-            
-            foreach ($years as $year) {
-                $val = $row['values'][$year] ?? ($row[$year] ?? null);
-                if ($val !== null && is_numeric($val)) {
-                    $yearlySums[$field][$year] += (float)$val;
-                    $yearlyCounts[$field][$year]++;
-                }
-            }
-        }
-    }
-    
-    $results = [];
-    foreach ($targetIndicators as $indicator) {
-        $row = ['Indicator' => $indicator];
-        $totalVal = 0;
-        $validYears = 0;
+// Protected Routes (Require Authentication)
+Route::middleware(['mayhem.auth'])->group(function () {
+
+    // Professional Primary Routes
+    Route::get('/tong-hop', [PageController::class, 'overview'])->name('reports.overview');
+    Route::get('/don-le/{ticker?}', [PageController::class, 'factsheet'])->name('reports.factsheet');
+    Route::get('/so-sanh', [PageController::class, 'comparison'])->name('reports.comparison');
+
+    // Users Management (Admin Role Only)
+    Route::get('/users', [PageController::class, 'users'])
+        ->middleware('mayhem.role:admin')
+        ->name('users.index');
+
+    // Reports prefix group (English aliases)
+    Route::prefix('reports')->group(function () {
+        Route::get('/', function () {
+            return redirect()->route('reports.overview');
+        });
+        Route::get('/overview', [PageController::class, 'overview']);
+        Route::get('/factsheet/{ticker?}', [PageController::class, 'factsheet']);
+        Route::get('/comparison', [PageController::class, 'comparison']);
         
-        foreach ($years as $year) {
-            if (isset($yearlyCounts[$indicator][$year]) && $yearlyCounts[$indicator][$year] > 0) {
-                $avgYear = $yearlySums[$indicator][$year] / $yearlyCounts[$indicator][$year];
-                $row[$year] = $avgYear;
-                
-                $totalVal += $avgYear;
-                $validYears++;
-            } else {
-                $row[$year] = null;
-            }
-        }
-        
-        $row['TotalAverage'] = $validYears > 0 ? ($totalVal / $validYears) : null;
-        $results[] = $row;
-    }
-    
-    return view('demo-avg', [
-        'years' => $years,
-        'results' => $results
-    ]);
+        // Wireframe legacy redirects
+        Route::get('/wireframe-1', function () { return redirect()->route('reports.overview'); });
+        Route::get('/wireframe-2', function () { return redirect()->route('reports.factsheet'); });
+        Route::get('/wireframe-3', function () { return redirect()->route('reports.comparison'); });
+    });
+
+    // Wireframe static file aliases redirect to professional routes
+    Route::get('/wireframe-1.html', function () { return redirect()->route('reports.overview'); });
+    Route::get('/wireframe-2.html', function () { return redirect()->route('reports.factsheet'); });
+    Route::get('/wireframe-3.html', function () { return redirect()->route('reports.comparison'); });
 });

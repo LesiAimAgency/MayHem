@@ -31,11 +31,14 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach($results as $index => $row)
+                      
                     <tr class="hover:bg-slate-50 transition-colors {{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50' }}">
                         <td class="px-4 py-3 sticky left-0 font-medium text-slate-700 border-r border-gray-100 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] {{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }}">
                             {{ $row['Indicator'] }}
                         </td>
+                        
                         @foreach($years as $year)
+                            
                             <td class="px-4 py-3 text-center font-mono">
                                 @if($row[$year] !== null)
                                     @php
