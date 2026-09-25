@@ -23,14 +23,11 @@
         class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.factsheet') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
         BÁO CÁO ĐƠN LẺ
       </a>
+      <a href="{{ route('reports.comparison') }}"
+        class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.factsheet') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
+        SO SÁNH
+      </a>
 
-      
-        <!-- Tab 3: SO SÁNH (Hiển thị active khi ở trang so sánh) -->
-        <a href="{{ route('reports.comparison') }}"
-          class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center font-bold shadow-sm bg-white text-[#051650]">
-          SO SÁNH
-        </a>
- 
     </nav>
 
     <!-- Right: Slogan, User Profile & Actions -->
@@ -58,7 +55,7 @@
       @endphp
 
       <!-- User Info & Actions -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2.5" style="padding-left: 103px;">
         
 
         <!-- User Chip -->
