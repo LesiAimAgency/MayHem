@@ -23,8 +23,9 @@
         class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.factsheet') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
         BÁO CÁO ĐƠN LẺ
       </a>
+
       <a href="{{ route('reports.comparison') }}"
-        class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.factsheet') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
+        class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.comparison') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
         SO SÁNH
       </a>
 
