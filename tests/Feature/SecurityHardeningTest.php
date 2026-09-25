@@ -177,7 +177,7 @@ class SecurityHardeningTest extends TestCase
         $adminToken = 'mayhem_test_admin_token_restore';
         Cache::put("mayhem_token_{$adminToken}", [
             'id' => 1,
-            'name' => 'MayHem Super Admin',
+            'name' => ' ',
             'email' => 'admin@mayhem.vn',
             'role' => 'admin'
         ], now()->addHour());

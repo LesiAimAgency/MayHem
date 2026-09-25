@@ -30,6 +30,10 @@ class AuthenticateMayHem
         }
 
         if (empty($token)) {
+            if (!$request->expectsJson() && !$request->is('api/*')) {
+                return redirect()->guest(route('login'));
+            }
+
             return response()->json([
                 'success' => false,
                 'status' => 'unauthorized',
@@ -46,7 +50,15 @@ class AuthenticateMayHem
             $allowDemoTokens = config('app.allow_demo_tokens', true);
 
             if (!$isProduction && $allowDemoTokens) {
-                if ($token === 'mayhem_demo_editor_token') {
+                if ($token === 'mayhem_demo_admin_token') {
+                    $user = User::where('role', 'admin')->first();
+                    $userData = $user ? [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'role' => 'admin'
+                    ] : ['id' => 1, 'name' => ' ', 'email' => 'admin@mayhem.vn', 'role' => 'admin'];
+                } elseif ($token === 'mayhem_demo_editor_token') {
                     $user = User::where('role', 'editor')->first();
                     $userData = $user ? [
                         'id' => $user->id,
@@ -62,19 +74,15 @@ class AuthenticateMayHem
                         'email' => $user->email,
                         'role' => 'staff'
                     ] : ['id' => 3, 'name' => 'Staff', 'email' => 'staff@mayhem.vn', 'role' => 'staff'];
-                } else {
-                    $user = User::where('role', 'admin')->first();
-                    $userData = $user ? [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'role' => 'admin'
-                    ] : ['id' => 1, 'name' => 'MayHem Super Admin', 'email' => 'admin@mayhem.vn', 'role' => 'admin'];
                 }
             }
         }
 
         if (!$userData) {
+            if (!$request->expectsJson() && !$request->is('api/*')) {
+                return redirect()->guest(route('login'))->withoutCookie('mayhem_token');
+            }
+
             return response()->json([
                 'success' => false,
                 'status' => 'unauthorized',
@@ -84,6 +92,11 @@ class AuthenticateMayHem
 
         // Attach validated user to Request
         $request->attributes->set('auth_user', $userData);
+
+        // Sync with Laravel Auth guard for blade templates and controllers
+        if (!empty($userData['id'])) {
+            \Illuminate\Support\Facades\Auth::loginUsingId($userData['id']);
+        }
 
         return $next($request);
     }

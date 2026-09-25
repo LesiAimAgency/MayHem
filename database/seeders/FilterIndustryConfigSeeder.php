@@ -31,7 +31,7 @@ class FilterIndustryConfigSeeder extends Seeder
                     'Tăng trưởng TOI',
                     'Chi phí vận hành (SG & A)',
                     'Tỷ lệ Chi phí / Thu nhập (CIR)',
-                    'Tăng tưởng CPVH',
+                    'Tăng trưởng CPVH',
                     'Lợi nhuận thuần từ hoạt động kinh doanh trước chi phí dự phòng rủi ro tín dụng',
                     'Biên lãi vận hành (trước DPRR)',
                     'Chi phí dự phòng rủi ro tín dụng',
