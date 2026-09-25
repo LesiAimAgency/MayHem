@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\FinancialMetricService;
 use App\Services\ScreenerService;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -38,8 +39,9 @@ class PageController extends Controller
             'sector_averages' => [],
         ];
 
-        // Fetch all historical reports for each company to populate banksData with real metrics & historical trends
+        $activeYears = $this->metricService->getActiveYears();
         $allReports = \App\Models\MhFinancialReport::whereIn('short_name', $companies->pluck('short_name'))
+            ->whereIn('report_year', $activeYears)
             ->orderBy('report_year', 'asc')
             ->get()
             ->groupBy('short_name');
@@ -58,16 +60,21 @@ class PageController extends Controller
                     $llr = round($llr * 100, 2);
                 }
 
+                $depr = $raw['depreciation'] ?? null;
+                $toi = $raw['toi'] ?? null;
+                $totalLiab = $raw['total_liabilities'] ?? null;
+                $ownersEq = $raw['owners_equity'] ?? null;
+
                 $history[] = [
                     'year' => (int) $r->report_year,
                     'cir' => $raw['cir'] ?? null,
-                    'cpkh_toi' => $ind['depreciation_toi'] ?? ($raw['depreciation'] && $raw['toi'] ? round(($raw['depreciation'] / $raw['toi']) * 100, 2) : null),
+                    'cpkh_toi' => $ind['depreciation_toi'] ?? (($depr && $toi) ? round(($depr / $toi) * 100, 2) : null),
                     'blvh' => $ind['operating_margin'] ?? null,
                     'blntt' => $ind['pbt_margin'] ?? null,
                     'blnst' => $ind['parent_npat_margin'] ?? null,
                     'ttlr' => $ind['growth_parent_npat'] ?? null,
                     'roa' => $raw['roa'] ?? null,
-                    'debt_equity' => $ind['debt_equity'] ?? ($raw['total_liabilities'] && $raw['owners_equity'] ? round($raw['total_liabilities'] / $raw['owners_equity'], 2) : null),
+                    'debt_equity' => $ind['debt_equity'] ?? (($totalLiab && $ownersEq) ? round($totalLiab / $ownersEq, 2) : null),
                     'roe' => $raw['roe'] ?? null,
                     'cfo' => $raw['cfo'] ?? null,
                     'parent_npat' => $raw['parent_npat'] ?? null,
@@ -107,9 +114,9 @@ class PageController extends Controller
             $sectorAverages[$key] = $vals->count() > 0 ? round($vals->avg(), 2) : 0;
         }
 
-        // Lấy năm max từ DB thay vì hardcode (tránh sai khi có thêm năm mới)
-        $maxReportYear = \App\Models\MhFinancialReport::max('report_year') ?? (int) date('Y');
-        $minReportYear = 2016; // năm đầu tiên có dữ liệu ngân hàng
+        $activeYears = $this->metricService->getActiveYears();
+        $maxReportYear = !empty($activeYears) ? max($activeYears) : (int) (\App\Models\MhFinancialReport::max('report_year') ?? (int) date('Y'));
+        $minReportYear = !empty($activeYears) ? min($activeYears) : 2018;
 
         $annualAverages = [];
         for ($year = $minReportYear; $year <= $maxReportYear; $year++) {
@@ -140,7 +147,7 @@ class PageController extends Controller
     /**
      * Báo Cáo Đơn Lẻ (Factsheet)
      */
-    public function factsheet(Request $request, ?string $ticker = null): View
+    public function factsheet(Request $request, ?string $ticker = null): View|JsonResponse
     {
         $companies = MhCompany::active()->orderBy('short_name', 'asc')->get();
         $defaultTicker = $companies->first()?->short_name ?? 'ABB';
@@ -162,8 +169,28 @@ class PageController extends Controller
         cookie()->queue('mayhem_selected_ticker', $resolvedTicker, 60 * 24 * 30);
 
         $factsheet = $this->metricService->getBankFactsheet($resolvedTicker);
+        $sectors = MhSector::all();
+
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->input('ajax') == '1') {
+            return response()->json([
+                'status' => 'success',
+                'selectedTicker' => $resolvedTicker,
+                'factsheet' => $factsheet,
+                'sectors' => $sectors,
+                'table_html' => view('reports.partials.factsheet-table', [
+                    'factsheet' => $factsheet,
+                ])->render(),
+                'edit_modal_html' => view('reports.partials.factsheet-edit-modal', [
+                    'factsheet' => $factsheet,
+                    'companies' => $companies,
+                    'sectors' => $sectors,
+                    'selectedTicker' => $resolvedTicker,
+                ])->render(),
+            ]);
+        }
 
         return view('reports.factsheet', [
+            'sectors' => $sectors,
             'companies' => $companies,
             'selectedTicker' => $resolvedTicker,
             'factsheet' => $factsheet,
@@ -171,10 +198,59 @@ class PageController extends Controller
     }
 
     /**
+     * Cập nhật số liệu tài chính FILL và tự động tính toán lại các chỉ tiêu TÍNH
+     */
+    public function updateMetrics(Request $request): JsonResponse
+    {
+        try {
+            $ticker = strtoupper($request->input('ticker', $request->json('ticker', '')));
+            $updates = $request->input('updates', $request->json('updates', []));
+
+            if (empty($ticker) || empty($updates) || !is_array($updates)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Dữ liệu cập nhật không hợp lệ hoặc thiếu mã cổ phiếu.',
+                ], 422);
+            }
+
+            $factsheet = $this->metricService->batchUpdateMetrics($ticker, $updates);
+            $companies = MhCompany::active()->orderBy('short_name', 'asc')->get();
+            $sectors = MhSector::all();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Đã lưu thay đổi và tự động tính toán lại các chỉ tiêu TÍNH thành công!',
+                'selectedTicker' => $ticker,
+                'factsheet' => $factsheet,
+                'table_html' => view('reports.partials.factsheet-table', [
+                    'factsheet' => $factsheet,
+                ])->render(),
+                'edit_modal_html' => view('reports.partials.factsheet-edit-modal', [
+                    'factsheet' => $factsheet,
+                    'companies' => $companies,
+                    'sectors' => $sectors,
+                    'selectedTicker' => $ticker,
+                ])->render(),
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Update metrics failed: ' . $e->getMessage(), [
+                'ticker' => $request->input('ticker'),
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Lỗi máy chủ khi cập nhật: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Báo Cáo So Sánh (Comparison)
      */
-    public function comparison(Request $request): View
+    public function comparison(Request $request): View|JsonResponse
     {
+        $sectors = MhSector::all();
         $companies = MhCompany::active()->orderBy('short_name', 'asc')->get();
         $tickersInput = $request->input('tickers', 'ACB,ABB,VCB');
         $tickers = array_filter(array_map('trim', explode(',', $tickersInput)));
@@ -183,17 +259,63 @@ class PageController extends Controller
             $tickers = ['ACB', 'ABB', 'VCB'];
         }
 
-        // Mode: 'latest' (default) = chỉ năm gần nhất, '10years' = 10 năm liên tiếp
-        $mode = $request->input('mode', 'latest');
-        $year = $request->filled('year') ? (int) $request->input('year') : null;
+        $activeYears = $this->metricService->getActiveYears();
+        $minActiveYear = !empty($activeYears) ? min($activeYears) : 2018;
+        $maxActiveYear = !empty($activeYears) ? max($activeYears) : (int) date('Y');
 
-        $comparison = $this->metricService->getComparison($tickers, $year, $mode);
+        // Chỉ hiển thị đúng các năm ACTIVE có dữ liệu thực tế (2018 -> 2025)
+        $allYears = $activeYears;
+
+        // Chỉ cho phép chọn từ các năm ACTIVE có dữ liệu thực tế
+        $reqFrom = $request->input('from_year');
+        $reqTo = $request->input('to_year');
+
+        $fromYear = ($request->filled('from_year') && in_array((int)$reqFrom, $activeYears))
+            ? (int)$reqFrom
+            : $minActiveYear;
+
+        $toYear = ($request->filled('to_year') && in_array((int)$reqTo, $activeYears))
+            ? (int)$reqTo
+            : $maxActiveYear;
+
+        if ($fromYear > $toYear) {
+            [$fromYear, $toYear] = [$toYear, $fromYear];
+        }
+        $mode = ($fromYear !== $toYear) ? '10years' : 'latest';
+
+        $comparison = $this->metricService->getComparison($tickers, $toYear, $mode, $fromYear, $toYear);
+
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->input('ajax') == '1') {
+            return response()->json([
+                'status' => 'success',
+                'tickers' => $tickers,
+                'from_year' => $fromYear,
+                'to_year' => $toYear,
+                'active_years' => $activeYears,
+                'mode' => $comparison['mode'],
+                'year' => $comparison['year'],
+                'years' => $comparison['years'],
+                'matrix_html' => view('reports.partials.comparison-matrix', [
+                    'comparison' => $comparison,
+                    'companies' => $companies,
+                    'activeYears' => $activeYears,
+                ])->render(),
+                'charts_html' => view('reports.partials.comparison-charts', [
+                    'comparison' => $comparison,
+                ])->render(),
+            ]);
+        }
 
         return view('reports.comparison', [
-            'companies'  => $companies,
+            'sectors'         => $sectors,
+            'companies'       => $companies,
             'selectedTickers' => $tickers,
-            'comparison' => $comparison,
-            'mode'       => $mode,
+            'comparison'      => $comparison,
+            'mode'            => $comparison['mode'],
+            'allYears'        => $allYears,
+            'activeYears'     => $activeYears,
+            'fromYear'        => $fromYear,
+            'toYear'          => $toYear,
         ]);
     }
 

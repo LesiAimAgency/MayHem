@@ -1,103 +1,87 @@
 <div id="compareTableView" class="bg-white rounded-xl shadow-sm border border-[#051650] overflow-hidden">
+  @php
+    $cMap = isset($companies) ? $companies->keyBy('short_name') : collect();
+    $rawYears = $comparison['years'] ?? [$comparison['year'] ?? 2025];
+    // Chỉ hiển thị các năm có số liệu thực tế, ẩn triệt để các cột năm chưa có dữ liệu (2015 - 2017)
+    $years = array_values(array_filter($rawYears, function($yr) use ($comparison) {
+      foreach ($comparison['matrix'] ?? [] as $m) {
+        foreach ($comparison['tickers'] ?? [] as $t) {
+          $v = $m['values'][$t][$yr] ?? null;
+          if ($v !== null && $v !== '') return true;
+        }
+      }
+      return false;
+    }));
+    if (empty($years)) {
+      $years = $rawYears;
+    }
+  @endphp
+
+  {{-- Header Toolbar with Scroll buttons & Stats --}}
+
+
   {{-- Scroll Container with Custom Scrollbar and Grab-to-Scroll --}}
-  <div id="comparisonScrollContainer" class="overflow-x-auto custom-scrollbar select-none">
+  <div id="comparisonScrollContainer" class="overflow-x-auto custom-scrollbar select-none cursor-grab">
     <table id="comparisonMatrixTable" class="w-full text-left text-xs border-separate border-spacing-0">
 
-      @php
-        $cMap = isset($companies) ? $companies->keyBy('short_name') : collect();
-      @endphp
-
-      {{-- ===== HEADER ===== --}}
+      {{-- ===== HEADER (Hiển thị toàn bộ các năm đã lọc) ===== --}}
       <thead class="text-[#051650] font-bold text-[11px] uppercase border-b border-[#818181]">
-
-        @if($comparison['mode'] === '10years')
-          {{-- Row 1: STT | Loại | Chỉ Tiêu | ĐVT | [BID colspan=N] | [CTG colspan=N] | ... --}}
-          <tr class="h-[42px]">
-            <th rowspan="2" class="col-sticky-stt px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">STT</th>
-            <th rowspan="2" class="col-sticky-type px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Loại</th>
-            <th rowspan="2" class="col-sticky-name px-3.5 text-left border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Chỉ Tiêu Tài Chính</th>
-            <th rowspan="2" class="col-sticky-unit px-2 text-center border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">ĐVT</th>
-            @foreach($comparison['tickers'] as $t)
-              @php
-                $cName = $cMap[$t]->company_name ?? $t;
-              @endphp
-              <th colspan="{{ count($comparison['years']) }}"
-                  class="px-3 py-1.5 text-center border-l-2 border-[#C8997D] bg-[#051650] text-white border-b border-[#051650] font-bold tracking-wider">
-                <div class="flex items-center justify-center gap-1.5">
-                  <span class="text-[13px] font-black font-sans">{{ $t }}</span>
-                  @if(!empty($cMap[$t]->company_name))
-                    <span class="text-[9.5px] text-[#C8997D] font-normal font-sans hidden sm:inline truncate max-w-[140px]" title="{{ $cName }}">
-                      &bull; {{ $cName }}
-                    </span>
-                  @endif
-                </div>
+        <tr class="h-[46px]">
+          <th rowspan="2" class="col-sticky-stt px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">STT</th>
+          <th rowspan="2" class="col-sticky-type px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Loại</th>
+          <th rowspan="2" class="col-sticky-name px-3.5 text-left border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Chỉ Tiêu Tài Chính</th>
+          <th rowspan="2" class="col-sticky-unit px-2 text-center border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">ĐVT</th>
+          @foreach($comparison['tickers'] as $t)
+            <th colspan="{{ count($years) }}" class="px-3 py-1.5 text-center border-l-2 border-[#C8997D] border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">
+              <div class="flex flex-col items-center justify-center">
+                <span class="text-[13px] font-black tracking-wider text-[#051650] font-sans">{{ $t }}</span>
+              </div>
+            </th>
+          @endforeach
+        </tr>
+        <tr class="h-[28px] bg-[#F8F3EC]">
+          @foreach($comparison['tickers'] as $t)
+            @foreach($years as $yIdx => $yr)
+              <th class="px-2.5 py-1 text-right font-mono font-bold text-[11px] text-[#051650] border-b border-[#D7D7D7]/70 bg-[#F8F3EC] min-w-[78px] {{ $yIdx === 0 ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/40' }} {{ $loop->last ? 'bg-gray-100/60 font-black' : '' }}">
+                {{ $yr }}
               </th>
             @endforeach
-          </tr>
-          {{-- Row 2: Years sub-headers --}}
-          <tr class="h-[34px]">
-            @foreach($comparison['tickers'] as $tIdx => $t)
-              @foreach($comparison['years'] as $yrIdx => $yr)
-                @php
-                  $isBankStart = ($yrIdx === 0 && $tIdx > 0);
-                  $isLatestYr = ($yr === $comparison['year']);
-                @endphp
-                <th class="px-2 text-center font-semibold min-w-[76px] border-b border-[#D7D7D7]/60
-                  {{ $isBankStart ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/60' }}
-                  {{ $isLatestYr ? 'bg-[#F8F3EC] text-[#051650] font-bold' : 'bg-[#FAFAFA] text-[#818181]' }}">
-                  {{ $yr }}
-                </th>
-              @endforeach
-            @endforeach
-          </tr>
-
-        @else
-          {{-- Single year header (Latest mode) --}}
-          <tr class="h-[50px]">
-            <th class="col-sticky-stt px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">STT</th>
-            <th class="col-sticky-type px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Loại</th>
-            <th class="col-sticky-name px-3.5 text-left border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Chỉ Tiêu Tài Chính</th>
-            <th class="col-sticky-unit px-2 text-center border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">ĐVT</th>
-            @foreach($comparison['tickers'] as $t)
-              @php
-                $cName = $cMap[$t]->company_name ?? $t;
-              @endphp
-              <th class="px-4 py-2 text-right min-w-[140px] border-l-2 border-[#C8997D] border-b border-[#051650] bg-[#f8f3ec] text-white">
-                <div class="flex flex-col items-end justify-center">
-                  <span class="text-[13px] font-black tracking-wider text-[#051650] font-sans">{{ $t }}</span>
-                  <span class="text-[10px] text-[#051650] font-normal truncate max-w-[160px] font-sans" title="{{ $cName }}">
-                    {{ $cName }}
-                  </span>
-                </div>
-              </th>
-            @endforeach
-          </tr>
-        @endif
-
+          @endforeach
+        </tr>
       </thead>
 
       {{-- ===== BODY ===== --}}
       <tbody class="text-[12px]">
 
         @php
-          function fmtVal($val, $unit) {
-            if ($val === null || !is_numeric($val)) return null;
-            $v = (float)$val;
-            if ($unit === '%')       return number_format($v, 2) . '%';
-            if ($unit === 'Tỷ VND')  return number_format($v, 0) . ' tỷ';
-            if ($unit === 'Lần')     return number_format($v, 2) . 'x';
-            if ($unit === 'VND/CP')  return number_format($v, 0);
-            return $val;
+          if (!function_exists('fmtVal')) {
+            function fmtVal($val, $unit) {
+              if ($val === null || !is_numeric($val)) return null;
+              $v = (float)$val;
+              if ($unit === 'VND/CP') {
+                return number_format($v, 0);
+              }
+              if ($unit === 'Tỷ VND') {
+                return (abs($v - round($v)) < 0.001) ? number_format($v, 0) : number_format($v, 2);
+              }
+              if ($unit === '%' || $unit === 'Lần') {
+                return number_format($v, 2);
+              }
+              return (abs($v - round($v)) < 0.001) ? number_format($v, 0) : number_format($v, 2);
+            }
           }
         @endphp
 
         @foreach($comparison['matrix'] as $m)
-          <tr class="group transition-colors {{ ($loop->index % 2 === 1) ? 'bg-[#FAFAFA]' : 'bg-white' }}">
+          <tr class="comparison-row group transition-colors {{ ($loop->index % 2 === 1) ? 'bg-[#FAFAFA]' : 'bg-white' }}"
+              data-type="{{ $m['type'] }}"
+              data-key="{{ $m['key'] }}"
+              data-name="{{ mb_strtolower($m['name']) }}">
             {{-- STT --}}
-            <td class="col-sticky-stt px-2 py-2.5 text-center text-[#818181] font-semibold border-r border-b border-[#D7D7D7]/50">{{ $m['stt'] }}</td>
+            <td class="col-sticky-stt px-2 py-2 text-center text-[#818181] font-semibold border-r border-b border-[#D7D7D7]/50">{{ $m['stt'] }}</td>
 
             {{-- Loại badge --}}
-            <td class="col-sticky-type px-2 py-2.5 text-center border-r border-b border-[#D7D7D7]/50">
+            <td class="col-sticky-type px-2 py-2 text-center border-r border-b border-[#D7D7D7]/50">
               @if($m['type'] === 'TÍNH')
                 <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">TÍNH</span>
               @else
@@ -108,57 +92,30 @@
             {{-- Tên chỉ tiêu --}}
             <td class="col-sticky-name px-3.5 py-2 font-semibold text-[#051650] border-r border-b border-[#D7D7D7]/50">
               <span class="block leading-snug line-clamp-2 text-[12px]" title="{{ $m['name'] }}">{{ $m['name'] }}</span>
-            
             </td>
 
             {{-- ĐVT --}}
-            <td class="col-sticky-unit px-2 py-2.5 text-center text-[#818181] text-[11px] border-b border-[#D7D7D7]/50">{{ $m['unit'] }}</td>
+            <td class="col-sticky-unit px-2 py-2 text-center text-[#818181] text-[11px] border-b border-[#D7D7D7]/50">{{ $m['unit'] }}</td>
 
-            @if($comparison['mode'] === '10years')
-              {{-- Multi-year mode: ticker → year → value --}}
-              @foreach($comparison['tickers'] as $tIdx => $t)
-                @foreach($comparison['years'] as $yrIdx => $yr)
-                  @php
-                    $val = $m['values'][$t][$yr] ?? null;
-                    $isBest = isset($m['best_cells'][$yr]) && $m['best_cells'][$yr] === $t;
-                    $fmt = fmtVal($val, $m['unit']);
-                    $isLatestYr = $yr === $comparison['year'];
-                    $isBankStart = ($yrIdx === 0 && $tIdx > 0);
-                  @endphp
-                  <td class="px-2.5 py-2.5 text-right font-mono text-[11.5px] border-b border-[#D7D7D7]/40
-                    {{ $isBankStart ? 'border-l-2 border-[#C8997D]/70' : 'border-l border-[#D7D7D7]/40' }}
-                    {{ $isBest ? 'text-emerald-700 font-black bg-emerald-50/70' : ($isLatestYr ? 'text-[#051650]' : 'text-[#818181]') }}
-                    group-hover:bg-[#F8F3EC]/40 transition-colors">
-                    @if($fmt !== null)
-                      {{ $fmt }}
-                      @if($isBest)<span class="text-[9px] text-emerald-600 font-bold ml-0.5">★</span>@endif
-                    @else
-                      <span class="text-[#D7D7D7]">-</span>
-                    @endif
-                  </td>
-                @endforeach
-              @endforeach
-
-            @else
-              {{-- Single year mode: ticker → value --}}
-              @foreach($comparison['tickers'] as $t)
+            {{-- Multi-year columns per ticker --}}
+            @foreach($comparison['tickers'] as $t)
+              @foreach($years as $yIdx => $yr)
                 @php
-                  $val = $m['values'][$t] ?? null;
-                  $isBest = !empty($m['best_ticker']) && $t === $m['best_ticker'];
+                  $tickerVals = $m['values'][$t] ?? null;
+                  $val = is_array($tickerVals) ? ($tickerVals[$yr] ?? ($tickerVals[(string)$yr] ?? null)) : $tickerVals;
                   $fmt = fmtVal($val, $m['unit']);
+                  $isFirstYr = ($yIdx === 0);
+                  $isLastYr = ($yIdx === count($years) - 1);
                 @endphp
-                <td class="px-4 py-2.5 text-right font-mono text-[12px] border-l border-b border-[#D7D7D7]/40
-                  {{ $isBest ? 'text-emerald-700 font-black bg-emerald-50/60' : 'text-[#323232]' }}
-                  group-hover:bg-[#F8F3EC]/40 transition-colors">
+                <td class="px-2.5 py-2 text-right font-mono text-[12px] border-b border-[#D7D7D7]/40 {{ $isFirstYr ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/30' }} {{ $isLastYr && count($years) > 1 ? 'bg-gray-50/40' : '' }} text-[#323232] group-hover:bg-[#F8F3EC]/40 transition-colors">
                   @if($fmt !== null)
                     {{ $fmt }}
-                    @if($isBest)<span class="text-[10px] text-emerald-600 font-bold ml-0.5">★</span>@endif
                   @else
                     <span class="text-[#D7D7D7]">-</span>
                   @endif
                 </td>
               @endforeach
-            @endif
+            @endforeach
 
           </tr>
         @endforeach
@@ -173,6 +130,17 @@
   #comparisonScrollContainer {
     position: relative;
     overflow-x: auto;
+    cursor: grab;
+  }
+
+  #comparisonScrollContainer.is-dragging {
+    cursor: grabbing !important;
+    user-select: none !important;
+  }
+
+  #comparisonScrollContainer.is-dragging * {
+    cursor: grabbing !important;
+    user-select: none !important;
   }
 
   #comparisonMatrixTable {
@@ -264,9 +232,25 @@
 
 {{-- Horizontal Scroll & Drag Handler --}}
 <script>
-  (function() {
+  window.initComparisonMatrixScroll = function() {
     const slider = document.getElementById('comparisonScrollContainer');
     if (!slider) return;
+
+    const btnLeft = document.getElementById('btnScrollTableLeft');
+    const btnRight = document.getElementById('btnScrollTableRight');
+
+    if (btnLeft) {
+      btnLeft.onclick = (e) => {
+        e.preventDefault();
+        slider.scrollBy({ left: -600, behavior: 'smooth' });
+      };
+    }
+    if (btnRight) {
+      btnRight.onclick = (e) => {
+        e.preventDefault();
+        slider.scrollBy({ left: 600, behavior: 'smooth' });
+      };
+    }
 
     // Check scroll offset to toggle is-scrolled class
     const updateScrollState = () => {
@@ -277,7 +261,7 @@
       }
     };
 
-    slider.addEventListener('scroll', updateScrollState, { passive: true });
+    slider.onscroll = updateScrollState;
     updateScrollState();
 
     // Mouse drag-to-scroll
@@ -285,33 +269,49 @@
     let startX = 0;
     let scrollLeft = 0;
 
-    slider.addEventListener('mousedown', (e) => {
+    slider.onmousedown = (e) => {
+      // Don't drag if clicking buttons, links, or inputs
       if (e.target.closest('button, a, input, select')) return;
       isDown = true;
-      slider.classList.add('cursor-grabbing');
+      slider.classList.add('is-dragging');
       slider.classList.remove('cursor-grab');
-      startX = e.pageX - slider.offsetLeft;
+      document.body.classList.add('select-none');
+      startX = e.pageX;
       scrollLeft = slider.scrollLeft;
-    });
+      e.preventDefault();
+    };
 
-    slider.addEventListener('mouseleave', () => {
+    window.onmouseup = () => {
       if (!isDown) return;
       isDown = false;
-      slider.classList.remove('cursor-grabbing');
-    });
+      slider.classList.remove('is-dragging');
+      slider.classList.add('cursor-grab');
+      document.body.classList.remove('select-none');
+    };
 
-    slider.addEventListener('mouseup', () => {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove('cursor-grabbing');
-    });
-
-    slider.addEventListener('mousemove', (e) => {
+    window.onmousemove = (e) => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.5;
+      const x = e.pageX;
+      const walk = (x - startX) * 2; // Smooth 2x drag speed
       slider.scrollLeft = scrollLeft - walk;
-    });
-  })();
+    };
+
+    // Wheel horizontal scrolling: vertical wheel scrolling turns into horizontal scrolling
+    slider.onwheel = (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        if (!e.ctrlKey) {
+          slider.scrollLeft += e.deltaY * 1.5;
+          e.preventDefault();
+        }
+      }
+    };
+  };
+
+  // Run on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.initComparisonMatrixScroll);
+  } else {
+    window.initComparisonMatrixScroll();
+  }
 </script>

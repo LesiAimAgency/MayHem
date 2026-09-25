@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: [
             'mayhem_token',
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'don-le/update-metrics',
+        ]);
         $middleware->alias([
             'mayhem.auth' => \App\Http\Middleware\AuthenticateMayHem::class,
             'mayhem.role' => \App\Http\Middleware\CheckRoleMayHem::class,

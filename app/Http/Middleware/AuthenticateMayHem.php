@@ -57,7 +57,7 @@ class AuthenticateMayHem
                         'name' => $user->name,
                         'email' => $user->email,
                         'role' => 'admin'
-                    ] : ['id' => 1, 'name' => 'MayHem Super Admin', 'email' => 'admin@mayhem.vn', 'role' => 'admin'];
+                    ] : ['id' => 1, 'name' => ' ', 'email' => 'admin@mayhem.vn', 'role' => 'admin'];
                 } elseif ($token === 'mayhem_demo_editor_token') {
                     $user = User::where('role', 'editor')->first();
                     $userData = $user ? [

@@ -118,8 +118,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="cir_avg_period" value="under_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="cir_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -162,8 +162,8 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="blvh" name="blvh_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="blvh" name="blvh_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 8 năm</span>
                   </label>
                 </div>
               </div>
@@ -183,8 +183,8 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="blntt" name="blntt_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="blntt" name="blntt_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 8 năm</span>
                   </label>
                 </div>
               </div>
@@ -217,8 +217,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="blnst_avg_period" value="above_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="blnst_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -240,8 +240,8 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="ttlr" name="ttlr_condition[]" value="positive_10y" data-label="Luôn là số dương liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Luôn là số dương liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="ttlr" name="ttlr_condition[]" value="positive_10y" data-label="Luôn là số dương liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Luôn là số dương liên tiếp 8 năm</span>
                   </label>
                 </div>
               </div>
@@ -275,8 +275,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roa_avg_period" value="above_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="roa_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -308,8 +308,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="de_under_10_period" value="under_10_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="de_under_10_period" value="under_10_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -324,8 +324,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="de_avg_period" value="under_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="de_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -360,18 +360,18 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roe_avg_period" value="above_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="roe_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="from_15pct_10y" data-label="Từ 15% trở lên liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Từ 15% trở lên liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="from_15pct_10y" data-label="Từ 15% trở lên liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Từ 15% trở lên liên tiếp 8 năm</span>
                   </label>
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="from_20pct_10y" data-label="Từ 20% trở lên liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Từ 20% trở lên liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="from_20pct_10y" data-label="Từ 20% trở lên liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Từ 20% trở lên liên tiếp 8 năm</span>
                   </label>
                 </div>
               </div>
@@ -391,8 +391,8 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="cfo" name="cfo_condition[]" value="greater_than_parent_npat_10y" data-label="Lớn hơn LNST của CĐ mẹ liên tiếp 10 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Lớn hơn "Lợi nhuận sau thuế của cổ đông công ty mẹ" liên tiếp 10 năm</span>
+                    <input type="checkbox" data-criteria-cb="cfo" name="cfo_condition[]" value="greater_than_parent_npat_10y" data-label="Lớn hơn LNST của CĐ mẹ liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Lớn hơn "Lợi nhuận sau thuế của cổ đông công ty mẹ" liên tiếp 8 năm</span>
                   </label>
                 </div>
               </div>
@@ -422,8 +422,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="casa_avg_period" value="above_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="casa_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -455,8 +455,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="npl_avg_period" value="under_avg_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="npl_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -491,8 +491,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="nim_3pct_period" value="above_3pct_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="nim_3pct_period" value="above_3pct_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -524,8 +524,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="car_10pct_period" value="above_10pct_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="car_10pct_period" value="above_10pct_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -540,8 +540,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="car_12pct_period" value="above_12pct_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="car_12pct_period" value="above_12pct_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>
@@ -573,8 +573,8 @@
                         <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="llr_50pct_period" value="above_50pct_10y" data-label="Liên tiếp 10 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 10 năm</span>
+                        <input type="radio" name="llr_50pct_period" value="above_50pct_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
+                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
                   </div>

@@ -222,6 +222,7 @@ class FinancialMetricService
         47 => ['key' => 'growth_oe', 'name' => 'Tăng trưởng OE', 'type' => 'TÍNH', 'unit' => '%', 'formula' => '(Owner Earnings năm nay - Owner Earnings năm trước) / |Owner Earnings năm trước|'],
     ];
 
+
     /**
      * Tính toán toàn bộ 16 chỉ tiêu và 30 trường thô cho 1 ngân hàng, lưu vào database
      */
@@ -320,29 +321,29 @@ class FinancialMetricService
 
             // 8. Total Liabilities & Equity & Total Assets
             $totalAssets = $rawCurr['total_assets'] ?? ($bs['total_assets'] ?? ($bs['BS_TOTAL_ASSETS'] ?? null));
-            if ($totalAssets !== null && abs($totalAssets) > 1e11) { $totalAssets = round($totalAssets / 1e9, 2); }
+            if ($totalAssets !== null && abs($totalAssets) > 1e6) { $totalAssets = round($totalAssets / 1e9, 2); }
 
             $equity = $rawCurr['owners_equity'] ?? ($bs['owners_equity'] ?? ($bs['BS_EQUITY'] ?? null));
-            if ($equity !== null && abs($equity) > 1e11) { $equity = round($equity / 1e9, 2); }
+            if ($equity !== null && abs($equity) > 1e6) { $equity = round($equity / 1e9, 2); }
 
             $totalLiab = $rawCurr['total_liabilities'] ?? ($bs['total_liabilities'] ?? ($bs['BS_TOTAL_LIABILITIES'] ?? null));
-            if ($totalLiab !== null && abs($totalLiab) > 1e11) { $totalLiab = round($totalLiab / 1e9, 2); }
+            if ($totalLiab !== null && abs($totalLiab) > 1e6) { $totalLiab = round($totalLiab / 1e9, 2); }
             // Đẳng thức kế toán: Tổng nợ phải trả = Tổng tài sản - Vốn chủ sở hữu
             if (($totalLiab === null || $totalLiab == 0) && $totalAssets > 0 && $equity > 0) {
                 $totalLiab = round($totalAssets - $equity, 2);
             }
 
             $cfo = $rawCurr['cfo'] ?? ($cf['net_cash_from_operating_activities'] ?? ($cf['CF_NET_CASH_FLOWS_FROM_OPERATING_ACTIVITIES'] ?? null));
-            if ($cfo !== null && abs($cfo) > 1e11) { $cfo = round($cfo / 1e9, 2); }
+            if ($cfo !== null && abs($cfo) > 1e6) { $cfo = round($cfo / 1e9, 2); }
 
             $dividends = $rawCurr['dividends_paid'] ?? abs($cf['dividends_paid'] ?? ($cf['CF_DIVIDENDS_PAID'] ?? 0));
-            if ($dividends !== null && abs($dividends) > 1e11) { $dividends = round($dividends / 1e9, 2); }
+            if ($dividends !== null && abs($dividends) > 1e6) { $dividends = round($dividends / 1e9, 2); }
 
             $capex = $rawCurr['capex'] ?? abs($cf['capex'] ?? ($cf['CF_PAYMENTS_FOR_FIXED_ASSETS'] ?? ($cf['purchases_of_fixed_assets_and_other_long_term_assets'] ?? ($cf['CF_PURCHASES_OF_FIXED_ASSETS'] ?? 0))));
-            if ($capex !== null && abs($capex) > 1e11) { $capex = round($capex / 1e9, 2); }
+            if ($capex !== null && abs($capex) > 1e6) { $capex = round($capex / 1e9, 2); }
 
             $cff = $rawCurr['cff'] ?? ($cf['net_cash_from_financing_activities'] ?? ($cf['CF_NET_CASH_FLOWS_FROM_FINANCING_ACTIVITIES'] ?? null));
-            if ($cff !== null && abs($cff) > 1e11) { $cff = round($cff / 1e9, 2); }
+            if ($cff !== null && abs($cff) > 1e6) { $cff = round($cff / 1e9, 2); }
 
             // --- 17 CÔNG THỨC CHUẨN ĐỐI CHIẾU ---
             $growthToi = ($prevToi && $prevToi != 0 && $toi !== null) ? round((($toi - $prevToi) / abs($prevToi)) * 100, 2) : null;
@@ -426,7 +427,7 @@ class FinancialMetricService
                 'total_assets' => $totalAssets,
                 'cfo' => $cfo,
                 'dividends_paid' => $dividends,
-                'cff' => $cff !== null ? (abs($cff) > 1e11 ? round($cff / 1e9, 2) : round($cff, 2)) : null,
+                'cff' => $cff !== null ? (abs($cff) > 1e6 ? round($cff / 1e9, 2) : round($cff, 2)) : null,
                 'doubtful_debt' => $doubtfulDebt,
                 'loss_debt' => $lossDebt,
                 'llr_coverage' => $llrVal,
@@ -447,12 +448,12 @@ class FinancialMetricService
                 'pb_ratio' => $rawCurr['pb_ratio'] ?? (isset($rat['pb_ratio']) ? round((float)$rat['pb_ratio'], 2) : (isset($rat['RT_VALUE_PB']) ? round((float)$rat['RT_VALUE_PB'], 2) : null)),
                 'retained_earnings' => (function() use ($rawCurr, $bs) {
                     $v = $rawCurr['retained_earnings'] ?? ($bs['retained_earnings'] ?? ($bs['BS_RETAINED_EARNINGS'] ?? null));
-                    if ($v !== null && abs($v) > 1e11) return round($v / 1e9, 2);
+                    if ($v !== null && abs($v) > 1e6) return round($v / 1e9, 2);
                     return $v !== null ? round((float)$v, 2) : null;
                 })(),
                 'market_cap' => (function() use ($rawCurr, $rat, $curr) {
                     $v = $rawCurr['market_cap'] ?? ($rat['market_cap'] ?? ($rat['RT_VALUE_MARKET_CAP'] ?? ($curr->calculated_data['market_cap_vnd'] ?? null)));
-                    if ($v !== null && abs($v) > 1e11) return round($v / 1e9, 2);
+                    if ($v !== null && abs($v) > 1e6) return round($v / 1e9, 2);
                     return $v !== null ? round((float)$v, 2) : null;
                 })(),
             ];
@@ -590,18 +591,25 @@ class FinancialMetricService
     {
         $company = MhCompany::with('sector')->where('short_name', $ticker)->firstOrFail();
 
+        $activeYears = $this->getActiveYears([$ticker]);
+        if (empty($activeYears)) {
+            $activeYears = $this->getActiveYears();
+        }
+
         $reports = MhFinancialReport::where('short_name', $ticker)
+            ->whereIn('report_year', $activeYears)
             ->orderBy('report_year', 'asc')
             ->get();
 
         // Nếu chưa được tính toán hoặc thiếu indicators thì tính toán ngay
         $needsRecalc = $reports->contains(function ($r) {
-            return empty($r->calculated_data['indicators']) || !isset($r->calculated_data['indicators']['growth_pbt']);
+            return empty($r->calculated_data['indicators']) || !array_key_exists('growth_pbt', $r->calculated_data['indicators'] ?? []);
         });
 
         if ($needsRecalc) {
             $this->calculateAndStoreBankMetrics($ticker);
             $reports = MhFinancialReport::where('short_name', $ticker)
+                ->whereIn('report_year', $activeYears)
                 ->orderBy('report_year', 'asc')
                 ->get();
         }
@@ -756,10 +764,37 @@ class FinancialMetricService
 
 
     /**
+     * Lấy danh sách các năm ACTIVE có dữ liệu tài chính thực tế trong DB
+     */
+    public function getActiveYears(?array $tickers = null): array
+    {
+        $query = MhFinancialReport::whereNotNull('calculated_data')
+            ->where('report_year', '>=', 2018); // Tạm ẩn dữ liệu 2015-2017 theo yêu cầu
+
+        if (!empty($tickers)) {
+            $query->whereIn('short_name', $tickers);
+        }
+
+        $years = $query->selectRaw('report_year, COUNT(CASE WHEN JSON_EXTRACT(calculated_data, "$.raw_metrics.total_assets") IS NOT NULL AND JSON_EXTRACT(calculated_data, "$.raw_metrics.total_assets") > 0 THEN 1 END) as valid_count')
+            ->groupBy('report_year')
+            ->having('valid_count', '>', 0)
+            ->orderBy('report_year', 'asc')
+            ->pluck('report_year')
+            ->map(fn($y) => (int) $y)
+            ->toArray();
+
+        if (empty($years)) {
+            return [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+        }
+
+        return $years;
+    }
+
+    /**
      * Get comparison matrix between selected banks (Wireframe 3)
      * Supports mode='latest' (single year) and mode='10years' (last 10 years)
      */
-    public function getComparison(array $tickers, ?int $year = null, string $mode = 'latest'): array
+    public function getComparison(array $tickers, ?int $year = null, string $mode = 'latest', ?int $fromYear = null, ?int $toYear = null): array
     {
         if (empty($tickers)) {
             $tickers = ['ACB', 'ABB', 'VCB'];
@@ -767,22 +802,39 @@ class FinancialMetricService
 
         $companies = MhCompany::whereIn('short_name', $tickers)->get()->keyBy('short_name');
 
-        // Lấy năm mới nhất từ DB (global, không chỉ theo tickers được chọn)
-        $globalMaxYear = (int) (MhFinancialReport::max('report_year') ?? date('Y'));
-        // Năm mới nhất có dữ liệu cho các tickers được chọn
-        $tickerMaxYear = (int) (MhFinancialReport::whereIn('short_name', $tickers)->max('report_year') ?? $globalMaxYear);
-        if (!$year) {
-            $year = $tickerMaxYear;
+        // Lấy danh sách năm active có dữ liệu thực tế
+        $activeYears = $this->getActiveYears();
+        $globalMaxYear = !empty($activeYears) ? max($activeYears) : (int) (MhFinancialReport::max('report_year') ?? date('Y'));
+        $globalMinYear = !empty($activeYears) ? min($activeYears) : 2018;
+
+        if (!$year || !in_array($year, $activeYears)) {
+            $year = $globalMaxYear;
         }
 
-        // Năm đầu tiên có trong DB
-        $globalMinYear = (int) (MhFinancialReport::min('report_year') ?? 2016);
-
-        // Xác định danh sách năm cần lấy
-        if ($mode === '10years') {
-            $years = range(max($year - 9, $globalMinYear), $year); // 10 năm gần nhất
+        // Xác định danh sách năm cần lấy - CHỈ lấy các năm active có dữ liệu
+        if ($fromYear !== null && $toYear !== null) {
+            $from = min($fromYear, $toYear);
+            $to = max($fromYear, $toYear);
+            $targetYears = range($from, $to);
+            $years = array_values(array_intersect($targetYears, $activeYears));
+            if (empty($years)) {
+                $years = [$globalMaxYear];
+            }
+            if (count($years) === 1) {
+                $year = $years[0];
+                $mode = 'latest';
+            } else {
+                $year = end($years);
+                $mode = '10years';
+            }
+        } elseif ($mode === '10years') {
+            $candidateYears = range(max($year - 9, $globalMinYear), $year);
+            $years = array_values(array_intersect($candidateYears, $activeYears));
+            if (empty($years)) {
+                $years = [$year];
+            }
         } else {
-            $years = [$year]; // Chỉ năm gần nhất
+            $years = in_array($year, $activeYears) ? [$year] : [$globalMaxYear];
         }
 
         // Load tất cả reports cần thiết một lần
@@ -871,13 +923,14 @@ class FinancialMetricService
             }
 
             return [
-                'year'    => $year,
-                'years'   => $years,
-                'mode'    => '10years',
-                'tickers' => $tickers,
-                'companies' => $companies->toArray(),
-                'matrix'  => $matrix,
-                'charts'  => $charts,
+                'year'         => $year,
+                'years'        => $years,
+                'active_years' => $activeYears,
+                'mode'         => '10years',
+                'tickers'      => $tickers,
+                'companies'    => $companies->toArray(),
+                'matrix'       => $matrix,
+                'charts'       => $charts,
             ];
         }
 
@@ -919,6 +972,7 @@ class FinancialMetricService
                 'type'        => $meta['type'],
                 'formula'     => $meta['formula'] ?? null,
                 'best_ticker' => $bestTicker,
+                'best_cells'  => [$year => $bestTicker],
                 'values'      => $rowValues,
             ];
         }
@@ -933,13 +987,14 @@ class FinancialMetricService
         }
 
         return [
-            'year'    => $year,
-            'years'   => [$year],
-            'mode'    => 'latest',
-            'tickers' => $tickers,
-            'companies' => $companies->toArray(),
-            'matrix'  => $matrix,
-            'charts'  => $charts,
+            'year'         => $year,
+            'years'        => [$year],
+            'active_years' => $activeYears,
+            'mode'         => 'latest',
+            'tickers'      => $tickers,
+            'companies'    => $companies->toArray(),
+            'matrix'       => $matrix,
+            'charts'       => $charts,
         ];
     }
 
@@ -968,4 +1023,85 @@ class FinancialMetricService
             'toi' => 15000,
         ];
     }
+
+    /**
+     * Cập nhật 1 giá trị chỉ tiêu cho 1 mã cổ phiếu và năm báo cáo
+     */
+    public function updateMetricValue(string $ticker, string $key, int $year, ?float $val, ?string $fieldName = null, bool $recalculate = true): array
+    {
+        $report = MhFinancialReport::firstOrNew([
+            'short_name' => $ticker,
+            'report_year' => $year,
+        ]);
+
+        $calc = $report->calculated_data ?? [];
+        $raw = $calc['raw_metrics'] ?? [];
+        $fillVi = $calc['fill_metrics_vi'] ?? [];
+
+        if (!empty($key)) {
+            $raw[$key] = $val;
+        }
+        if (!empty($fieldName)) {
+            $fillVi[$fieldName] = $val;
+            $mappedKey = $this->mapKeyFromFieldName($fieldName);
+            if ($mappedKey) {
+                $raw[$mappedKey] = $val;
+            }
+        }
+
+        $calc['raw_metrics'] = $raw;
+        $calc['fill_metrics_vi'] = $fillVi;
+        $report->calculated_data = $calc;
+        $report->save();
+
+        if ($recalculate) {
+            // Recalculate indicators for bank tickers
+            $company = MhCompany::where('short_name', $ticker)->first();
+            if ($company && ($company->sector_id === 1 || !$company->sector_id)) {
+                $this->calculateAndStoreBankMetrics($ticker);
+            }
+        }
+
+        return [
+            'status' => 'success',
+            'bank' => $ticker,
+            'ticker' => $ticker,
+            'field' => $fieldName ?? $key,
+            'year' => (string) $year,
+            'new_value' => $val,
+            'audit_log_id' => 'log_' . uniqid(),
+        ];
+    }
+
+    /**
+     * Cập nhật hàng loạt chỉ tiêu từ chế độ chỉnh sửa dữ liệu
+     */
+    public function batchUpdateMetrics(string $ticker, array $updates): array
+    {
+        foreach ($updates as $u) {
+            $year = (int) ($u['year'] ?? date('Y'));
+            $key = $u['key'] ?? '';
+            $field = $u['field'] ?? null;
+            $val = (isset($u['value']) && $u['value'] !== '' && is_numeric($u['value'])) ? (float) $u['value'] : null;
+
+            $this->updateMetricValue($ticker, $key, $year, $val, $field, false);
+        }
+
+        // Tự động tính toán lại tất cả 17 chỉ tiêu TÍNH cho mã ngân hàng
+        $company = MhCompany::where('short_name', $ticker)->first();
+        if ($company && ($company->sector_id === 1 || !$company->sector_id)) {
+            $this->calculateAndStoreBankMetrics($ticker);
+        }
+
+        return $this->getBankFactsheet($ticker);
+    }
+
+    protected function mapKeyFromFieldName(string $fieldName): ?string
+    {
+        foreach (self::MASTER_47_METRICS as $m) {
+            if ($m['name'] === $fieldName) return $m['key'];
+        }
+        return null;
+    }
 }
+

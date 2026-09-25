@@ -62,15 +62,11 @@
         
 
         <!-- User Chip -->
-        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-[#D7D7D7]/80 shadow-xs select-none" title="{{ $authUser->name ?? 'Người dùng' }} ({{ $authUser->email ?? '' }})">
+        <div class="" title="{{ $authUser->name ?? 'Người dùng' }} ({{ $authUser->email ?? '' }})">
           <div class="w-7 h-7 rounded-full bg-[#051650] text-white font-bold flex items-center justify-center text-[11px] shadow-xs">
             {{ $initials }}
           </div>
-          <div class="flex flex-col text-left pr-1">
-            <span class="text-[11px] font-bold text-[#051650] leading-none truncate max-w-[120px] hidden sm:inline">
-              {{ $authUser->name ?? 'Người dùng' }}
-            </span>
-          </div>
+          
         </div>
 
         <!-- Logout Button -->

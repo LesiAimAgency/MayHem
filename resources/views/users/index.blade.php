@@ -12,7 +12,7 @@
       <!-- Left: Greeting Typography -->
       <div class="space-y-0.5">
         <p class="text-[11px] uppercase tracking-wider text-[#818181] font-semibold">Security & Access Management</p>
-        <h1 class="text-[28px] font-bold text-[#051650] leading-tight">Quản Lý Người Dùng & Phân Quyền</h1>
+        <h1 class="text-[49px] font-bold text-[#051650] leading-tight">Quản Lý Người Dùng & Phân Quyền</h1>
         <p class="text-[13px] text-[#818181]">Phân quyền kiểm toán viên, chuyên viên phân tích và kiểm soát truy cập hệ thống.</p>
       </div>
 

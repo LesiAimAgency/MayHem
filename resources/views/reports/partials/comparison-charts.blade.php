@@ -101,11 +101,10 @@
                     // Format value
                     if ($v !== null && is_numeric($v)) {
                       $fv = (float)$v;
-                      if ($m['unit'] === '%')       $fStr = number_format($fv, 2) . '%';
-                      elseif ($m['unit'] === 'Tỷ VND') $fStr = number_format($fv, 0) . ' tỷ';
-                      elseif ($m['unit'] === 'Lần')  $fStr = number_format($fv, 2) . 'x';
-                      elseif ($m['unit'] === 'VND/CP') $fStr = number_format($fv, 0);
-                      else $fStr = $v;
+                      if ($m['unit'] === 'VND/CP')          $fStr = number_format($fv, 0);
+                      elseif ($m['unit'] === 'Tỷ VND')      $fStr = (abs($fv - round($fv)) < 0.001) ? number_format($fv, 0) : number_format($fv, 2);
+                      elseif ($m['unit'] === '%' || $m['unit'] === 'Lần') $fStr = number_format($fv, 2);
+                      else                                  $fStr = (abs($fv - round($fv)) < 0.001) ? number_format($fv, 0) : number_format($fv, 2);
                     } else { $fStr = null; }
                     $colors = [$barColors[$ci % count($barColors)]];
                   @endphp

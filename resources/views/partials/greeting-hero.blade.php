@@ -8,7 +8,7 @@
       <span class="text-[12px]  tracking-wider text-[#051650] font-medium hidden lg:inline-block select-none">
         ANOTHER DAY, ANOTHER DOLLAR
       </span>
-      <h1 class="text-[28px] font-bold text-[#051650] leading-tight">Xin chào, Minh Quân</h1>
+      <h1 class="text-[49px] font-bold text-[#051650] leading-tight">Xin chào, Minh Quân</h1>
       <p class="text-[13px] text-[#818181] " style="margin-top:15px ">Hôm nay bạn muốn xem gì?</p>
 
     </div>

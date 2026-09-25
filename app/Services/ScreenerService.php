@@ -44,6 +44,7 @@ class ScreenerService
 
         foreach ($companies as $company) {
             $reports = MhFinancialReport::where('short_name', $company->short_name)
+                ->where('report_year', '>=', 2016)
                 ->orderBy('report_year', 'desc')
                 ->take(10)
                 ->get();

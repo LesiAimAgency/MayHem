@@ -9,7 +9,7 @@
         <div class="text-[13px] font-bold text-[#051650] flex items-center gap-2">
           <span>Các mã đang đưa vào so sánh đối chiếu:</span>
           <span id="comparedCountBadge" class="px-2 py-0.5 rounded bg-[#F8F3EC] text-[#051650] text-xs font-bold border border-[#C8997D]">
-            {{ count($comparison['tickers']) }} mã
+            {{ count($comparison['tickers']) }} mã &bull; Ngành: Ngân hàng
             @if($comparison['mode'] === '10years')
               &bull; Liên tiếp {{ count($comparison['years']) }} năm ({{ $comparison['years'][0] }}–{{ end($comparison['years']) }})
             @else
@@ -29,23 +29,18 @@
 
       {{-- Right: Add Stock Dropdown & Reset Button --}}
       <div class="flex items-center gap-3 w-full lg:w-auto justify-end shrink-0">
-        <div class="relative w-full sm:w-[220px]">
-          <select id="addCompareSelector" 
-                  class="w-full h-[34px] bg-white border border-[#818181] rounded-[8px] px-3 text-xs text-[#323232] appearance-none focus:outline-none focus:ring-1 focus:ring-[#051650] cursor-pointer pr-8 shadow-sm">
-            <option value="" disabled selected>+ Thêm mã vào bảng...</option>
-            @foreach($companies as $comp)
-              @if(!in_array($comp->short_name, $comparison['tickers']))
-                <option value="{{ $comp->short_name }}">{{ $comp->short_name }} - {{ $comp->company_name }}</option>
-              @endif
-            @endforeach
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-[#818181]">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </div>
-        </div>
+        <x-stock-selector 
+            id="addCompareSelector"
+            name="add_ticker"
+            :companies="$companies"
+            :exclude="$comparison['tickers']"
+            placeholder="+ Thêm mã vào bảng..."
+            mode="action"
+            width="w-full sm:w-[250px]"
+        />
 
         <a href="{{ route('reports.comparison', ['tickers' => 'ACB,ABB,VCB']) }}" id="resetCompareBtn"
-           class="h-[34px] px-4 rounded-lg border border-[#818181] text-[#051650] hover:bg-gray-100 transition-colors text-[11px] font-bold shadow-sm flex items-center justify-center">
+           class="h-[32px] px-4 rounded-lg border border-[#818181] text-[#051650] hover:bg-gray-100 transition-colors text-[11px] font-bold shadow-sm flex items-center justify-center shrink-0">
           Đặt lại
         </a>
       </div>
@@ -65,7 +60,7 @@
         </span>
       </label>
 
-      {{-- Radio: Liên tiếp 10 năm --}}
+      {{-- Radio: Liên tiếp 8 năm --}}
       <label class="flex items-center gap-2 cursor-pointer group">
         <input type="radio" name="yearMode" id="mode10years" value="10years"
                class="accent-[#051650] w-3.5 h-3.5 cursor-pointer"
@@ -80,16 +75,3 @@
 
   </div>
 </section>
-
-@push('scripts')
-<script>
-  // Year mode radio toggle → reload with mode param
-  document.querySelectorAll('input[name="yearMode"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      const url = new URL(window.location.href);
-      url.searchParams.set('mode', radio.value);
-      window.location.href = url.toString();
-    });
-  });
-</script>
-@endpush

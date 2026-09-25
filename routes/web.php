@@ -54,6 +54,7 @@ Route::middleware(['mayhem.auth'])->group(function () {
     // Professional Primary Routes
     Route::get('/tong-hop', [PageController::class, 'overview'])->name('reports.overview');
     Route::get('/don-le/{ticker?}', [PageController::class, 'factsheet'])->name('reports.factsheet');
+    Route::post('/don-le/update-metrics', [PageController::class, 'updateMetrics'])->name('reports.factsheet.update');
     Route::get('/so-sanh', [PageController::class, 'comparison'])->name('reports.comparison');
 
     // Users Management (Admin Role Only)
