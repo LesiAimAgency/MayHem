@@ -15,7 +15,7 @@
       <!-- Tab 1: BÁO CÁO TỔNG HỢP -->
       <a href="{{ route('reports.overview') }}"
         class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center {{ request()->routeIs('reports.overview') ? 'font-bold shadow-sm bg-white text-[#051650]' : 'font-semibold text-[#818181] hover:text-[#051650]' }}">
-        BÁO CÁO TỔNG HỢP
+        LỌC DỮ LIỆU
       </a>
 
       <!-- Tab 2: BÁO CÁO ĐƠN LẺ -->
@@ -24,13 +24,13 @@
         BÁO CÁO ĐƠN LẺ
       </a>
 
-      @if(request()->routeIs('reports.comparison'))
+      
         <!-- Tab 3: SO SÁNH (Hiển thị active khi ở trang so sánh) -->
         <a href="{{ route('reports.comparison') }}"
           class="h-[36px] px-6 rounded-full text-[13px] uppercase transition-all flex items-center justify-center font-bold shadow-sm bg-white text-[#051650]">
           SO SÁNH
         </a>
-      @endif
+ 
     </nav>
 
     <!-- Right: Slogan, User Profile & Actions -->
