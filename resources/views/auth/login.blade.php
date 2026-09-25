@@ -49,17 +49,13 @@
   <header class="w-full bg-[#F2F2F2] border-b border-[#D7D7D7]/50">
     <div class="max-w-[1440px] mx-auto px-9 h-[80px] flex items-center justify-between">
       <!-- Logo MAYHEM -->
-      <a href="{{ route('reports.overview') }}" class="flex items-center gap-3.5 group">
-        <div class="w-11 h-11 flex items-center justify-center transition-transform group-hover:scale-105">
-          <svg class="w-10 h-10 text-[#C8997D]" viewBox="0 0 100 100" fill="currentColor">
-            <path d="M15 20L35 45V15H45V55L50 62L55 55V15H65V45L85 20V85H75V40L65 52V85H55V65L50 72L45 65V85H35V52L25 40V85H15V20Z"/>
-          </svg>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-[24px] font-black tracking-widest text-[#222D5E] uppercase leading-none font-sans">MAYHEM</span>
-          <span class="text-[8px] tracking-wider text-[#C8997D] uppercase font-bold mt-1">Deal with problems by becoming rich</span>
-        </div>
-      </a>
+      <a href="/" class="flex items-center group select-none shrink-0" title="MAYHEM - Trang chủ">
+      <img src="{{ asset('assets/images/Logo.svg') }}"
+           alt="MAYHEM"
+           width="239"
+           height="60"
+           class="w-[239px] h-[60px] object-contain transition-transform group-hover:scale-[1.02] block">
+    </a>
 
       <!-- Security Status Badge -->
       <div class="flex items-center gap-2 text-xs text-[#818181]">
