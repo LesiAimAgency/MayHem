@@ -31,19 +31,19 @@
           <th rowspan="2" class="col-sticky-type px-2 text-center border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Loại</th>
           <th rowspan="2" class="col-sticky-name px-3.5 text-left border-r border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">Chỉ Tiêu Tài Chính</th>
           <th rowspan="2" class="col-sticky-unit px-2 text-center border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">ĐVT</th>
-          @foreach($comparison['tickers'] as $t)
-            <th colspan="{{ count($years) }}" class="px-3 py-1.5 text-center border-l-2 border-[#C8997D] border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">
+          @foreach($years as $yr)
+            <th colspan="{{ count($comparison['tickers']) }}" class="px-3 py-1.5 text-center border-l-2 border-[#C8997D] border-b border-[#D7D7D7]/70 bg-[#F8F3EC]">
               <div class="flex flex-col items-center justify-center">
-                <span class="text-[13px] font-black tracking-wider text-[#051650] font-sans">{{ $t }}</span>
+                <span class="text-[13px] font-black tracking-wider text-[#051650] font-sans">{{ $yr }}</span>
               </div>
             </th>
           @endforeach
         </tr>
         <tr class="h-[28px] bg-[#F8F3EC]">
-          @foreach($comparison['tickers'] as $t)
-            @foreach($years as $yIdx => $yr)
-              <th class="px-2.5 py-1 text-right font-mono font-bold text-[11px] text-[#051650] border-b border-[#D7D7D7]/70 bg-[#F8F3EC] min-w-[78px] {{ $yIdx === 0 ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/40' }} {{ $loop->last ? 'bg-gray-100/60 font-black' : '' }}">
-                {{ $yr }}
+          @foreach($years as $yr)
+            @foreach($comparison['tickers'] as $tIdx => $t)
+              <th class="px-2.5 py-1 text-right font-mono font-bold text-[11px] text-[#051650] border-b border-[#D7D7D7]/70 bg-[#F8F3EC] min-w-[78px] {{ $tIdx === 0 ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/40' }} {{ $loop->last ? 'bg-gray-100/60 font-black' : '' }}">
+                {{ $t }}
               </th>
             @endforeach
           @endforeach
@@ -97,17 +97,17 @@
             {{-- ĐVT --}}
             <td class="col-sticky-unit px-2 py-2 text-center text-[#818181] text-[11px] border-b border-[#D7D7D7]/50">{{ $m['unit'] }}</td>
 
-            {{-- Multi-year columns per ticker --}}
-            @foreach($comparison['tickers'] as $t)
-              @foreach($years as $yIdx => $yr)
+            {{-- Multi-ticker columns per year --}}
+            @foreach($years as $yr)
+              @foreach($comparison['tickers'] as $tIdx => $t)
                 @php
                   $tickerVals = $m['values'][$t] ?? null;
                   $val = is_array($tickerVals) ? ($tickerVals[$yr] ?? ($tickerVals[(string)$yr] ?? null)) : $tickerVals;
                   $fmt = fmtVal($val, $m['unit']);
-                  $isFirstYr = ($yIdx === 0);
-                  $isLastYr = ($yIdx === count($years) - 1);
+                  $isFirstTicker = ($tIdx === 0);
+                  $isLastTicker = ($tIdx === count($comparison['tickers']) - 1);
                 @endphp
-                <td class="px-2.5 py-2 text-right font-mono text-[12px] border-b border-[#D7D7D7]/40 {{ $isFirstYr ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/30' }} {{ $isLastYr && count($years) > 1 ? 'bg-gray-50/40' : '' }} text-[#323232] group-hover:bg-[#F8F3EC]/40 transition-colors">
+                <td class="px-2.5 py-2 text-right font-mono text-[12px] border-b border-[#D7D7D7]/40 {{ $isFirstTicker ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/30' }} {{ $isLastTicker && count($comparison['tickers']) > 1 ? 'bg-gray-50/40' : '' }} text-[#323232] group-hover:bg-[#F8F3EC]/40 transition-colors">
                   @if($fmt !== null)
                     {{ $fmt }}
                   @else
