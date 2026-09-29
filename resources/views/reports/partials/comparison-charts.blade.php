@@ -114,7 +114,7 @@
                         {{ $bd['ticker'] }}
                         @if($isBest)<span class="text-emerald-600">★</span>@endif
                       </span>
-                      <span class="font-mono {{ $isBest ? 'font-black text-emerald-700' : '' }}">
+                      <span class="font-inter tabular-nums {{ $isBest ? 'font-black text-emerald-700' : '' }}">
                         {{ $fStr ?? 'N/A' }}
                       </span>
                     </div>

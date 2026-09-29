@@ -39,7 +39,7 @@
           <th scope="col" class="px-4 py-3.5 min-w-[280px]">CHỈ TIÊU TÀI CHÍNH</th>
           <th scope="col" class="px-3 py-3.5 text-center w-24">ĐVT</th>
           @foreach($factsheet['years'] as $year)
-            <th scope="col" class="px-3.5 py-3.5 text-right font-mono {{ $loop->last ? 'text-[#051650] font-black bg-gray-100/60 border-l border-[#E9ECEF]' : '' }}">
+            <th scope="col" class="px-3.5 py-3.5 text-right font-inter tabular-nums {{ $loop->last ? 'text-[#051650] font-black bg-gray-100/60 border-l border-[#E9ECEF]' : '' }}">
               {{ $year }}
             </th>
           @endforeach
@@ -71,7 +71,7 @@
                 @if(!empty($metric['formula']))
                   <button type="button"
                           onclick="showFormulaModal('{{ addslashes($metric['name']) }}', '{{ addslashes($metric['formula']) }}', '{{ $metric['unit'] }}')"
-                          class="text-[#C8997D] hover:text-[#051650] transition-colors text-[10px] font-mono font-bold px-1 rounded bg-[#F8F3EC] cursor-pointer"
+                          class="text-[#C8997D] hover:text-[#051650] transition-colors text-[10px] font-inter font-bold px-1 rounded bg-[#F8F3EC] cursor-pointer"
                           title="Xem công thức: {{ $metric['formula'] }}">
                     fx
                   </button>
@@ -84,7 +84,7 @@
                 $val = $metric['values'][$year] ?? null;
                 $isNegative = is_numeric($val) && $val < 0;
               @endphp
-              <td class="px-3.5 py-3 text-right font-mono {{ $loop->last ? 'bg-gray-100/30 font-bold border-l border-[#E9ECEF]' : '' }} {{ $isNegative ? 'text-red-600' : '' }}">
+              <td class="px-3.5 py-3 text-right font-inter tabular-nums {{ $loop->last ? 'bg-gray-100/30 font-bold border-l border-[#E9ECEF]' : '' }} {{ $isNegative ? 'text-red-600' : '' }}">
                 @if($val !== null)
                   @if($metric['unit'] === '%')
                     {{ ($val > 0 && str_contains($metric['name'], 'Tăng trưởng') ? '+' : '') . number_format($val, 2) }}%

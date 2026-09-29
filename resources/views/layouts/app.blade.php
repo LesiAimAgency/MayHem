@@ -33,7 +33,8 @@
             }
           },
           fontFamily: {
-            sans: ['"Be Vietnam Pro"', '"Inter"', 'sans-serif']
+            sans: ['"Be Vietnam Pro"', '"Inter"', 'sans-serif'],
+            inter: ['"Inter"', 'sans-serif']
           }
         }
       }
@@ -41,6 +42,15 @@
   </script>
   <style>
     body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
+    .font-inter { font-family: 'Inter', sans-serif !important; }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+    /* Đảm bảo toàn bộ số liệu trên các table hiển thị bằng font Inter & căn đều số */
+    table td, table th {
+      font-feature-settings: "tnum" 1;
+    }
     .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
