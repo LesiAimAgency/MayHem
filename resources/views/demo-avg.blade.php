@@ -4,7 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo Trung Bình Ngành</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Inter"', 'sans-serif'],
+              inter: ['"Inter"', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .font-inter { font-family: 'Inter', sans-serif !important; }
+      .tabular-nums {
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+      }
+      table td, table th {
+        font-feature-settings: "tnum" 1;
+      }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 p-8">
     <div class="max-w-7xl mx-auto">
@@ -39,7 +65,7 @@
                         
                         @foreach($years as $year)
                             
-                            <td class="px-4 py-3 text-center font-mono">
+                            <td class="px-4 py-3 text-center font-inter tabular-nums">
                                 @if($row[$year] !== null)
                                     @php
                                         // Định dạng số hiển thị cho gọn
@@ -58,7 +84,7 @@
                                 @endif
                             </td>
                         @endforeach
-                        <td class="px-4 py-3 text-center font-mono font-bold text-blue-700 bg-blue-50/30 border-l border-gray-200 sticky right-0">
+                        <td class="px-4 py-3 text-center font-inter tabular-nums font-bold text-blue-700 bg-blue-50/30 border-l border-gray-200 sticky right-0">
                             @if($row['TotalAverage'] !== null)
                                 @php
                                     $val = $row['TotalAverage'];

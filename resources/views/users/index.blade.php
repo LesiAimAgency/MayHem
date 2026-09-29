@@ -122,7 +122,7 @@
                     <span>{{ $user->name }}</span>
                   </div>
                 </td>
-                <td class="px-4 text-[#495057] font-mono">{{ $user->email }}</td>
+                <td class="px-4 text-[#495057] font-inter">{{ $user->email }}</td>
                 <td class="px-4 text-center">
                   @if($user->role === 'admin')
                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#051650] text-[#C8997D] border border-[#C8997D]/40">ADMIN</span>
@@ -143,7 +143,7 @@
                     </span>
                   @endif
                 </td>
-                <td class="px-4 text-center text-[#818181] font-mono text-[11px]">
+                <td class="px-4 text-center text-[#818181] font-inter tabular-nums text-[11px]">
                   {{ $user->created_at ? $user->created_at->format('d/m/Y') : '-' }}
                 </td>
                 <td class="px-6 text-right whitespace-nowrap">

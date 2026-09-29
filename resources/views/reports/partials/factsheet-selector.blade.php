@@ -87,7 +87,7 @@
                       data-ticker="{{ $comp->short_name }}"
                       data-name="{{ $comp->company_name }}">
                 <div class="flex items-center gap-2 min-w-0">
-                  <span class="font-bold text-[#051650] text-xs font-mono group-hover:text-[#C8997D]">{{ $comp->short_name }}</span>
+                  <span class="font-bold text-[#051650] text-xs font-inter group-hover:text-[#C8997D]">{{ $comp->short_name }}</span>
                   <span class="text-[11px] text-[#495057] truncate max-w-[190px]">{{ $comp->company_name }}</span>
                 </div>
                 @if($comp->short_name === ($selectedTicker ?? 'ABB'))

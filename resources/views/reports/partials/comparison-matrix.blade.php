@@ -42,7 +42,7 @@
         <tr class="h-[28px] bg-[#F8F3EC]">
           @foreach($years as $yr)
             @foreach($comparison['tickers'] as $tIdx => $t)
-              <th class="px-2.5 py-1 text-right font-mono font-bold text-[11px] text-[#051650] border-b border-[#D7D7D7]/70 bg-[#F8F3EC] min-w-[78px] {{ $tIdx === 0 ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/40' }} {{ $loop->last ? 'bg-gray-100/60 font-black' : '' }}">
+              <th class="px-2.5 py-1 text-right font-inter tabular-nums font-bold text-[11px] text-[#051650] border-b border-[#D7D7D7]/70 bg-[#F8F3EC] min-w-[78px] {{ $tIdx === 0 ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/40' }} {{ $loop->last ? 'bg-gray-100/60 font-black' : '' }}">
                 {{ $t }}
               </th>
             @endforeach
@@ -107,7 +107,7 @@
                   $isFirstTicker = ($tIdx === 0);
                   $isLastTicker = ($tIdx === count($comparison['tickers']) - 1);
                 @endphp
-                <td class="px-2.5 py-2 text-right font-mono text-[12px] border-b border-[#D7D7D7]/40 {{ $isFirstTicker ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/30' }} {{ $isLastTicker && count($comparison['tickers']) > 1 ? 'bg-gray-50/40' : '' }} text-[#323232] group-hover:bg-[#F8F3EC]/40 transition-colors">
+                <td class="px-2.5 py-2 text-right font-inter tabular-nums text-[12px] border-b border-[#D7D7D7]/40 {{ $isFirstTicker ? 'border-l-2 border-[#C8997D]' : 'border-l border-[#D7D7D7]/30' }} {{ $isLastTicker && count($comparison['tickers']) > 1 ? 'bg-gray-50/40' : '' }} text-[#323232] group-hover:bg-[#F8F3EC]/40 transition-colors">
                   @if($fmt !== null)
                     {{ $fmt }}
                   @else
@@ -146,6 +146,11 @@
   #comparisonMatrixTable {
     border-collapse: separate !important;
     border-spacing: 0 !important;
+  }
+
+  #comparisonMatrixTable td,
+  #comparisonMatrixTable th {
+    font-feature-settings: "tnum" 1;
   }
 
   /* 4 Sticky Left Columns */

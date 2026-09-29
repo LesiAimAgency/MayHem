@@ -192,7 +192,7 @@
             <input type="text"
                    id="modal_input_{{ $k }}"
                    name="{{ $name }}"
-                   class="modal-metric-input w-full bg-transparent text-[13px] font-mono text-[#051650] focus:outline-none placeholder-[#818181] text-left"
+                   class="modal-metric-input w-full bg-transparent text-[13px] font-inter tabular-nums text-[#051650] focus:outline-none placeholder-[#818181] text-left"
                    data-key="{{ $k }}"
                    data-name="{{ $name }}"
                    data-unit="{{ $unit }}"

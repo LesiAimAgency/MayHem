@@ -1913,7 +1913,7 @@ function renderFinancialTableRows() {
       : `<span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#F1F3F5] text-[#495057] border border-[#DEE2E6]">FILL</span>`;
 
     const fxIcon = row.type === 'TÍNH'
-      ? `<span class="inline-flex items-center justify-center px-1.5 py-0.2 rounded text-[9.5px] font-bold font-mono bg-[#EBF3FC] text-[#228BE6] border border-[#D0EBFF]" title="Chỉ tiêu tính toán bằng công thức toán học">fx</span>`
+      ? `<span class="inline-flex items-center justify-center px-1.5 py-0.2 rounded text-[9.5px] font-bold font-inter bg-[#EBF3FC] text-[#228BE6] border border-[#D0EBFF]" title="Chỉ tiêu tính toán bằng công thức toán học">fx</span>`
       : '';
 
     let yearTds = '';
@@ -1933,7 +1933,7 @@ function renderFinancialTableRows() {
 
       const lastColStyle = isLastYear ? 'border-l border-[#E9ECEF] bg-gray-50/70 font-semibold' : '';
 
-      yearTds += `<td class="px-3.5 py-3 text-right font-mono text-[12px] ${textClass} ${lastColStyle}">${escapeHtml(val)}</td>`;
+      yearTds += `<td class="px-3.5 py-3 text-right font-inter tabular-nums text-[12px] ${textClass} ${lastColStyle}">${escapeHtml(val)}</td>`;
     });
 
     const safeFormula = escapeHtml(row.formula || 'Chỉ tiêu được ghi nhận trực tiếp từ Báo cáo tài chính kiểm toán (FILL)');
@@ -2291,7 +2291,7 @@ function renderComparisonMatrixTable() {
       const bestBadge = isBest ? `<span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 font-extrabold border border-emerald-300 text-xs shadow-xs">${displayVal}</span>` : `<span class="font-medium text-[#051650]">${displayVal}</span>`;
 
       bankTds += `
-        <td class="px-4 py-2.5 text-right font-mono border-l border-b border-[#D7D7D7]/40">
+        <td class="px-4 py-2.5 text-right font-inter tabular-nums border-l border-b border-[#D7D7D7]/40">
           ${bestBadge}
         </td>
       `;
@@ -2308,7 +2308,7 @@ function renderComparisonMatrixTable() {
       <td class="col-sticky-name px-4 py-2.5 font-medium text-[#051650] border-r border-b border-[#D7D7D7]/50">
         ${escapeHtml(metric.name)}
       </td>
-      <td class="col-sticky-unit px-2 py-2.5 text-center text-[#818181] text-[11px] font-mono border-b border-[#D7D7D7]/50">
+      <td class="col-sticky-unit px-2 py-2.5 text-center text-[#818181] text-[11px] font-inter border-b border-[#D7D7D7]/50">
         ${escapeHtml(metric.unit)}
       </td>
       ${bankTds}
@@ -2341,7 +2341,7 @@ function renderVisualComparisonBars() {
             <span class="px-1.5 py-0.5 rounded bg-[#051650] text-white text-[10px]">${escapeHtml(b.ticker)}</span>
             <span>${escapeHtml(b.name)}</span>
           </span>
-          <span class="font-mono text-[#051650] font-bold">${formatFn(val)}</span>
+          <span class="font-inter tabular-nums text-[#051650] font-bold">${formatFn(val)}</span>
         </div>
         <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden p-0.5">
           <div class="h-full rounded-full bg-gradient-to-r from-[#C8997D] to-[#051650] transition-all duration-500" style="width: ${pct}%"></div>
