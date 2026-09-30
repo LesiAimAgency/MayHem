@@ -994,28 +994,59 @@ class FinancialMetricService
 
 
     /**
-     * Get sector averages for screener
+     * Lấy trung bình ngành theo từng năm riêng biệt từ database thực tế
+     * @return array [year => [metric_key => average_value]]
      */
-    public function getSectorAverage(int $sectorId): array
+    public function getAnnualSectorAverages(int $sectorId = 1): array
     {
-        return [
-            'cir' => 45.2,
-            'cpkh_toi' => 4.5,
-            'blvh' => 54.8,
-            'blntt' => 38.6,
-            'blnst' => 30.5,
-            'ttlr' => 15.2,
-            'roa' => 1.45,
-            'debt_equity' => 9.8,
-            'roe' => 16.5,
-            'cfo' => 5000,
-            'casa' => 22.4,
-            'npl' => 1.85,
-            'nim' => 3.25,
-            'car' => 11.2,
-            'llr' => 140.0,
-            'toi' => 15000,
-        ];
+        $companies = MhCompany::active()->where('sector_id', $sectorId)->get();
+        if ($companies->isEmpty()) {
+            return [];
+        }
+
+        $activeYears = $this->getActiveYears($companies->pluck('short_name')->toArray());
+        $allReports = MhFinancialReport::whereIn('short_name', $companies->pluck('short_name'))
+            ->whereIn('report_year', $activeYears)
+            ->get()
+            ->groupBy('report_year');
+
+        $metricKeys = ['cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr', 'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'];
+        $annualAverages = [];
+
+        foreach ($activeYears as $year) {
+            $yearReports = $allReports->get($year) ?? collect();
+            foreach ($metricKeys as $key) {
+                $vals = [];
+                foreach ($yearReports as $rep) {
+                    $metrics = $this->extractMetrics($rep);
+                    $v = $metrics[$key] ?? null;
+                    if ($v !== null && is_numeric($v)) {
+                        $vals[] = (float) $v;
+                    }
+                }
+                $annualAverages[$year][$key] = count($vals) > 0 ? round(array_sum($vals) / count($vals), 2) : 0;
+            }
+        }
+
+        return $annualAverages;
+    }
+
+    /**
+     * Get sector averages for screener (lấy trung bình ngành năm gần nhất hoặc năm được chỉ định)
+     */
+    public function getSectorAverage(int $sectorId = 1, ?int $year = null): array
+    {
+        $annual = $this->getAnnualSectorAverages($sectorId);
+        if (empty($annual)) {
+            return [];
+        }
+
+        if ($year && isset($annual[$year])) {
+            return $annual[$year];
+        }
+
+        $maxYear = max(array_keys($annual));
+        return $annual[$maxYear] ?? [];
     }
 
     /**

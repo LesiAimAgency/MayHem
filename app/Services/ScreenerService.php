@@ -36,7 +36,8 @@ class ScreenerService
             ];
         }
 
-        // Sector average for comparison (e.g. under_avg condition)
+        // Sector averages for comparison (theo từng năm và năm gần nhất)
+        $annualSectorAverages = $this->metricService->getAnnualSectorAverages($sectorId);
         $sectorAverages = $this->metricService->getSectorAverage($sectorId);
 
         // Fetch latest reports for each company
@@ -64,7 +65,7 @@ class ScreenerService
                     continue;
                 }
 
-                if (!$this->evaluateCriterion($criterionKey, $conditionVal, $metrics, $reports, $sectorAverages)) {
+                if (!$this->evaluateCriterion($criterionKey, $conditionVal, $metrics, $reports, $sectorAverages, $annualSectorAverages, $latestReport)) {
                     $passed = false;
                     break;
                 }
@@ -85,6 +86,7 @@ class ScreenerService
             'matched_count' => count($matched),
             'matched_companies' => $matched,
             'sector_averages' => $sectorAverages,
+            'annual_averages' => $annualSectorAverages,
         ];
     }
 
@@ -96,47 +98,88 @@ class ScreenerService
         mixed $condition,
         array $latestMetrics,
         $historicalReports,
-        array $sectorAverages
+        array $sectorAverages,
+        array $annualSectorAverages = [],
+        ?MhFinancialReport $latestReport = null
     ): bool {
-        // 1. Special Handling for CIR
-        if ($key === 'cir') {
-            $cirVal = $latestMetrics['cir'] ?? null;
-            if ($cirVal === null) return true; // neutral if data absent
+        $latestYear = $latestReport ? (int)$latestReport->report_year : (int)date('Y');
+        $conds = is_array($condition) ? $condition : [$condition];
 
-            // Array of checkbox values, e.g. ['under_60_latest', 'under_avg_latest', 'under_avg_10y']
-            $conds = is_array($condition) ? $condition : [$condition];
+        // 1. Handling for CIR & Metrics with Average Conditions
+        $avgMetrics = ['cir', 'blvh', 'blntt', 'blnst', 'roa', 'de', 'roe', 'casa', 'npl'];
+        if (in_array($key, $avgMetrics)) {
+            $metricKeyMap = [
+                'cpkh' => 'cpkh_toi',
+                'de' => 'debt_equity',
+            ];
+            $realKey = $metricKeyMap[$key] ?? $key;
+            $metricVal = $latestMetrics[$realKey] ?? ($latestMetrics[$key] ?? null);
 
-            // 1a. Standalone condition: under_60_latest (AND)
-            if (in_array('under_60_latest', $conds)) {
-                if ($cirVal >= 60.0) {
-                    return false;
+            // Standalone threshold conditions
+            if ($key === 'cir' && in_array('under_60_latest', $conds)) {
+                if ($metricVal === null || $metricVal >= 60.0) return false;
+            }
+            if ($key === 'roa' && in_array('from_1pct', $conds)) {
+                if ($metricVal === null || $metricVal < 1.0) return false;
+            }
+            if ($key === 'roe' && in_array('from_15pct_10y', $conds)) {
+                if ($historicalReports->isEmpty()) return false;
+                foreach ($historicalReports as $rep) {
+                    $m = $this->metricService->extractMetrics($rep);
+                    if (($m['roe'] ?? null) === null || $m['roe'] < 15.0) return false;
+                }
+            }
+            if ($key === 'roe' && in_array('from_20pct_10y', $conds)) {
+                if ($historicalReports->isEmpty()) return false;
+                foreach ($historicalReports as $rep) {
+                    $m = $this->metricService->extractMetrics($rep);
+                    if (($m['roe'] ?? null) === null || $m['roe'] < 20.0) return false;
                 }
             }
 
-            // 1b. cir_avg conditions (under_avg_latest, under_avg_10y): OR logic giữa các kỳ đã chọn
-            $avgConds = array_intersect($conds, ['under_avg', 'under_avg_latest', 'under_avg_10y']);
+            // Conditions so sánh Trung bình ngành
+            $avgConds = array_intersect($conds, [
+                'under_avg', 'under_avg_latest', 'under_avg_10y', 'under_avg_range',
+                'above_avg', 'above_avg_latest', 'above_avg_10y', 'above_avg_range'
+            ]);
+
             if (!empty($avgConds)) {
                 $passedAvg = false;
-                $avgCir = $sectorAverages['cir'] ?? 45.0;
+                $isUnder = in_array($key, ['cir', 'de', 'npl']);
 
-                if (in_array('under_avg', $avgConds) || in_array('under_avg_latest', $avgConds)) {
-                    if ($cirVal < $avgCir) {
-                        $passedAvg = true;
+                // a) Năm gần nhất: Lấy TBN của ĐÚNG năm gần nhất
+                if (in_array('under_avg_latest', $avgConds) || in_array('under_avg', $avgConds) ||
+                    in_array('above_avg_latest', $avgConds) || in_array('above_avg', $avgConds)) {
+                    $latestTbn = $annualSectorAverages[$latestYear][$realKey] ?? ($sectorAverages[$realKey] ?? null);
+                    if ($metricVal !== null && $latestTbn !== null) {
+                        $checkPass = $isUnder ? ($metricVal < $latestTbn) : ($metricVal > $latestTbn);
+                        if ($checkPass) $passedAvg = true;
                     }
                 }
 
-                if (in_array('under_avg_10y', $avgConds)) {
+                // b) Dải nhiều năm (8-10 năm): Mỗi năm so với TBN của ĐÚNG năm đó
+                if (in_array('under_avg_10y', $avgConds) || in_array('under_avg_range', $avgConds) ||
+                    in_array('above_avg_10y', $avgConds) || in_array('above_avg_range', $avgConds)) {
                     if (!$historicalReports->isEmpty()) {
-                        $all10y = true;
+                        $allYearsPassed = true;
                         foreach ($historicalReports as $rep) {
+                            $repYear = (int)$rep->report_year;
                             $repMetrics = $this->metricService->extractMetrics($rep);
-                            $repCir = $repMetrics['cir'] ?? null;
-                            if ($repCir === null || $repCir >= $avgCir) {
-                                $all10y = false;
+                            $repVal = $repMetrics[$realKey] ?? ($repMetrics[$key] ?? null);
+                            $yearTbn = $annualSectorAverages[$repYear][$realKey] ?? null;
+
+                            if ($repVal === null || $yearTbn === null) {
+                                $allYearsPassed = false;
+                                break;
+                            }
+
+                            $checkYear = $isUnder ? ($repVal < $yearTbn) : ($repVal > $yearTbn);
+                            if (!$checkYear) {
+                                $allYearsPassed = false;
                                 break;
                             }
                         }
-                        if ($all10y) {
+                        if ($allYearsPassed) {
                             $passedAvg = true;
                         }
                     }
