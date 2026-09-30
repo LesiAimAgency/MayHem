@@ -106,30 +106,47 @@ class PageController extends Controller
             ], $latest);
         })->values();
 
-        // Calculate industry averages for latest year and historical years
-        $metricKeys = ['cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr', 'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'];
-        $sectorAverages = [];
-        foreach ($metricKeys as $key) {
-            $vals = $banksData->pluck($key)->filter(fn($v) => $v !== null && is_numeric($v));
-            $sectorAverages[$key] = $vals->count() > 0 ? round($vals->avg(), 2) : 0;
-        }
-
+        // Calculate industry averages for historical years and latest year
         $activeYears = $this->metricService->getActiveYears();
         $maxReportYear = !empty($activeYears) ? max($activeYears) : (int) (\App\Models\MhFinancialReport::max('report_year') ?? (int) date('Y'));
         $minReportYear = !empty($activeYears) ? min($activeYears) : 2018;
 
+        $metricKeys = ['cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr', 'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'];
         $annualAverages = [];
+        $annualAveragesBreakdown = [];
         for ($year = $minReportYear; $year <= $maxReportYear; $year++) {
             foreach ($metricKeys as $key) {
                 $vals = $banksData->map(function($b) use ($year, $key) {
                     foreach ($b['history'] as $h) {
                         if ($h['year'] == $year && isset($h[$key]) && is_numeric($h[$key])) {
-                            return $h[$key];
+                            return (float) $h[$key];
                         }
                     }
                     return null;
                 })->filter(fn($v) => $v !== null);
-                $annualAverages[$year][$key] = $vals->count() > 0 ? round($vals->avg(), 2) : 0;
+
+                $count = $vals->count();
+                $sum = $count > 0 ? round($vals->sum(), 2) : 0;
+                $avg = $count > 0 ? round($vals->avg(), 2) : 0;
+
+                $annualAverages[$year][$key] = $avg;
+                $annualAveragesBreakdown[$year][$key] = [
+                    'year' => $year,
+                    'key' => $key,
+                    'sum' => $sum,
+                    'count' => $count,
+                    'avg' => $avg,
+                    'formula' => $count > 0 ? "Tổng ({$sum}) / {$count} NH = {$avg}" : "Không có dữ liệu",
+                ];
+            }
+        }
+
+        // TBN năm gần nhất lấy từ bảng annualAverages của năm maxReportYear
+        $sectorAverages = $annualAverages[$maxReportYear] ?? [];
+        if (empty($sectorAverages)) {
+            foreach ($metricKeys as $key) {
+                $vals = $banksData->pluck($key)->filter(fn($v) => $v !== null && is_numeric($v));
+                $sectorAverages[$key] = $vals->count() > 0 ? round($vals->avg(), 2) : 0;
             }
         }
 
@@ -140,6 +157,7 @@ class PageController extends Controller
             'customFilters' => $customFilters,
             'sectorAverages' => $sectorAverages,
             'annualAverages' => $annualAverages,
+            'annualAveragesBreakdown' => $annualAveragesBreakdown,
             'screenerResult' => $screenerResult,
         ]);
     }

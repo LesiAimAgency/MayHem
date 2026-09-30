@@ -1174,57 +1174,98 @@ window.uncheckCriteriaSubCheckbox = function (groupId, value) {
 };
 
 /**
- * Tính mức trung bình từ toàn bộ dữ liệu của danh sách ngân hàng được chọn theo khoảng năm
+ * Lấy Trung bình ngành của một năm cụ thể cho một chỉ tiêu
  */
-function calculate10YearAverages(banks) {
-  const { fromYear, toYear } = getTimelineRange();
-  const targetBanks = (banks && banks.length > 0) ? banks : getBanksList();
-  const metricKeys = ['cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr', 'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'];
-  const result = {};
-
-  metricKeys.forEach(key => {
-    const vals = [];
-    targetBanks.forEach(b => {
-      const hList = b.history || [];
-      hList.forEach(h => {
-        if (h.year >= fromYear && h.year <= toYear) {
-          if (h[key] !== null && h[key] !== undefined && typeof h[key] === 'number' && !isNaN(h[key])) {
-            vals.push(h[key]);
-          }
-        }
-      });
-    });
-
-    if (vals.length > 0) {
-      const sum = vals.reduce((acc, v) => acc + v, 0);
-      result[key] = +(sum / vals.length).toFixed(2);
-      result[`${key}_count`] = vals.length;
-    } else {
-      result[key] = null;
-      result[`${key}_count`] = 0;
-    }
-  });
-
-  return result;
+function getAnnualSectorAverage(year, key) {
+  if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[year] && window.ANNUAL_AVERAGES[year][key] !== undefined && window.ANNUAL_AVERAGES[year][key] !== null) {
+    return window.ANNUAL_AVERAGES[year][key];
+  }
+  return null;
 }
 
 /**
- * Kiểm tra 1 điều kiện cụ thể của 1 tiêu chí đối với ngân hàng
+ * Tính toán Trung bình ngành ĐỘNG dựa trên danh sách ngân hàng ĐÃ ĐƯỢC CHỌN trong stockChipsContainer.
+ * Mỗi năm tính trung bình cộng của các ngân hàng có dữ liệu trong năm đó.
  */
-function evaluateCondition(bank, metric, condition) {
+function calculateDynamicSectorAverages(selectedBanks) {
+  if (!selectedBanks || selectedBanks.length === 0) return {};
+
+  const { fromYear, toYear } = getTimelineRange();
+  const allYears = new Set();
+
+  // Danh sách các năm cần tính độc lập (MỖI NĂM tính trung bình cộng RIÊNG của chính năm đó từ các mã đã chọn, TUYỆT ĐỐI không gộp các năm)
+  selectedBanks.forEach(b => {
+    if (Array.isArray(b.history)) {
+      b.history.forEach(h => {
+        if (typeof h.year === 'number') allYears.add(h.year);
+      });
+    }
+  });
+
+  const targetYear = new Date().getFullYear() - 1;
+  allYears.add(targetYear);
+  for (let y = fromYear; y <= toYear; y++) allYears.add(y);
+
+  const metricFields = [
+    'cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr',
+    'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'
+  ];
+
+  const dynamicAnnualAverages = {};
+
+  allYears.forEach(year => {
+    dynamicAnnualAverages[year] = {};
+    metricFields.forEach(field => {
+      const validValues = [];
+
+      selectedBanks.forEach(bank => {
+        let val = null;
+        if (Array.isArray(bank.history)) {
+          const h = bank.history.find(item => item.year === year);
+          if (h && h[field] !== undefined && h[field] !== null && typeof h[field] === 'number') {
+            val = h[field];
+          }
+        }
+        // Nếu là targetYear mà trong history chưa có, fallback về bank[field]
+        if (val === null && year === targetYear && bank[field] !== undefined && bank[field] !== null && typeof bank[field] === 'number') {
+          val = bank[field];
+        }
+
+        if (val !== null && typeof val === 'number' && !isNaN(val)) {
+          validValues.push(val);
+        }
+      });
+
+      if (validValues.length > 0) {
+        const sum = validValues.reduce((acc, v) => acc + v, 0);
+        dynamicAnnualAverages[year][field] = Number((sum / validValues.length).toFixed(2));
+      } else {
+        // Fallback về window.ANNUAL_AVERAGES nếu nhóm đã chọn không có số liệu năm đó
+        dynamicAnnualAverages[year][field] = window.ANNUAL_AVERAGES?.[year]?.[field] ?? null;
+      }
+    });
+  });
+
+  return dynamicAnnualAverages;
+}
+
+/**
+ * Đánh giá chi tiết 1 điều kiện lọc đối với 1 ngân hàng,
+ * trả về đầy đủ số liệu tính ra của NH, số liệu chuẩn/TBN, chênh lệch và kết quả đối chiếu.
+ * Hỗ trợ TBN ĐỘNG tính từ nhóm ngân hàng đã chọn trong stockChipsContainer.
+ */
+function getConditionComparison(bank, metric, condition, dynamicAverages, selectedCount) {
   const metricKeyMap = {
     cpkh: 'cpkh_toi',
     de: 'debt_equity'
   };
   const key = metricKeyMap[metric] || metric;
   const history = bank.history || [];
-
-  // Xác định năm tài chính gần nhất từ dữ liệu lịch sử
   const allYears = history.map(h => h.year).filter(y => typeof y === 'number');
   const targetYear = allYears.length > 0 ? Math.max(...allYears) : (new Date().getFullYear() - 1);
   const targetHistory = history.find(h => h.year === targetYear);
+  const { fromYear, toYear } = getTimelineRange();
 
-  // Lấy giá trị của ngân hàng ở năm gần nhất, fallback về bank[key]
   const getLatestVal = (field) => {
     if (targetHistory && targetHistory[field] !== undefined && targetHistory[field] !== null) {
       return targetHistory[field];
@@ -1232,242 +1273,240 @@ function evaluateCondition(bank, metric, condition) {
     return (bank[field] !== undefined && bank[field] !== null) ? bank[field] : null;
   };
 
-  // Trung bình ngành: Ưu tiên lấy từ toàn bộ dữ liệu của các ngân hàng đã chọn
-  const sectorAvg = (window.SELECTED_10Y_AVERAGES && window.SELECTED_10Y_AVERAGES[key] !== undefined && window.SELECTED_10Y_AVERAGES[key] !== null)
-    ? window.SELECTED_10Y_AVERAGES[key]
-    : ((window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][key] !== undefined)
-      ? window.ANNUAL_AVERAGES[targetYear][key]
-      : ((window.SECTOR_AVERAGES && window.SECTOR_AVERAGES[key] !== undefined) ? window.SECTOR_AVERAGES[key] : null));
-
-  // Helper kiểm tra so sánh với Trung bình ngành cho năm gần nhất
-  const checkLatestVsAvg = (field, isUnder) => {
-    const val = getLatestVal(field);
-    if (val === null || typeof val !== 'number') return false;
-    let latestAvg = null;
-    if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][field] !== undefined && window.ANNUAL_AVERAGES[targetYear][field] !== null) {
-      latestAvg = window.ANNUAL_AVERAGES[targetYear][field];
-    } else if (sectorAvg !== null) {
-      latestAvg = sectorAvg;
+  const getLatestTBN = (field) => {
+    // 1. Ưu tiên Trung bình ngành ĐỘNG tính từ các mã đã chọn trong stockChipsContainer
+    if (dynamicAverages && dynamicAverages[targetYear] && dynamicAverages[targetYear][field] !== undefined && dynamicAverages[targetYear][field] !== null) {
+      return dynamicAverages[targetYear][field];
     }
-    if (latestAvg === null) return false;
-    return isUnder ? val < latestAvg : val > latestAvg;
+    // 2. Fallback về Trung bình ngành toàn hệ thống
+    if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][field] !== undefined && window.ANNUAL_AVERAGES[targetYear][field] !== null) {
+      return window.ANNUAL_AVERAGES[targetYear][field];
+    }
+    if (window.SECTOR_AVERAGES && window.SECTOR_AVERAGES[field] !== undefined && window.SECTOR_AVERAGES[field] !== null) {
+      return window.SECTOR_AVERAGES[field];
+    }
+    return null;
   };
 
-  // Helper kiểm tra các năm nằm trong khoảng timeline slider [fromYear, toYear]
-  const checkRangeVsAvg = (field, isUnder) => {
-    const { fromYear, toYear } = getTimelineRange();
-    const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
-    if (relevantYears.length === 0) return false;
-    if (relevantYears.length < (toYear - fromYear + 1)) return false;
+  const isPercent = !['de', 'debt_equity'].includes(key);
+  const unit = isPercent ? '%' : 'x';
+  const fmt = (num) => (typeof num === 'number' && !isNaN(num)) ? `${Number(num.toFixed(2))}${unit}` : 'N/A';
 
-    return relevantYears.every(h => {
-      const val = h[field];
-      if (val === null || val === undefined || typeof val !== 'number') return false;
+  const label = CRITERIA_METRIC_LABELS[metric] || metric.toUpperCase();
+  const countLabel = selectedCount ? ` (${selectedCount} mã đã chọn)` : '';
 
-      let yearAvg = null;
-      if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[h.year] && window.ANNUAL_AVERAGES[h.year][field] !== undefined && window.ANNUAL_AVERAGES[h.year][field] !== null) {
-        yearAvg = window.ANNUAL_AVERAGES[h.year][field];
-      } else if (sectorAvg !== null) {
-        yearAvg = sectorAvg;
-      }
-
-      if (yearAvg === null) return false;
-      return isUnder ? val < yearAvg : val > yearAvg;
-    });
+  let res = {
+    metric,
+    condition,
+    label,
+    passed: false,
+    bankVal: null,
+    bankValStr: 'N/A',
+    benchmarkStr: 'N/A',
+    diffStr: '—',
+    comparisonStr: '',
+    statusStr: '❌ LOẠI',
+    reason: '',
+    yearlyBreakdown: []
   };
 
-  switch (metric) {
-    case 'cir':
-      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
-        return checkRangeVsAvg('cir', true);
-      }
-      if (condition === 'under_avg_latest') {
-        return checkLatestVsAvg('cir', true);
-      }
-      if (condition === 'under_60_latest') {
-        const val = getLatestVal('cir');
-        return val !== null && val < 60;
-      }
-      break;
+  // 1. So sánh TBN năm gần nhất
+  if (condition === 'under_avg_latest' || condition === 'above_avg_latest') {
+    const val = getLatestVal(key);
+    const avg = getLatestTBN(key);
+    const isUnder = condition === 'under_avg_latest';
 
-    case 'cpkh':
-      if (condition === 'under_10_latest') {
-        const val = getLatestVal('cpkh_toi');
-        return val !== null && val < 10;
-      }
-      break;
+    res.bankVal = val;
+    res.bankValStr = fmt(val);
+    res.benchmarkStr = avg !== null ? `TBN ${targetYear}${countLabel}: ${fmt(avg)}` : 'TBN: N/A';
 
-    case 'blvh':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('blvh', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('blvh', false);
-      }
-      break;
-
-    case 'blntt':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('blntt', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('blntt', false);
-      }
-      break;
-
-    case 'blnst':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('blnst', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('blnst', false);
-      }
-      break;
-
-    case 'ttlr':
-      if (condition === 'positive_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.ttlr !== null && typeof h.ttlr === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.ttlr > 0);
-      }
-      break;
-
-    case 'roa':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('roa', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('roa', false);
-      }
-      if (condition === 'from_1pct') {
-        const val = getLatestVal('roa');
-        return val !== null && val >= 1.0;
-      }
-      break;
-
-    case 'de':
-      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
-        return checkRangeVsAvg('debt_equity', true);
-      }
-      if (condition === 'under_avg_latest') {
-        return checkLatestVsAvg('debt_equity', true);
-      }
-      if (condition === 'under_10' || condition === 'under_10_latest') {
-        const val = getLatestVal('debt_equity');
-        return val !== null && val < 10;
-      }
-      if (condition === 'under_10_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.debt_equity !== null && typeof h.debt_equity === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.debt_equity < 10);
-      }
-      break;
-
-    case 'roe':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('roe', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('roe', false);
-      }
-      if (condition === 'from_15pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.roe !== null && typeof h.roe === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.roe >= 15);
-      }
-      if (condition === 'from_20pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.roe !== null && typeof h.roe === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.roe >= 20);
-      }
-      break;
-
-    case 'cfo':
-      if (condition === 'greater_than_parent_npat_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h =>
-          h.year >= fromYear && h.year <= toYear &&
-          h.cfo !== null && typeof h.cfo === 'number' &&
-          h.parent_npat !== null && typeof h.parent_npat === 'number'
-        );
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.cfo > h.parent_npat);
-      }
-      break;
-
-    case 'casa':
-      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
-        return checkRangeVsAvg('casa', false);
-      }
-      if (condition === 'above_avg_latest') {
-        return checkLatestVsAvg('casa', false);
-      }
-      break;
-
-    case 'npl':
-      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
-        return checkRangeVsAvg('npl', true);
-      }
-      if (condition === 'under_avg_latest') {
-        return checkLatestVsAvg('npl', true);
-      }
-      break;
-
-    case 'nim':
-      if (condition === 'above_3pct_latest') {
-        const val = getLatestVal('nim');
-        return val !== null && val > 3.0;
-      }
-      if (condition === 'above_3pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.nim !== null && typeof h.nim === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.nim > 3.0);
-      }
-      break;
-
-    case 'car':
-      if (condition === 'above_10pct_latest') {
-        const val = getLatestVal('car');
-        return val !== null && val > 10.0;
-      }
-      if (condition === 'above_10pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.car !== null && typeof h.car === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.car > 10.0);
-      }
-      if (condition === 'above_12pct_latest') {
-        const val = getLatestVal('car');
-        return val !== null && val > 12.0;
-      }
-      if (condition === 'above_12pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.car !== null && typeof h.car === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.car > 12.0);
-      }
-      break;
-
-    case 'llr':
-      if (condition === 'above_50pct_latest') {
-        const val = getLatestVal('llr');
-        return val !== null && val > 50.0;
-      }
-      if (condition === 'above_50pct_10y') {
-        const { fromYear, toYear } = getTimelineRange();
-        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.llr !== null && typeof h.llr === 'number');
-        if (relevantYears.length < (toYear - fromYear + 1)) return false;
-        return relevantYears.every(h => h.llr > 50.0);
-      }
-      break;
+    if (val !== null && avg !== null) {
+      const diff = val - avg;
+      res.diffStr = (diff > 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)) + unit;
+      res.passed = isUnder ? (val < avg) : (val > avg);
+      res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+      const op = isUnder ? '<' : '>';
+      res.comparisonStr = `${fmt(val)} ${res.passed ? op : (isUnder ? '≥' : '≤')} ${fmt(avg)}`;
+      res.reason = res.passed
+        ? `Đạt (${fmt(val)} ${op} TBN ${fmt(avg)})`
+        : `Trượt (${fmt(val)} ${isUnder ? '≥' : '≤'} TBN ${fmt(avg)})`;
+    } else {
+      res.passed = false;
+      res.statusStr = '❌ LOẠI';
+      res.reason = 'Thiếu dữ liệu';
+    }
+    return res;
   }
-  // Điều kiện không xác định → loại bỏ (không pass)
-  return false;
+
+  // 2. So sánh TBN theo từng năm trong dải Timeline (under_avg_range, under_avg_10y, above_avg_range, above_avg_10y)
+  if (['under_avg_range', 'under_avg_10y', 'above_avg_range', 'above_avg_10y'].includes(condition)) {
+    const isUnder = condition.startsWith('under_');
+    const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
+    const totalYears = toYear - fromYear + 1;
+    let passedYears = 0;
+    let failYears = [];
+    const yearlyBreakdown = [];
+
+    const latestVal = getLatestVal(key);
+    res.bankVal = latestVal;
+    res.bankValStr = fmt(latestVal);
+    res.benchmarkStr = `TBN${countLabel} (${fromYear} - ${toYear})`;
+
+    for (let y = fromYear; y <= toYear; y++) {
+      const h = relevantYears.find(item => item.year === y);
+      const val = h ? h[key] : null;
+      let yearAvg = null;
+      if (dynamicAverages && dynamicAverages[y] && dynamicAverages[y][key] !== undefined && dynamicAverages[y][key] !== null) {
+        yearAvg = dynamicAverages[y][key];
+      } else {
+        yearAvg = window.ANNUAL_AVERAGES?.[y]?.[key] ?? null;
+      }
+      let ok = false;
+      if (val !== null && typeof val === 'number' && yearAvg !== null && typeof yearAvg === 'number') {
+        ok = isUnder ? (val < yearAvg) : (val > yearAvg);
+      }
+      yearlyBreakdown.push({
+        year: y,
+        bankVal: val,
+        tbnVal: yearAvg,
+        passed: ok
+      });
+      if (ok) {
+        passedYears++;
+      } else {
+        failYears.push(`${y} (${fmt(val)} ${isUnder ? '≥' : '≤'} TBN ${fmt(yearAvg)})`);
+      }
+    }
+
+    res.yearlyBreakdown = yearlyBreakdown;
+    res.passed = (passedYears === totalYears && totalYears > 0);
+    res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+    res.diffStr = `${passedYears}/${totalYears} năm`;
+    res.comparisonStr = `${passedYears}/${totalYears} năm ${isUnder ? '<' : '>'} TBN`;
+    res.reason = res.passed
+      ? `Đạt ${passedYears}/${totalYears} năm (${fromYear} - ${toYear})`
+      : `Trượt ở: ${failYears.slice(0, 2).join('; ')}${failYears.length > 2 ? '...' : ''}`;
+    return res;
+  }
+
+  // 3. So sánh ngưỡng cố định (Fixed threshold)
+  const thresholdConfigs = {
+    under_60_latest: { threshold: 60.0, op: '<', multi: false, field: 'cir' },
+    under_10_latest: { threshold: 10.0, op: '<', multi: false, field: key },
+    under_10: { threshold: 10.0, op: '<', multi: false, field: key },
+    from_1pct: { threshold: 1.0, op: '>=', multi: false, field: 'roa' },
+    above_3pct_latest: { threshold: 3.0, op: '>', multi: false, field: 'nim' },
+    above_10pct_latest: { threshold: 10.0, op: '>', multi: false, field: 'car' },
+    above_12pct_latest: { threshold: 12.0, op: '>', multi: false, field: 'car' },
+    above_50pct_latest: { threshold: 50.0, op: '>', multi: false, field: 'llr' },
+
+    // Multi-year threshold
+    under_10_10y: { threshold: 10.0, op: '<', multi: true, field: key },
+    above_3pct_10y: { threshold: 3.0, op: '>', multi: true, field: 'nim' },
+    above_10pct_10y: { threshold: 10.0, op: '>', multi: true, field: 'car' },
+    above_12pct_10y: { threshold: 12.0, op: '>', multi: true, field: 'car' },
+    above_50pct_10y: { threshold: 50.0, op: '>', multi: true, field: 'llr' },
+    from_15pct_10y: { threshold: 15.0, op: '>=', multi: true, field: 'roe' },
+    from_20pct_10y: { threshold: 20.0, op: '>=', multi: true, field: 'roe' }
+  };
+
+  const tConfig = thresholdConfigs[condition];
+  if (tConfig) {
+    const fKey = tConfig.field;
+    const thresh = tConfig.threshold;
+    const op = tConfig.op;
+
+    if (!tConfig.multi) {
+      const val = getLatestVal(fKey);
+      res.bankVal = val;
+      res.bankValStr = fmt(val);
+      res.benchmarkStr = `${op} ${fmt(thresh)}`;
+      if (val !== null) {
+        const diff = val - thresh;
+        res.diffStr = (diff > 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)) + unit;
+        res.passed = (op === '<') ? (val < thresh) : (op === '>') ? (val > thresh) : (val >= thresh);
+        res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+        res.comparisonStr = `${fmt(val)} ${res.passed ? op : 'không đạt'} ${fmt(thresh)}`;
+        res.reason = res.passed ? `Đạt (${fmt(val)} ${op} ${fmt(thresh)})` : `Trượt (${fmt(val)} không ${op} ${fmt(thresh)})`;
+      } else {
+        res.passed = false;
+        res.statusStr = '❌ LOẠI';
+        res.reason = 'Thiếu dữ liệu';
+      }
+      return res;
+    } else {
+      const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
+      const totalYears = toYear - fromYear + 1;
+      let passedCount = 0;
+      let failYears = [];
+      const yearlyBreakdown = [];
+
+      const latestVal = getLatestVal(fKey);
+      res.bankVal = latestVal;
+      res.bankValStr = fmt(latestVal);
+      res.benchmarkStr = `${op} ${fmt(thresh)} (${fromYear}-${toYear})`;
+
+      for (let y = fromYear; y <= toYear; y++) {
+        const h = relevantYears.find(item => item.year === y);
+        const val = h ? h[fKey] : null;
+        let ok = false;
+        if (val !== null && typeof val === 'number') {
+          ok = (op === '<') ? (val < thresh) : (op === '>') ? (val > thresh) : (val >= thresh);
+        }
+        yearlyBreakdown.push({ year: y, bankVal: val, passed: ok });
+        if (ok) passedCount++;
+        else failYears.push(`${y} (${fmt(val)})`);
+      }
+
+      res.yearlyBreakdown = yearlyBreakdown;
+      res.passed = (passedCount === totalYears && totalYears > 0);
+      res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+      res.diffStr = `${passedCount}/${totalYears} năm`;
+      res.comparisonStr = `${passedCount}/${totalYears} năm ${op} ${fmt(thresh)}`;
+      res.reason = res.passed
+        ? `Đạt ${passedCount}/${totalYears} năm`
+        : `Trượt ở: ${failYears.slice(0, 2).join('; ')}${failYears.length > 2 ? '...' : ''}`;
+      return res;
+    }
+  }
+
+  // 4. Custom multi-year conditions (ttlr, cfo)
+  if (condition === 'positive_10y') {
+    const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
+    const totalYears = toYear - fromYear + 1;
+    const okCount = relevantYears.filter(h => h.ttlr !== null && typeof h.ttlr === 'number' && h.ttlr > 0).length;
+    res.passed = (okCount === totalYears && totalYears > 0);
+    res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+    res.bankValStr = `${okCount}/${totalYears} năm`;
+    res.benchmarkStr = '> 0% liên tục';
+    res.diffStr = `${okCount}/${totalYears} năm`;
+    res.comparisonStr = `${okCount}/${totalYears} năm > 0%`;
+    res.reason = res.passed ? 'Tăng trưởng dương liên tục' : `Chỉ có ${okCount}/${totalYears} năm dương`;
+    return res;
+  }
+
+  if (condition === 'greater_than_parent_npat_10y') {
+    const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
+    const totalYears = toYear - fromYear + 1;
+    const okCount = relevantYears.filter(h => h.cfo !== null && h.parent_npat !== null && h.cfo > h.parent_npat).length;
+    res.passed = (okCount === totalYears && totalYears > 0);
+    res.statusStr = res.passed ? '✅ ĐẠT' : '❌ LOẠI';
+    res.bankValStr = `${okCount}/${totalYears} năm`;
+    res.benchmarkStr = 'CFO > LNST';
+    res.diffStr = `${okCount}/${totalYears} năm`;
+    res.comparisonStr = `${okCount}/${totalYears} năm CFO > LNST`;
+    res.reason = res.passed ? 'CFO > LNST liên tục' : `Chỉ có ${okCount}/${totalYears} năm CFO > LNST`;
+    return res;
+  }
+
+  return res;
+}
+
+/**
+ * Kiểm tra 1 điều kiện cụ thể của 1 tiêu chí đối với ngân hàng (gọi qua getConditionComparison)
+ */
+function evaluateCondition(bank, metric, condition, dynamicAverages, selectedCount) {
+  return getConditionComparison(bank, metric, condition, dynamicAverages, selectedCount).passed;
 }
 
 // ----------------------------------------------------------------------------
@@ -1476,15 +1515,8 @@ function evaluateCondition(bank, metric, condition) {
 function runFilterLogic() {
   const banksList = getBanksList();
 
-  // ── GIAI ĐOẠN 1: Kiểm tra nguồn dữ liệu ──────────────────────────────────
-  console.group('%c[FILTER] ══ CHẠY BỘ LỌC ══', 'color:#051650;font-weight:bold;font-size:13px');
-  console.log('[FILTER] 📦 BANKS_DATA tổng:', banksList.length, 'ngân hàng');
-  console.log('[FILTER] 📡 SECTOR_AVERAGES:', window.SECTOR_AVERAGES);
-  console.log('[FILTER] 📅 ANNUAL_AVERAGES (năm):', Object.keys(window.ANNUAL_AVERAGES || {}));
-
   if (banksList.length === 0) {
     console.warn('[FILTER] ⚠️ BANKS_DATA rỗng — không có dữ liệu!');
-    console.groupEnd();
     return;
   }
 
@@ -1493,29 +1525,49 @@ function runFilterLogic() {
   // Quy tắc: Bắt buộc phải có mã cổ phiếu thì bộ lọc mới hoạt động được
   if (!selectedStocks || selectedStocks.length === 0) {
     console.warn('[FILTER] ⚠️ Chưa chọn mã cổ phiếu — bộ lọc chưa hoạt động');
-    console.groupEnd();
     if (countSummary) countSummary.textContent = 'Có 00 mã cổ phiếu thoả điều kiện';
     currentFilteredBanks = [];
     renderCompanyTable([]);
     return;
   }
 
-  // ── GIAI ĐOẠN 2: Danh sách mã đã chọn ────────────────────────────────────
-  console.log('[FILTER] ✅ Mã đã chọn:', selectedStocks);
+  console.group('%c[FILTER] ══ CHẠY BỘ LỌC ══', 'color:#051650;font-weight:bold;font-size:13px');
 
-  // Lấy danh sách tất cả các điều kiện đang được chọn
   const activeConditions = getAllActiveConditions();
   const hasCriteriaFilters = activeConditions.length > 0;
+  const allBanks = getBanksList();
+  const selectedBanks = allBanks.filter(bank => selectedStocks.includes(bank.ticker));
+  const targetYear = new Date().getFullYear() - 1;
 
-  // ── GIAI ĐOẠN 3: Điều kiện lọc đang bật ──────────────────────────────────
-  console.group('[FILTER] 🎯 Điều kiện đang bật (' + activeConditions.length + ' điều kiện)');
-  activeConditions.forEach((cond, i) => {
-    console.log(
-      `  [${i + 1}] ${cond.type.toUpperCase()} | metric: ${cond.metric} | condition: ${cond.condition} | label: ${cond.label}`
-    );
-  });
-  console.groupEnd();
+  // Tính Trung bình ngành ĐỘNG từ chính các ngân hàng đã được chọn trong stockChipsContainer
+  const dynamicSectorAverages = calculateDynamicSectorAverages(selectedBanks);
 
+  console.log(`📌 Danh sách ${selectedBanks.length} mã CP đã chọn trong [stockChipsContainer]:`, selectedStocks.join(', '));
+  console.log(`📊 Trung bình ngành (TBN ĐỘNG) tính từ ${selectedBanks.length} mã đã chọn (${targetYear}):`, dynamicSectorAverages[targetYear]);
+
+  if (hasCriteriaFilters) {
+    console.log('🎯 Tiêu chí lọc:', activeConditions.map(c => c.label).join(' | '));
+    activeConditions.forEach(cond => {
+      const key = { cpkh: 'cpkh_toi', de: 'debt_equity' }[cond.metric] || cond.metric;
+      const parts = [];
+      selectedBanks.forEach(b => {
+        const h = b.history ? b.history.find(item => item.year === targetYear) : null;
+        const val = (h && h[key] !== null && typeof h[key] === 'number') ? h[key] : (b[key] ?? null);
+        if (val !== null && typeof val === 'number') {
+          parts.push(`${b.ticker}: ${Number(val.toFixed(2))}%`);
+        }
+      });
+      const avg = dynamicSectorAverages?.[targetYear]?.[key];
+      const label = CRITERIA_METRIC_LABELS[cond.metric] || cond.metric.toUpperCase();
+      if (parts.length > 0) {
+        console.log(`🧮 Phép tính TBN 1 năm (${targetYear}) cho ${label}: (${parts.join(' + ')}) / ${parts.length} mã = ${avg !== undefined ? avg + '%' : 'N/A'}`);
+      }
+    });
+  } else {
+    console.log('🎯 Tiêu chí lọc: (Chưa chọn tiêu chí nào — hiển thị dữ liệu đối chiếu cơ bản)');
+  }
+
+  // 1. Phân loại điều kiện standalone và nhóm OR
   const standaloneConditions = [];
   const subConditionsByGroup = {};
 
@@ -1528,307 +1580,167 @@ function runFilterLogic() {
     }
   });
 
-  console.log('[FILTER] AND conditions (standalone/radio):', standaloneConditions.map(c => `${c.metric}:${c.condition}`));
-  console.log('[FILTER] OR groups (sub-checkbox):', subConditionsByGroup);
-
-  // ── GIAI ĐOẠN 4: Lọc theo mã đã chọn & Tính TB 8 năm của nhóm ──────────
-  const allBanks = getBanksList();
-  const selectedBanks = allBanks.filter(bank => selectedStocks.includes(bank.ticker));
-  console.log('[FILTER] 🏦 Ngân hàng trong pool lọc:', selectedBanks.map(b => b.ticker));
-
-  // Tính trung bình toàn bộ 8 năm của các ngân hàng đã chọn
-  window.SELECTED_10Y_AVERAGES = calculate10YearAverages(selectedBanks);
-  console.log('[FILTER] 📊 Mức trung bình 8 năm của các ngân hàng đã chọn:', window.SELECTED_10Y_AVERAGES);
-
-  // ── GIAI ĐOẠN 5: Đánh giá từng ngân hàng ────────────────────────────────
-  console.group('[FILTER] 🔍 Đánh giá từng ngân hàng');
-
-  let filtered = selectedBanks.filter(bank => {
-    if (!hasCriteriaFilters) {
-      console.log(`  ✅ ${bank.ticker} — Không có điều kiện → PASS`);
-      return true;
-    }
-
+  // 2. Đánh giá từng ngân hàng & lấy toàn bộ thông tin đối chiếu số liệu
+  const evaluatedBanks = selectedBanks.map(bank => {
+    let passed = true;
     let failReason = null;
+    const condComparisons = [];
 
-    // 1. AND: Standalone + radio
-    for (const cond of standaloneConditions) {
-      const result = evaluateCondition(bank, cond.metric, cond.condition);
-      console.log(
-        `  ${result ? '✅' : '❌'} ${bank.ticker} | ${cond.metric}:${cond.condition}`,
-        `| Giá trị: ${bank[cond.metric] ?? bank['debt_equity'] ?? bank['cpkh_toi'] ?? 'N/A'}`
-      );
-      if (!result) {
-        failReason = `${cond.metric}:${cond.condition}`;
-        break;
+    if (hasCriteriaFilters) {
+      // Đánh giá các điều kiện standalone (AND)
+      for (const cond of standaloneConditions) {
+        const comp = getConditionComparison(bank, cond.metric, cond.condition, dynamicSectorAverages, selectedBanks.length);
+        condComparisons.push({ cond, comp });
+        if (!comp.passed && passed) {
+          passed = false;
+          failReason = `${cond.label} (${comp.reason})`;
+        }
+      }
+
+      // Đánh giá các nhóm sub_checkbox (OR trong nhóm)
+      for (const groupId in subConditionsByGroup) {
+        const conds = subConditionsByGroup[groupId];
+        const groupComps = conds.map(cond => ({
+          cond,
+          comp: getConditionComparison(bank, cond.metric, cond.condition, dynamicSectorAverages, selectedBanks.length)
+        }));
+        const passedAny = groupComps.some(item => item.comp.passed);
+        condComparisons.push(...groupComps);
+        if (!passedAny && passed) {
+          passed = false;
+          failReason = groupComps.map(item => `${item.cond.label}: ${item.comp.reason}`).join(' HOẶC ');
+        }
       }
     }
 
-    if (failReason) {
-      console.log(`  ❌ ${bank.ticker} → LOẠI vì: ${failReason}`);
-      return false;
-    }
-
-    // 2. OR: Sub-checkbox groups
-    for (const groupId in subConditionsByGroup) {
-      const conds = subConditionsByGroup[groupId];
-      const passedAny = conds.some(cond => {
-        const result = evaluateCondition(bank, cond.metric, cond.condition);
-        console.log(
-          `  ${result ? '✅' : '  '} ${bank.ticker} | OR-group[${groupId}] | ${cond.condition}`
-        );
-        return result;
-      });
-      if (!passedAny) {
-        console.log(`  ❌ ${bank.ticker} → LOẠI vì OR-group không pass: ${groupId}`);
-        return false;
-      }
-    }
-
-    console.log(`  ✅ ${bank.ticker} → PASS tất cả điều kiện`);
-    return true;
+    return {
+      bank,
+      passed,
+      failReason,
+      condComparisons
+    };
   });
 
-  console.groupEnd();
+  const filtered = evaluatedBanks.filter(b => b.passed).map(b => b.bank);
+  const failedBanks = evaluatedBanks.filter(b => !b.passed);
 
-  // ── GIAI ĐOẠN 6: Kết quả cuối ────────────────────────────────────────────
-  console.log(
-    `[FILTER] 🏁 KẾT QUẢ: ${filtered.length}/${selectedBanks.length} ngân hàng thoả điều kiện:`,
-    filtered.map(b => b.ticker)
-  );
+  // 3. Kẻ bảng console.table đối chiếu dữ liệu (Đầy đủ cả ngân hàng thỏa và không thỏa)
+  let tableData = [];
 
-  // Hiển thị chi tiết số liệu tính toán và trung bình ngành để người dùng so sánh tổng quan
-  if (selectedBanks.length > 0 && hasCriteriaFilters) {
-    const targetYear = new Date().getFullYear() - 1;
+  if (hasCriteriaFilters) {
+    if (activeConditions.length === 1) {
+      // Trường hợp 1 tiêu chí: Kẻ bảng chi tiết từng cột đối chiếu số liệu
+      const c = activeConditions[0];
+      const metricLabel = CRITERIA_METRIC_LABELS[c.metric] || c.metric.toUpperCase();
 
-    // 1. Bảng so sánh tổng quan bằng console.table
-    console.group(`[FILTER] 📊 BẢNG SO SÁNH SỐ LIỆU TÍNH TOÁN & TRUNG BÌNH 10 NĂM CỦA CÁC MÃ ĐÃ CHỌN`);
-    const comparisonTableData = selectedBanks.map(bank => {
-      const isPass = filtered.some(b => b.ticker === bank.ticker);
-      const row = {
-        'Mã CP': bank.ticker,
-        'Tên Ngân Hàng': bank.name,
-        'Kết quả': isPass ? '✅ ĐẠT' : '❌ LOẠI'
+      tableData = evaluatedBanks.map(item => {
+        const compInfo = item.condComparisons.find(x => x.cond.condition === c.condition)?.comp;
+        return {
+          'Mã CP': item.bank.ticker,
+          'Tên Ngân Hàng': item.bank.name,
+          [`${metricLabel} (Số liệu NH)`]: compInfo ? compInfo.bankValStr : 'N/A',
+          [`${metricLabel} (Chuẩn/TBN nhóm)`]: compInfo ? compInfo.benchmarkStr : 'N/A',
+          'Chênh lệch': compInfo ? compInfo.diffStr : '—',
+          'Đối chiếu': compInfo ? compInfo.comparisonStr : '—',
+          'Đánh giá': compInfo ? compInfo.statusStr : '—',
+          'KẾT QUẢ': item.passed ? '✅ THỎA MÃN' : '❌ KHÔNG THỎA'
+        };
+      });
+    } else {
+      // Trường hợp nhiều tiêu chí: Kẻ bảng đối chiếu cho từng tiêu chí
+      tableData = evaluatedBanks.map(item => {
+        const row = {
+          'Mã CP': item.bank.ticker,
+          'Tên Ngân Hàng': item.bank.name
+        };
+
+        item.condComparisons.forEach(({ cond, comp }) => {
+          const mLabel = CRITERIA_METRIC_LABELS[cond.metric] || cond.metric.toUpperCase();
+          row[`${mLabel} (NH)`] = comp.bankValStr;
+          row[`${mLabel} (Chuẩn/TBN nhóm)`] = comp.benchmarkStr;
+          row[`${mLabel} (Đối chiếu)`] = `${comp.comparisonStr} ➔ ${comp.statusStr}`;
+        });
+
+        row['KẾT LUẬN'] = item.passed ? '✅ THỎA MÃN' : '❌ KHÔNG THỎA';
+        row['Lý do loại'] = item.failReason ? item.failReason : '—';
+        return row;
+      });
+    }
+  } else {
+    // Trường hợp chưa chọn tiêu chí nào: Kẻ bảng đối chiếu các chỉ số cơ bản của NH vs TBN nhóm đã chọn
+    const fmtPct = (num) => (typeof num === 'number' && !isNaN(num)) ? `${Number(num.toFixed(2))}%` : 'N/A';
+    const getVal = (bankObj, field) => {
+      const hRecord = bankObj.history ? bankObj.history.find(h => h.year === targetYear) : null;
+      return (hRecord && hRecord[field] !== undefined && hRecord[field] !== null) ? hRecord[field] : (bankObj[field] ?? null);
+    };
+    const getAvg = (field) => dynamicSectorAverages?.[targetYear]?.[field] ?? window.ANNUAL_AVERAGES?.[targetYear]?.[field] ?? null;
+
+    tableData = evaluatedBanks.map(item => {
+      const b = item.bank;
+      const cirVal = getVal(b, 'cir');
+      const cirAvg = getAvg('cir');
+      const nimVal = getVal(b, 'nim');
+      const nimAvg = getAvg('nim');
+      const roaVal = getVal(b, 'roa');
+      const roaAvg = getAvg('roa');
+      const roeVal = getVal(b, 'roe');
+      const roeAvg = getAvg('roe');
+      const nplVal = getVal(b, 'npl');
+      const nplAvg = getAvg('npl');
+      const carVal = getVal(b, 'car');
+      const carAvg = getAvg('car');
+
+      return {
+        'Mã CP': b.ticker,
+        'Tên Ngân Hàng': b.name,
+        [`CIR ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(cirVal)} vs ${fmtPct(cirAvg)}`,
+        [`NIM ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(nimVal)} vs ${fmtPct(nimAvg)}`,
+        [`ROA ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(roaVal)} vs ${fmtPct(roaAvg)}`,
+        [`ROE ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(roeVal)} vs ${fmtPct(roeAvg)}`,
+        [`NPL ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(nplVal)} vs ${fmtPct(nplAvg)}`,
+        [`CAR ${targetYear} (NH vs TBN nhóm)`]: `${fmtPct(carVal)} vs ${fmtPct(carAvg)}`,
+        'KẾT QUẢ': '✅ THỎA MÃN (Mặc định - Chưa chọn tiêu chí)'
       };
-
-      activeConditions.forEach(cond => {
-        const key = { cpkh: 'cpkh_toi', de: 'debt_equity' }[cond.metric] || cond.metric;
-        const hRecord = bank.history ? bank.history.find(h => h.year === targetYear) : null;
-        const bankVal = (hRecord && hRecord[key] !== undefined && hRecord[key] !== null)
-          ? hRecord[key]
-          : (bank[key] ?? null);
-
-        const secAvg = (window.SELECTED_10Y_AVERAGES && window.SELECTED_10Y_AVERAGES[key] !== undefined && window.SELECTED_10Y_AVERAGES[key] !== null)
-          ? window.SELECTED_10Y_AVERAGES[key]
-          : ((window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][key] !== undefined)
-            ? window.ANNUAL_AVERAGES[targetYear][key]
-            : (window.SECTOR_AVERAGES?.[key] ?? null));
-
-        const countSample = window.SELECTED_10Y_AVERAGES ? window.SELECTED_10Y_AVERAGES[`${key}_count`] : 0;
-        const label = CRITERIA_METRIC_LABELS[cond.metric] || cond.metric.toUpperCase();
-        const headerName = `${label} [field: ${key}]`;
-
-        if (cond.condition.includes('avg_latest')) {
-          row[headerName] = `Giá trị: ${bankVal !== null ? bankVal + '%' : 'N/A'} | TB 8 năm (${selectedBanks.length} mã, ${countSample} mẫu): ${secAvg !== null ? secAvg + '%' : 'N/A'}`;
-        } else if (cond.condition.includes('avg_10y')) {
-          const isUnder = cond.condition.startsWith('under');
-          const hList = bank.history || [];
-          const passYears = hList.filter(h => {
-            const v = h[key];
-            return v !== null && v !== undefined && typeof v === 'number' && (isUnder ? v < secAvg : v > secAvg);
-          }).length;
-          const totalYears = hList.length;
-          const allPass = totalYears > 0 && passYears === totalYears;
-          row[headerName] = `${allPass ? '✅ ĐẠT' : '❌ LOẠI'} (${passYears}/${totalYears} năm ${isUnder ? '<' : '>'} TB: ${secAvg}%)`;
-        } else if (cond.condition === 'positive_10y') {
-          const validYears = (bank.history || []).filter(h => h.ttlr !== null && h.ttlr !== undefined && typeof h.ttlr === 'number');
-          const posYears = validYears.filter(h => h.ttlr > 0).length;
-          const allPos = validYears.length > 0 && posYears === validYears.length;
-          row[headerName] = `${allPos ? '✅ ĐẠT' : '❌ LOẠI'} (${posYears}/${validYears.length} năm dương | 2025: ${bankVal !== null ? bankVal + '%' : 'N/A'})`;
-        } else if (cond.metric === 'cfo' && cond.condition === 'greater_than_parent_npat_10y') {
-          const validYears = (bank.history || []).filter(h =>
-            h.cfo !== null && h.cfo !== undefined && typeof h.cfo === 'number' &&
-            h.parent_npat !== null && h.parent_npat !== undefined && typeof h.parent_npat === 'number'
-          );
-          const passYears = validYears.filter(h => h.cfo > h.parent_npat).length;
-          const allPass = validYears.length > 0 && passYears === validYears.length;
-          const latestCfo = (hRecord && hRecord.cfo !== undefined && hRecord.cfo !== null) ? hRecord.cfo : (bank.cfo ?? null);
-          const latestNpat = (hRecord && hRecord.parent_npat !== undefined && hRecord.parent_npat !== null) ? hRecord.parent_npat : (bank.parent_npat ?? null);
-          row[headerName] = `${allPass ? '✅ ĐẠT' : '❌ LOẠI'} (${passYears}/${validYears.length} năm CFO > LNST | ${targetYear}: ${latestCfo !== null ? Math.round(latestCfo) : 'N/A'} > ${latestNpat !== null ? Math.round(latestNpat) : 'N/A'})`;
-        } else if (cond.metric === 'roa' && cond.condition === 'from_1pct') {
-          const pass = bankVal !== null && bankVal >= 1.0;
-          row[headerName] = `${pass ? '✅ ĐẠT' : '❌ LOẠI'} (ROA ${targetYear}: ${bankVal !== null ? bankVal + '%' : 'N/A'} >= 1%)`;
-        } else if (cond.metric === 'de' && (cond.condition === 'under_10' || cond.condition === 'under_10_latest')) {
-          const pass = bankVal !== null && bankVal < 10;
-          row[headerName] = `${pass ? '✅ ĐẠT' : '❌ LOẠI'} (D/E ${targetYear}: ${bankVal !== null ? bankVal : 'N/A'} < 10)`;
-        } else if (cond.metric === 'de' && cond.condition === 'under_10_10y') {
-          const validYears = (bank.history || []).filter(h => h.debt_equity !== null && h.debt_equity !== undefined && typeof h.debt_equity === 'number');
-          const passYears = validYears.filter(h => h.debt_equity < 10).length;
-          const allPass = validYears.length > 0 && passYears === validYears.length;
-          row[headerName] = `${allPass ? '✅ ĐẠT' : '❌ LOẠI'} (${passYears}/${validYears.length} năm D/E < 10 | ${targetYear}: ${bankVal !== null ? bankVal : 'N/A'})`;
-        } else {
-          row[headerName] = `Giá trị ${targetYear}: ${bankVal !== null ? bankVal : 'N/A'}`;
-        }
-      });
-
-      return row;
     });
-
-    console.table(comparisonTableData);
-
-    // 2. Chi tiết từng ngân hàng ĐẠT
-    if (filtered.length > 0) {
-      console.group(`[FILTER] 🏆 Chi tiết các ngân hàng ĐẠT (${filtered.length} mã):`);
-      filtered.forEach(bank => {
-        console.group(`  🏦 ${bank.ticker} - ${bank.name}`);
-        activeConditions.forEach(cond => {
-          const key = { cpkh: 'cpkh_toi', de: 'debt_equity' }[cond.metric] || cond.metric;
-          const hRecord = bank.history ? bank.history.find(h => h.year === targetYear) : null;
-          const bankVal = (hRecord && hRecord[key] !== undefined && hRecord[key] !== null)
-            ? hRecord[key]
-            : (bank[key] ?? null);
-          const secAvg = (window.SELECTED_10Y_AVERAGES && window.SELECTED_10Y_AVERAGES[key] !== undefined && window.SELECTED_10Y_AVERAGES[key] !== null)
-            ? window.SELECTED_10Y_AVERAGES[key]
-            : ((window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][key] !== undefined)
-              ? window.ANNUAL_AVERAGES[targetYear][key]
-              : (window.SECTOR_AVERAGES?.[key] ?? null));
-          const countSample = window.SELECTED_10Y_AVERAGES ? window.SELECTED_10Y_AVERAGES[`${key}_count`] : 0;
-          const label = CRITERIA_METRIC_LABELS[cond.metric] || cond.metric.toUpperCase();
-
-          if (cond.condition === 'positive_10y') {
-            const validYears = (bank.history || []).filter(h => h.ttlr !== null && h.ttlr !== undefined && typeof h.ttlr === 'number');
-            const yearsDetail = validYears.map(h => `${h.year}: +${h.ttlr}%`).join(', ');
-            console.log(
-              `    • ${label} (field: "${key}") [LUÔN LÀ SỐ DƯƠNG]:`,
-              `Tất cả ${validYears.length}/${validYears.length} năm có dữ liệu đều dương: [${yearsDetail}]`
-            );
-          } else if (cond.condition.includes('avg_10y')) {
-            const isUnder = cond.condition.startsWith('under');
-            const yearsDetail = (bank.history || []).map(h => `${h.year}: ${h[key] ?? 'N/A'}`).join(', ');
-            console.log(
-              `    • ${label} (field: "${key}") [LIÊN TIẾP 10 NĂM]:`,
-              `TB đã tính = ${secAvg}% | Thỏa hết tất cả các năm (${isUnder ? '<' : '>'} ${secAvg}%): [${yearsDetail}]`
-            );
-          } else if (cond.metric === 'cfo' && cond.condition === 'greater_than_parent_npat_10y') {
-            const validYears = (bank.history || []).filter(h =>
-              h.cfo !== null && h.cfo !== undefined && typeof h.cfo === 'number' &&
-              h.parent_npat !== null && h.parent_npat !== undefined && typeof h.parent_npat === 'number'
-            );
-            const yearsDetail = validYears.map(h => `${h.year}: CFO (${Math.round(h.cfo)}) > LNST (${Math.round(h.parent_npat)}) ✅`).join(', ');
-            console.log(
-              `    • ${label} (field: "cfo" vs "parent_npat") [LIÊN TIẾP 10 NĂM]:`,
-              `Thỏa tất cả ${validYears.length}/${validYears.length} năm CFO > LNST CĐ mẹ: [${yearsDetail}]`
-            );
-          } else if (cond.metric === 'roa' && cond.condition === 'from_1pct') {
-            console.log(
-              `    • ${label} (field: "roa") [TỪ 1% TRỞ LÊN Ở NĂM GẦN NHẤT]:`,
-              `ROA năm ${targetYear} = ${bankVal}% >= 1% ✅`
-            );
-          } else if (cond.metric === 'de' && (cond.condition === 'under_10' || cond.condition === 'under_10_latest')) {
-            console.log(
-              `    • ${label} (field: "debt_equity") [DƯỚI 10 Ở NĂM GẦN NHẤT]:`,
-              `D/E năm ${targetYear} = ${bankVal} < 10 ✅`
-            );
-          } else if (cond.metric === 'de' && cond.condition === 'under_10_10y') {
-            const validYears = (bank.history || []).filter(h => h.debt_equity !== null && h.debt_equity !== undefined && typeof h.debt_equity === 'number');
-            const yearsDetail = validYears.map(h => `${h.year}: ${h.debt_equity}`).join(', ');
-            console.log(
-              `    • ${label} (field: "debt_equity") [DƯỚI 10 LIÊN TIẾP 10 NĂM]:`,
-              `Tất cả ${validYears.length}/${validYears.length} năm đều < 10: [${yearsDetail}] ✅`
-            );
-          } else {
-            console.log(
-              `    • ${label} (field: "${key}"):`,
-              `Giá trị năm ${targetYear} = ${bankVal !== null ? bankVal : 'N/A'}`,
-              secAvg !== null ? `| TB 8 năm (${selectedBanks.length} mã đã chọn, ${countSample} bản ghi) = ${secAvg}` : '',
-              `| Điều kiện: "${cond.label || cond.condition}"`
-            );
-          }
-        });
-        console.groupEnd();
-      });
-      console.groupEnd();
-    }
-
-    // 3. Chi tiết các ngân hàng KHÔNG ĐẠT (nếu có)
-    const failedBanks = selectedBanks.filter(b => !filtered.some(f => f.ticker === b.ticker));
-    if (failedBanks.length > 0) {
-      console.group(`[FILTER] ⚠️ Chi tiết các ngân hàng KHÔNG ĐẠT (${failedBanks.length} mã):`);
-      failedBanks.forEach(bank => {
-        console.group(`  🏦 ${bank.ticker} - ${bank.name}`);
-        activeConditions.forEach(cond => {
-          const key = { cpkh: 'cpkh_toi', de: 'debt_equity' }[cond.metric] || cond.metric;
-          const hRecord = bank.history ? bank.history.find(h => h.year === targetYear) : null;
-          const bankVal = (hRecord && hRecord[key] !== undefined && hRecord[key] !== null)
-            ? hRecord[key]
-            : (bank[key] ?? null);
-          const secAvg = (window.SELECTED_10Y_AVERAGES && window.SELECTED_10Y_AVERAGES[key] !== undefined && window.SELECTED_10Y_AVERAGES[key] !== null)
-            ? window.SELECTED_10Y_AVERAGES[key]
-            : ((window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][key] !== undefined)
-              ? window.ANNUAL_AVERAGES[targetYear][key]
-              : (window.SECTOR_AVERAGES?.[key] ?? null));
-          const countSample = window.SELECTED_10Y_AVERAGES ? window.SELECTED_10Y_AVERAGES[`${key}_count`] : 0;
-          const label = CRITERIA_METRIC_LABELS[cond.metric] || cond.metric.toUpperCase();
-          const pass = evaluateCondition(bank, cond.metric, cond.condition);
-
-          if (cond.condition === 'positive_10y') {
-            const validYears = (bank.history || []).filter(h => h.ttlr !== null && h.ttlr !== undefined && typeof h.ttlr === 'number');
-            const negYears = validYears.filter(h => h.ttlr <= 0).map(h => `${h.year}: ${h.ttlr}%`);
-            console.log(
-              `    ❌ ${label} (field: "${key}") [LUÔN LÀ SỐ DƯƠNG]: Không thỏa vì các năm sau bị âm/không dương: ${negYears.join(', ')}`
-            );
-          } else if (cond.condition.includes('avg_10y')) {
-            const isUnder = cond.condition.startsWith('under');
-            const failedYears = (bank.history || []).filter(h => {
-              const v = h[key];
-              return v === null || v === undefined || (isUnder ? v >= secAvg : v <= secAvg);
-            }).map(h => `${h.year} (${h[key] ?? 'null'})`);
-            console.log(
-              `    ❌ ${label} (field: "${key}") [LIÊN TIẾP 10 NĂM]: Không thỏa vì các năm sau vi phạm so với TB ${secAvg}%: ${failedYears.join(', ')}`
-            );
-          } else if (cond.metric === 'cfo' && cond.condition === 'greater_than_parent_npat_10y') {
-            const validYears = (bank.history || []).filter(h =>
-              h.cfo !== null && h.cfo !== undefined && typeof h.cfo === 'number' &&
-              h.parent_npat !== null && h.parent_npat !== undefined && typeof h.parent_npat === 'number'
-            );
-            const failedYears = validYears.filter(h => h.cfo <= h.parent_npat).map(h => `${h.year} (CFO: ${Math.round(h.cfo)} <= LNST: ${Math.round(h.parent_npat)})`);
-            const passCount = validYears.filter(h => h.cfo > h.parent_npat).length;
-            console.log(
-              `    ❌ ${label} (field: "cfo" vs "parent_npat") [LIÊN TIẾP 10 NĂM]: Không thỏa (${passCount}/${validYears.length} năm đạt), các năm sau vi phạm CFO <= LNST: ${failedYears.join(', ')}`
-            );
-          } else if (cond.metric === 'roa' && cond.condition === 'from_1pct') {
-            console.log(
-              `    ❌ ${label} (field: "roa") [TỪ 1% TRỞ LÊN Ở NĂM GẦN NHẤT]: Không thỏa vì ROA năm ${targetYear} = ${bankVal !== null ? bankVal + '%' : 'N/A'} < 1%`
-            );
-          } else if (cond.metric === 'de' && (cond.condition === 'under_10' || cond.condition === 'under_10_latest')) {
-            console.log(
-              `    ❌ ${label} (field: "debt_equity") [DƯỚI 10 Ở NĂM GẦN NHẤT]: Không thỏa vì D/E năm ${targetYear} = ${bankVal !== null ? bankVal : 'N/A'} >= 10`
-            );
-          } else if (cond.metric === 'de' && cond.condition === 'under_10_10y') {
-            const validYears = (bank.history || []).filter(h => h.debt_equity !== null && h.debt_equity !== undefined && typeof h.debt_equity === 'number');
-            const failedYears = validYears.filter(h => h.debt_equity >= 10).map(h => `${h.year}: ${h.debt_equity}`);
-            const passCount = validYears.filter(h => h.debt_equity < 10).length;
-            console.log(
-              `    ❌ ${label} (field: "debt_equity") [DƯỚI 10 LIÊN TIẾP 10 NĂM]: Không thỏa (${passCount}/${validYears.length} năm đạt), các năm sau vi phạm D/E >= 10: ${failedYears.join(', ')}`
-            );
-          } else {
-            console.log(
-              `    ${pass ? '✅' : '❌'} ${label} (field: "${key}"):`,
-              `Giá trị năm ${targetYear} = ${bankVal !== null ? bankVal : 'N/A'}`,
-              secAvg !== null ? `| TB 8 năm (${selectedBanks.length} mã đã chọn, ${countSample} bản ghi) = ${secAvg}` : '',
-              `| ${pass ? 'Đạt' : 'Không đạt'}: "${cond.label || cond.condition}"`
-            );
-          }
-        });
-        console.groupEnd();
-      });
-      console.groupEnd();
-    }
-
-    console.groupEnd(); // End BẢNG SO SÁNH
   }
 
-  console.groupEnd(); // ══ KẾT THÚC BỘ LỌC ══
+  // In bảng đối chiếu ra DevTools Console
+  console.table(tableData);
+
+  // In tổng kết
+  console.log(`🏁 KẾT QUẢ: Có ${filtered.length}/${selectedBanks.length} mã thỏa điều kiện:`, filtered.map(b => b.ticker));
+  if (failedBanks.length > 0) {
+    console.log(`❌ Danh sách ${failedBanks.length} mã KHÔNG thỏa điều kiện:`, failedBanks.map(b => `${b.bank.ticker}: ${b.failReason}`));
+  }
+
+  // Nếu có tiêu chí dải năm (Timeline Range), in thêm bảng chi tiết các năm để kiểm chứng
+  const hasRangeCond = activeConditions.some(c => c.condition.includes('_range') || c.condition.includes('_10y'));
+  if (hasRangeCond) {
+    const rangeDetails = [];
+    evaluatedBanks.forEach(item => {
+      item.condComparisons.forEach(({ cond, comp }) => {
+        if (comp.yearlyBreakdown && comp.yearlyBreakdown.length > 0) {
+          comp.yearlyBreakdown.forEach(yr => {
+            rangeDetails.push({
+              'Mã CP': item.bank.ticker,
+              'Tiêu chí': comp.label,
+              'Năm': yr.year,
+              'Số liệu NH': (typeof yr.bankVal === 'number') ? `${yr.bankVal.toFixed(2)}%` : 'N/A',
+              'TBN Nhóm Năm đó': (typeof yr.tbnVal === 'number') ? `${yr.tbnVal.toFixed(2)}%` : '—',
+              'Đạt năm này': yr.passed ? '✅ ĐẠT' : '❌ TRƯỢT'
+            });
+          });
+        }
+      });
+    });
+    if (rangeDetails.length > 0) {
+      console.groupCollapsed(`📅 Bảng đối chiếu chi tiết theo từng năm (${selectedBanks.length} mã đã chọn trong Timeline Range)`);
+      console.table(rangeDetails);
+      console.groupEnd();
+    }
+  }
+
+  console.groupEnd();
 
   // Lưu danh sách kết quả
   currentFilteredBanks = filtered;
