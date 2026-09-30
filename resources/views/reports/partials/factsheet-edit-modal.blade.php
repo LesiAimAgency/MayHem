@@ -81,6 +81,17 @@
   <!-- Modal Dialog Container (1368px x 1087px chuẩn lọc.svg) -->
   <div class="relative w-full max-w-[1368px] min-h-[960px] bg-[#F2F2F2] rounded-2xl shadow-2xl p-6 sm:p-9 flex flex-col justify-between overflow-x-hidden my-auto border border-[#D7D7D7]/60 animate-in zoom-in-95 duration-150">
     
+    <!-- Modal Loading Overlay (Khi chuyển mã cổ phiếu qua AJAX) -->
+    <div id="modalLoadingOverlay" class="hidden absolute inset-0 bg-[#F2F2F2]/80 backdrop-blur-2xs z-40 flex items-center justify-center rounded-2xl transition-all duration-200">
+      <div class="flex items-center gap-3 px-6 py-3.5 rounded-xl bg-white shadow-xl border border-[#D7D7D7]">
+        <svg class="animate-spin h-5 w-5 text-[#051650]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span id="modalLoadingText" class="text-xs font-bold text-[#051650]">Đang tải dữ liệu BCTC...</span>
+      </div>
+    </div>
+    
     <!-- Top-Right Close Button: x: 1326.5, y: 24.5, w: 25, h: 25, rx: 12.5, stroke: black -->
     <button type="button" id="btnCloseEditModal"
             class="absolute top-6 right-6 w-[25px] h-[25px] rounded-full border border-black flex items-center justify-center text-black hover:bg-black/10 transition-colors cursor-pointer select-none leading-none text-xs font-bold"

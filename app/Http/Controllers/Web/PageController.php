@@ -151,7 +151,6 @@ class PageController extends Controller
     {
         $companies = MhCompany::active()->orderBy('short_name', 'asc')->get();
         $defaultTicker = $companies->first()?->short_name ?? 'ABB';
-
         // Resolve ticker from query param, cookie, session, or default
         $resolvedTicker = $ticker 
             ?? $request->input('ticker') 
@@ -160,17 +159,13 @@ class PageController extends Controller
             ?? $defaultTicker;
 
         $resolvedTicker = strtoupper($resolvedTicker);
-
         if (!$companies->contains('short_name', $resolvedTicker)) {
             $resolvedTicker = $defaultTicker;
         }
-
         session(['mayhem_selected_ticker' => $resolvedTicker]);
         cookie()->queue('mayhem_selected_ticker', $resolvedTicker, 60 * 24 * 30);
-
         $factsheet = $this->metricService->getBankFactsheet($resolvedTicker);
         $sectors = MhSector::all();
-
         if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->input('ajax') == '1') {
             return response()->json([
                 'status' => 'success',
@@ -188,7 +183,6 @@ class PageController extends Controller
                 ])->render(),
             ]);
         }
-
         return view('reports.factsheet', [
             'sectors' => $sectors,
             'companies' => $companies,

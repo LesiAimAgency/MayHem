@@ -91,7 +91,7 @@
                   <span class="text-[11px] text-[#495057] truncate max-w-[190px]">{{ $comp->company_name }}</span>
                 </div>
                 @if($comp->short_name === ($selectedTicker ?? 'ABB'))
-                  <span class="w-2 h-2 rounded-full bg-[#051650]"></span>
+                  <span class="stock-active-dot w-2 h-2 rounded-full bg-[#051650]"></span>
                 @endif
               </button>
             @endforeach

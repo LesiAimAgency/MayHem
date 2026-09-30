@@ -591,16 +591,13 @@ class FinancialMetricService
     {
         $company = MhCompany::with('sector')->where('short_name', $ticker)->firstOrFail();
 
-        $activeYears = $this->getActiveYears([$ticker]);
-        if (empty($activeYears)) {
-            $activeYears = $this->getActiveYears();
-        }
-
+        $activeYears = $this->getActiveYears();
+       
         $reports = MhFinancialReport::where('short_name', $ticker)
             ->whereIn('report_year', $activeYears)
             ->orderBy('report_year', 'asc')
             ->get();
-
+       
         // Nếu chưa được tính toán hoặc thiếu indicators thì tính toán ngay
         $needsRecalc = $reports->contains(function ($r) {
             return empty($r->calculated_data['indicators']) || !array_key_exists('growth_pbt', $r->calculated_data['indicators'] ?? []);
@@ -768,16 +765,13 @@ class FinancialMetricService
      */
     public function getActiveYears(?array $tickers = null): array
     {
-        $query = MhFinancialReport::whereNotNull('calculated_data')
-            ->where('report_year', '>=', 2018); // Tạm ẩn dữ liệu 2015-2017 theo yêu cầu
+        $query = MhFinancialReport::where('report_year', '>=', 2018);
 
         if (!empty($tickers)) {
             $query->whereIn('short_name', $tickers);
         }
 
-        $years = $query->selectRaw('report_year, COUNT(CASE WHEN JSON_EXTRACT(calculated_data, "$.raw_metrics.total_assets") IS NOT NULL AND JSON_EXTRACT(calculated_data, "$.raw_metrics.total_assets") > 0 THEN 1 END) as valid_count')
-            ->groupBy('report_year')
-            ->having('valid_count', '>', 0)
+        $years = $query->distinct()
             ->orderBy('report_year', 'asc')
             ->pluck('report_year')
             ->map(fn($y) => (int) $y)

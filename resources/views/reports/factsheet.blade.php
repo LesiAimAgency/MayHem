@@ -267,6 +267,12 @@
     }
 
 
+    // Helper to get cookie by name
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+      return match ? decodeURIComponent(match[3]) : null;
+    }
+
     // -------------------------------------------------------------
     // 3. MODAL EDIT FINANCIAL DATA (Chuẩn 100% lọc.svg)
     // -------------------------------------------------------------
@@ -327,13 +333,17 @@
         });
       }
 
+      window.modalRenderYearFields = renderYearFields;
+
       // Open Modal
-      btnOpen?.addEventListener('click', () => {
-        if (modal) {
-          modal.classList.remove('hidden');
-          renderYearFields(window.modalActiveYear || 2023);
-        }
-      });
+      if (btnOpen) {
+        btnOpen.onclick = () => {
+          if (modal) {
+            modal.classList.remove('hidden');
+            renderYearFields(window.modalActiveYear || 2023);
+          }
+        };
+      }
 
       // Close Modal
       function closeModal() {
@@ -343,26 +353,28 @@
         modal.classList.add('hidden');
       }
 
-      btnClose?.addEventListener('click', closeModal);
+      if (btnClose) btnClose.onclick = closeModal;
 
       // Close when clicking directly on backdrop
-      modal?.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
+      if (modal) {
+        modal.onclick = (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        };
+      }
 
       // Switch Year Pills
       yearPills.forEach(pill => {
-        pill.addEventListener('click', () => {
+        pill.onclick = () => {
           const y = parseInt(pill.getAttribute('data-year'));
           renderYearFields(y);
-        });
+        };
       });
 
       // Input changes handling: Chỉ đánh dấu và lưu ô mà người dùng thực sự nhập
       metricInputs.forEach(input => {
-        input.addEventListener('input', () => {
+        input.oninput = () => {
           const key = input.getAttribute('data-key');
           const oldVal = (input.dataset.old || '').trim();
           const newVal = input.value.trim();
@@ -383,132 +395,146 @@
               box.classList.add('border-[#818181]');
             }
           }
-        });
+        };
       });
 
-      // Stock Dropdown inside modal
-      modalStockSelect?.addEventListener('change', (e) => {
-        const newTicker = e.target.value;
-        if (newTicker && newTicker !== currentTicker) {
-          loadFactsheetAjax(newTicker);
-        }
-      });
+      // Stock Dropdown inside modal (Nhập mã cổ phiếu bạn muốn xem chi tiết)
+      if (modalStockSelect) {
+        modalStockSelect.onchange = (e) => {
+          const newTicker = e.target.value;
+          if (newTicker && newTicker !== currentTicker) {
+            loadFactsheetAjax(newTicker);
+          }
+        };
+      }
 
       // Sector Dropdown inside modal
-      modalSectorSelect?.addEventListener('change', (e) => {
-        // Sector change handler
-      });
+      if (modalSectorSelect) {
+        modalSectorSelect.onchange = (e) => {
+          // Sector change handler
+        };
+      }
 
       // Submit modal changes (Nút LƯU DỮ LIỆU)
-      btnSubmit?.addEventListener('click', async () => {
-        // Collect all updates from modified values
-        const updates = [];
-        for (const y in window.modalModifiedValues) {
-          for (const k in window.modalModifiedValues[y]) {
-            const v = window.modalModifiedValues[y][k];
-            const clean = String(v ?? '').replace(/,/g, '').trim();
-            const parsedVal = (clean !== '' && !isNaN(clean)) ? parseFloat(clean) : null;
-            updates.push({
-              key: k,
-              year: parseInt(y),
-              value: parsedVal
-            });
+      if (btnSubmit) {
+        btnSubmit.onclick = async () => {
+          // Collect all updates from modified values
+          const updates = [];
+          for (const y in window.modalModifiedValues) {
+            for (const k in window.modalModifiedValues[y]) {
+              const v = window.modalModifiedValues[y][k];
+              const clean = String(v ?? '').replace(/,/g, '').trim();
+              const parsedVal = (clean !== '' && !isNaN(clean)) ? parseFloat(clean) : null;
+              updates.push({
+                key: k,
+                year: parseInt(y),
+                value: parsedVal
+              });
+            }
           }
-        }
 
-        if (updates.length === 0) {
-          showToast('Không có dữ liệu nào thay đổi.');
-          closeModal();
-          return;
-        }
+          if (updates.length === 0) {
+            showToast('Không có dữ liệu nào thay đổi.');
+            closeModal();
+            return;
+          }
 
-        // Ticker target for updates
-        const targetTicker = document.getElementById('modalStockSelect')?.value 
-          || window.modalCurrentTicker 
-          || currentTicker 
-          || 'ABB';
+          // Ticker target for updates
+          const targetTicker = document.getElementById('modalStockSelect')?.value 
+            || window.modalCurrentTicker 
+            || currentTicker 
+            || 'ABB';
 
-        const saveSpinner = document.getElementById('btnSaveSpinner');
-        const saveText = document.getElementById('btnSaveText');
+          const saveSpinner = document.getElementById('btnSaveSpinner');
+          const saveText = document.getElementById('btnSaveText');
 
-        if (btnSubmit) btnSubmit.disabled = true;
-        if (saveSpinner) saveSpinner.classList.remove('hidden');
-        if (saveText) saveText.textContent = 'ĐANG LƯU...';
+          btnSubmit.disabled = true;
+          if (saveSpinner) saveSpinner.classList.remove('hidden');
+          if (saveText) saveText.textContent = 'ĐANG LƯU...';
 
-        try {
-          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-          const res = await fetch('/don-le/update-metrics', {
-            method: 'POST',
-            headers: {
+          try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const mayhemToken = getCookie('mayhem_token');
+            const headers = {
               'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': csrfToken || '',
               'X-Requested-With': 'XMLHttpRequest',
               'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              ticker: targetTicker,
-              updates: updates
-            })
-          });
+            };
+            if (csrfToken) headers['X-CSRF-TOKEN'] = csrfToken;
+            if (mayhemToken) {
+              headers['Authorization'] = `Bearer ${mayhemToken}`;
+              headers['X-MayHem-Token'] = mayhemToken;
+            }
 
-          let data = null;
-          try {
-            data = await res.json();
-          } catch (_) {}
-
-          if (!res.ok || !data || data.status !== 'success') {
-            const errMsg = data?.message || `Lỗi máy chủ (${res.status}): Cập nhật thất bại.`;
-            throw new Error(errMsg);
-          }
-
-          // Update table HTML with recalculated TÍNH metrics
-          const tableWrapper = document.getElementById('factsheetTableWrapper');
-          if (tableWrapper && data.table_html) {
-            tableWrapper.innerHTML = data.table_html;
-          }
-
-          // Update modal HTML with newly saved values
-          const modalWrapper = document.getElementById('factsheetEditModalWrapper');
-          if (modalWrapper && data.edit_modal_html) {
-            modalWrapper.innerHTML = data.edit_modal_html;
-          }
-
-          // Synchronize memory cache of metrics data
-          if (data.factsheet?.all_metrics) {
-            const newMap = {};
-            data.factsheet.all_metrics.forEach(m => {
-              if (m.key) newMap[m.key] = m.values || {};
+            const res = await fetch('/don-le/update-metrics', {
+              method: 'POST',
+              headers: headers,
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                ticker: targetTicker,
+                updates: updates
+              })
             });
-            window.modalMetricsData = newMap;
+
+            let data = null;
+            try {
+              data = await res.json();
+            } catch (_) {}
+
+            if (!res.ok || !data || data.status !== 'success') {
+              const errMsg = data?.message || `Lỗi máy chủ (${res.status}): Cập nhật thất bại.`;
+              throw new Error(errMsg);
+            }
+
+            // Update table HTML with recalculated TÍNH metrics
+            const tableWrapper = document.getElementById('factsheetTableWrapper');
+            if (tableWrapper && data.table_html) {
+              tableWrapper.innerHTML = data.table_html;
+            }
+
+            // Update modal HTML with newly saved values
+            const modalWrapper = document.getElementById('factsheetEditModalWrapper');
+            if (modalWrapper && data.edit_modal_html) {
+              modalWrapper.innerHTML = data.edit_modal_html;
+            }
+
+            // Synchronize memory cache of metrics data
+            if (data.factsheet?.all_metrics) {
+              const newMap = {};
+              data.factsheet.all_metrics.forEach(m => {
+                if (m.key) newMap[m.key] = m.values || {};
+              });
+              window.modalMetricsData = newMap;
+            }
+            window.modalCurrentTicker = targetTicker;
+            currentTicker = targetTicker;
+
+            // Clear modified memory
+            window.modalModifiedValues = {};
+
+            // Re-bind interactions
+            bindTableInteractions();
+            bindModalInteractions();
+
+            // Close modal
+            closeModal();
+
+            showToast(`Đã lưu thành công ${updates.length} chỉ tiêu! Toàn bộ các chỉ tiêu TÍNH đã được tự động tính toán lại theo số liệu mới.`);
+          } catch (err) {
+            console.error('Save failed:', err);
+            showToast('Có lỗi xảy ra khi lưu: ' + err.message, false);
+          } finally {
+            if (btnSubmit) btnSubmit.disabled = false;
+            if (saveSpinner) saveSpinner.classList.add('hidden');
+            if (saveText) saveText.textContent = 'LƯU DỮ LIỆU';
           }
-          window.modalCurrentTicker = targetTicker;
-          currentTicker = targetTicker;
-
-          // Clear modified memory
-          window.modalModifiedValues = {};
-
-          // Re-bind interactions
-          bindTableInteractions();
-          bindModalInteractions();
-
-          // Close modal
-          closeModal();
-
-          showToast(`Đã lưu thành công ${updates.length} chỉ tiêu! Toàn bộ các chỉ tiêu TÍNH đã được tự động tính toán lại theo số liệu mới.`);
-        } catch (err) {
-          console.error('Save failed:', err);
-          showToast('Có lỗi xảy ra khi lưu: ' + err.message, false);
-        } finally {
-          if (btnSubmit) btnSubmit.disabled = false;
-          if (saveSpinner) saveSpinner.classList.add('hidden');
-          if (saveText) saveText.textContent = 'LƯU DỮ LIỆU';
-        }
-      });
+        };
+      }
     }
 
 
     // -------------------------------------------------------------
-    // 4. AJAX LOAD FACTSHEET (Khi chuyển mã cổ phiếu)
+    // 4. AJAX LOAD FACTSHEET (Khi chuyển mã cổ phiếu - Không reload trang)
     // -------------------------------------------------------------
     async function loadFactsheetAjax(ticker, updateHistory = true) {
       if (!ticker || isFactsheetLoading) return;
@@ -518,64 +544,144 @@
       const overlay = document.getElementById('factsheetLoadingOverlay');
       const overlayText = document.getElementById('loadingOverlayText');
       const wrapper = document.getElementById('factsheetContentWrapper');
-      if (overlay) overlay.classList.remove('hidden');
-      if (overlayText) overlayText.textContent = `Đang tải báo cáo tài chính ${ticker}...`;
-      if (wrapper) wrapper.classList.add('opacity-60', 'pointer-events-none');
+
+      const modal = document.getElementById('editFinancialDataModal');
+      const wasModalOpen = modal && !modal.classList.contains('hidden');
+      const modalOverlay = document.getElementById('modalLoadingOverlay');
+      const modalLoadingText = document.getElementById('modalLoadingText');
+      const modalStockSelect = document.getElementById('modalStockSelect');
+
+      if (wasModalOpen) {
+        if (modalOverlay) modalOverlay.classList.remove('hidden');
+        if (modalLoadingText) modalLoadingText.textContent = `Đang tải dữ liệu BCTC ${ticker}...`;
+        if (modalStockSelect) modalStockSelect.disabled = true;
+      } else {
+        if (overlay) overlay.classList.remove('hidden');
+        if (overlayText) overlayText.textContent = `Đang tải báo cáo tài chính ${ticker}...`;
+        if (wrapper) wrapper.classList.add('opacity-60', 'pointer-events-none');
+      }
 
       try {
         const fetchUrl = new URL(`/don-le/${encodeURIComponent(ticker)}`, window.location.origin);
         fetchUrl.searchParams.set('ajax', '1');
 
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const mayhemToken = getCookie('mayhem_token');
+
+        const headers = {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+        };
+        if (csrfToken) headers['X-CSRF-TOKEN'] = csrfToken;
+        if (mayhemToken) {
+          headers['Authorization'] = `Bearer ${mayhemToken}`;
+          headers['X-MayHem-Token'] = mayhemToken;
+        }
+
         const res = await fetch(fetchUrl.toString(), {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
-          }
+          headers: headers,
+          credentials: 'same-origin',
         });
 
-        if (!res.ok) throw new Error('Network response error');
+        if (!res.ok) {
+          let errData = null;
+          try { errData = await res.json(); } catch (_) {}
+          throw new Error(errData?.message || `Lỗi máy chủ (${res.status})`);
+        }
         const data = await res.json();
 
         if (data.status === 'success') {
-          // Update Table HTML
+          // 1. Update Table HTML on main page
           const tableWrapper = document.getElementById('factsheetTableWrapper');
           if (tableWrapper && data.table_html) {
             tableWrapper.innerHTML = data.table_html;
           }
 
-          // Update Modal HTML for the new stock
+          // 2. Update Modal HTML for the new stock
           const modalWrapper = document.getElementById('factsheetEditModalWrapper');
           if (modalWrapper && data.edit_modal_html) {
             modalWrapper.innerHTML = data.edit_modal_html;
           }
 
-          // Update Document Title
+          // 3. Keep modal open if it was open before!
+          const newModal = document.getElementById('editFinancialDataModal');
+          if (wasModalOpen && newModal) {
+            newModal.classList.remove('hidden');
+          }
+
+          // 4. Update memory cache of metrics data
+          const newMetricsMap = {};
+          if (data.factsheet && data.factsheet.all_metrics) {
+            data.factsheet.all_metrics.forEach(m => {
+              if (m.key) {
+                newMetricsMap[m.key] = m.values || {};
+              }
+            });
+          }
+          window.modalMetricsData = newMetricsMap;
+          window.modalCurrentTicker = data.selectedTicker;
+
+          const years = data.factsheet?.years || [];
+          const validYears = years.filter(y => parseInt(y) >= 2016);
+          const defaultYear = validYears.includes(2023) ? 2023 : (validYears[validYears.length - 1] || 2023);
+          window.modalActiveYear = defaultYear;
+          window.modalModifiedValues = {};
+
+          // 5. Update Document Title
           document.title = `MAYHEM - Báo Cáo Đơn Lẻ | Tra Cứu BCTC Ngân Hàng ${data.selectedTicker}`;
 
-          // Update Stock Input Text
+          // 6. Update Stock Input on main selector
           if (stockInput && data.factsheet && data.factsheet.company) {
             stockInput.value = `${data.selectedTicker} - ${data.factsheet.company.company_name}`;
             stockInput.setAttribute('data-selected-ticker', data.selectedTicker);
           }
 
-          // Update Browser URL without reload
+          // 7. Update active state in stock dropdown items on main page
+          document.querySelectorAll('.stock-option-item').forEach(item => {
+            const itemTicker = item.getAttribute('data-ticker');
+            if (itemTicker === data.selectedTicker) {
+              item.classList.add('bg-[#F8F3EC]/70', 'font-bold');
+              if (!item.querySelector('.stock-active-dot')) {
+                const dot = document.createElement('span');
+                dot.className = 'stock-active-dot w-2 h-2 rounded-full bg-[#051650] shrink-0';
+                item.appendChild(dot);
+              }
+            } else {
+              item.classList.remove('bg-[#F8F3EC]/70', 'font-bold');
+              const dot = item.querySelector('.stock-active-dot');
+              if (dot) dot.remove();
+            }
+          });
+
+          // 8. Update Browser URL without reload
           if (updateHistory) {
             const cleanUrl = `/don-le/${encodeURIComponent(data.selectedTicker)}`;
             window.history.pushState({ ticker: data.selectedTicker }, '', cleanUrl);
           }
 
-          // Reset filter & Bind interactions
+          // 9. Reset filter & Bind interactions
           currentFilter = 'ALL';
           bindTableInteractions();
           bindModalInteractions();
+
+          // 10. If modal is open, ensure active year fields are populated
+          if (wasModalOpen && typeof window.modalRenderYearFields === 'function') {
+            window.modalRenderYearFields(window.modalActiveYear);
+          }
+
+          showToast(`Đã tải dữ liệu BCTC ${data.selectedTicker} (${data.factsheet?.company?.company_name || ''})`);
         }
       } catch (err) {
-        console.error('AJAX factsheet load failed, falling back:', err);
-        window.location.href = `/don-le/${encodeURIComponent(ticker)}`;
+        console.error('AJAX factsheet load failed:', err);
+        showToast('Có lỗi xảy ra khi tải dữ liệu: ' + err.message, false);
       } finally {
         isFactsheetLoading = false;
         if (overlay) overlay.classList.add('hidden');
         if (wrapper) wrapper.classList.remove('opacity-60', 'pointer-events-none');
+        const modalOverlayAfter = document.getElementById('modalLoadingOverlay');
+        if (modalOverlayAfter) modalOverlayAfter.classList.add('hidden');
+        const modalStockSelectAfter = document.getElementById('modalStockSelect');
+        if (modalStockSelectAfter) modalStockSelectAfter.disabled = false;
       }
     }
 
