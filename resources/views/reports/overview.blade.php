@@ -3,7 +3,69 @@
 @section('title', 'MAYHEM - Báo Cáo Tổng Hợp | Lọc & Sàng Lọc Cổ Phiếu')
 @section('meta_description', 'Báo cáo tổng hợp sàng lọc cổ phiếu ngân hàng theo 15 tiêu chí tài chính, ngành nghề và mã cổ phiếu.')
 
+@push('styles')
+<style>
+.range-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+.range-slider-thumb::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+.range-slider-thumb::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+.range-slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #051650;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(5, 22, 80, 0.45);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  margin-top: -5px;
+}
+.range-slider-thumb::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 6px rgba(5, 22, 80, 0.6);
+}
+.range-slider-thumb::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+  background: #1971C2;
+}
+.range-slider-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #051650;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(5, 22, 80, 0.45);
+  cursor: pointer;
+}
+.range-slider-thumb::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+</style>
+@endpush
+
 @section('content')
+
+@php
+  $yearsList = !empty($annualAverages) ? array_keys($annualAverages) : [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+  sort($yearsList);
+  $minYear = !empty($yearsList) ? min($yearsList) : 2018;
+  $maxYear = !empty($yearsList) ? max($yearsList) : 2025;
+@endphp
 
   <!-- Greeting Hero with 3 Quick Action Cards -->
   @include('partials.greeting-hero', ['activeCard' => 'overview'])
@@ -88,8 +150,46 @@
 
       </div>
 
+      <!-- SECTION 2.5: MỐC THỜI GIAN LỌC (Timeline Range Slider) -->
+      <div class="pt-2">
+        <div class="p-3 bg-[#F8F9FA] rounded-xl border border-[#E9ECEF] space-y-2">
+          <div class="flex items-center justify-between text-[11px] text-[#051650]">
+            <span class="font-medium">Từ mốc: <b class="font-bold text-[#1971C2]" id="timelineRangeLabelFrom" data-range-label-from="global">{{ $minYear }}</b></span>
+            <span class="font-medium">Tới mốc: <b class="font-bold text-[#1971C2]" id="timelineRangeLabelTo" data-range-label-to="global">{{ $maxYear }}</b></span>
+          </div>
+          <div class="relative w-full h-5 flex items-center">
+            <div class="absolute w-full h-1.5 bg-[#E9ECEF] rounded-lg"></div>
+            <div id="timelineRangeHighlight" data-range-highlight="global" class="absolute h-1.5 bg-[#051650] rounded-lg pointer-events-none" style="left: 0%; right: 0%;"></div>
+            <input type="range" id="timelineRangeMin" data-range-min="global" min="{{ $minYear }}" max="{{ $maxYear }}" value="{{ $minYear }}" step="1"
+                   class="range-slider-thumb absolute w-full h-1.5 appearance-none bg-transparent pointer-events-none z-20 cursor-pointer">
+            <input type="range" id="timelineRangeMax" data-range-max="global" min="{{ $minYear }}" max="{{ $maxYear }}" value="{{ $maxYear }}" step="1"
+                   class="range-slider-thumb absolute w-full h-1.5 appearance-none bg-transparent pointer-events-none z-30 cursor-pointer">
+          </div>
+          <div class="flex justify-between text-[10px] text-[#818181] pt-0.5">
+            <span>{{ $minYear }}</span>
+            <span>{{ (int)(($minYear + $maxYear) / 2) }}</span>
+            <span>{{ $maxYear }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- SECTION 3: 15 TIÊU CHÍ CHỌN ĐIỀU KIỆN -->
-      <div class="pt-4 space-y-5">
+      <div class="pt-4 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h2 class="text-[15px] font-bold text-[#051650]">Tiêu chí tài chính</h2>
+            <span class="text-[11px] text-[#818181] font-normal">(15 chỉ tiêu sàng lọc)</span>
+          </div>
+          <button type="button" id="clearAllCriteriaFilterBtn"
+            class="text-[11px] font-medium text-[#818181] hover:text-[#FE0000] transition-colors flex items-center gap-1 cursor-pointer"
+            title="Xóa tất cả các điều kiện tài chính đang chọn">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            <span>Xóa điều kiện lọc</span>
+          </button>
+        </div>
+
         <!-- Row 1: 4 Cột -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-[36px] gap-y-4">
           <!-- 1. CIR -->
@@ -104,25 +204,17 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="cir" name="cir_condition[]" value="under_avg_range" data-label="Dưới Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="cir" name="cir_condition[]" value="under_avg_latest" data-label="Dưới Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành năm gần nhất</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
                     <input type="checkbox" data-criteria-cb="cir" name="cir_condition[]" value="under_60_latest" data-label="Dưới 60% ở năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
                     <span class="ml-2.5 text-xs text-[#323232]">Dưới 60% ở năm gần nhất</span>
                   </label>
-                  <div class="space-y-1.5" data-criteria-group="cir_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="cir_avg" data-metric="cir" data-label="Dưới Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="cir_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="cir_avg_period" value="under_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="cir_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -158,12 +250,15 @@
                 <svg class="w-3.5 h-3.5 text-[#818181] shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
               <div data-criteria-menu="blvh" class="hidden absolute top-full left-0 mt-1 w-max min-w-[280px] max-w-[340px] bg-white border border-[#D7D7D7] rounded-[8px] shadow-lg z-50">
-                 
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="blvh" name="blvh_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 8 năm</span>
+                    <input type="checkbox" data-criteria-cb="blvh" name="blvh_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="blvh" name="blvh_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
                   </label>
                 </div>
               </div>
@@ -179,12 +274,15 @@
                 <svg class="w-3.5 h-3.5 text-[#818181] shrink-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
               <div data-criteria-menu="blntt" class="hidden absolute top-full left-0 mt-1 w-max min-w-[280px] max-w-[340px] bg-white border border-[#D7D7D7] rounded-[8px] shadow-lg z-50">
-                 
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
-                    <input type="checkbox" data-criteria-cb="blntt" name="blntt_condition[]" value="above_avg_10y" data-label="Cao hơn trung bình ngành trong liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn trung bình ngành trong liên tiếp 8 năm</span>
+                    <input type="checkbox" data-criteria-cb="blntt" name="blntt_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="blntt" name="blntt_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
                   </label>
                 </div>
               </div>
@@ -206,22 +304,14 @@
                  
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
-                  <div class="space-y-1.5" data-criteria-group="blnst_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="blnst_avg" data-metric="blnst" data-label="Cao hơn Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="blnst_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="blnst_avg_period" value="above_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="blnst_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="blnst" name="blnst_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="blnst" name="blnst_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -261,25 +351,17 @@
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
                   <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="roa" name="roa_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="roa" name="roa_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
                     <input type="checkbox" data-criteria-cb="roa" name="roa_condition[]" value="from_1pct" data-label="Từ 1% trở lên ở năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
                     <span class="ml-2.5 text-xs text-[#323232]">Từ 1% trở lên ở năm gần nhất</span>
                   </label>
-                  <div class="space-y-1.5" data-criteria-group="roa_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="roa_avg" data-metric="roa" data-label="Cao hơn Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="roa_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roa_avg_period" value="above_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roa_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -297,6 +379,14 @@
                  
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="de" name="de_condition[]" value="under_avg_range" data-label="Dưới Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="de" name="de_condition[]" value="under_avg_latest" data-label="Dưới Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành năm gần nhất</span>
+                  </label>
                   <div class="space-y-1.5" data-criteria-group="de_under_10">
                     <label class="flex items-center cursor-pointer select-none">
                       <input type="checkbox" data-criteria-parent="de_under_10" data-metric="de" data-label="Dưới 10" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
@@ -309,22 +399,6 @@
                       </label>
                       <label class="inline-flex items-center gap-1.5 cursor-pointer">
                         <input type="radio" name="de_under_10_period" value="under_10_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="space-y-1.5" data-criteria-group="de_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="de_avg" data-metric="de" data-label="Dưới Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="de_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="de_avg_period" value="under_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="de_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
                         <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
                       </label>
                     </div>
@@ -349,22 +423,14 @@
                  
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
-                  <div class="space-y-1.5" data-criteria-group="roe_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="roe_avg" data-metric="roe" data-label="Cao hơn Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="roe_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roe_avg_period" value="above_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="roe_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
+                  </label>
                   <label class="flex items-center cursor-pointer select-none">
                     <input type="checkbox" data-criteria-cb="roe" name="roe_condition[]" value="from_15pct_10y" data-label="Từ 15% trở lên liên tiếp 8 năm" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
                     <span class="ml-2.5 text-xs text-[#323232]">Từ 15% trở lên liên tiếp 8 năm</span>
@@ -411,22 +477,14 @@
                  
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
-                  <div class="space-y-1.5" data-criteria-group="casa_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="casa_avg" data-metric="casa" data-label="Cao hơn Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="casa_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="casa_avg_period" value="above_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="casa_avg_period" value="above_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="casa" name="casa_condition[]" value="above_avg_range" data-label="Cao hơn Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="casa" name="casa_condition[]" value="above_avg_latest" data-label="Cao hơn Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Cao hơn Trung bình ngành năm gần nhất</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -444,22 +502,14 @@
                  
                 <div class="border-t border-[#F0F0F0]"></div>
                 <div class="p-3 space-y-3">
-                  <div class="space-y-1.5" data-criteria-group="npl_avg">
-                    <label class="flex items-center cursor-pointer select-none">
-                      <input type="checkbox" data-criteria-parent="npl_avg" data-metric="npl" data-label="Dưới Trung Bình Ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
-                      <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung Bình Ngành</span>
-                    </label>
-                    <div data-criteria-sub="npl_avg" class="hidden pt-1 flex items-center gap-5 text-xs text-[#323232] select-none pl-1">
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="npl_avg_period" value="under_avg_latest" data-label="Ở năm gần nhất" checked class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Ở năm gần nhất</span>
-                      </label>
-                      <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="npl_avg_period" value="under_avg_10y" data-label="Liên tiếp 8 năm" class="w-3.5 h-3.5 text-[#051650] cursor-pointer accent-[#051650]">
-                        <span class="text-xs text-[#323232]">Liên tiếp 8 năm</span>
-                      </label>
-                    </div>
-                  </div>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="npl" name="npl_condition[]" value="under_avg_range" data-label="Dưới Trung bình ngành" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer select-none">
+                    <input type="checkbox" data-criteria-cb="npl" name="npl_condition[]" value="under_avg_latest" data-label="Dưới Trung bình ngành năm gần nhất" class="w-4 h-4 text-[#051650] border-[#D7D7D7] rounded focus:ring-0 cursor-pointer accent-[#051650]">
+                    <span class="ml-2.5 text-xs text-[#323232]">Dưới Trung bình ngành năm gần nhất</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -593,9 +643,19 @@
           <span id="filterCountSummary">Có 00 mã cổ phiếu thoả điều kiện</span>
         </div>
 
-        <div class="flex items-center gap-4 w-full sm:w-auto justify-end">
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-end flex-wrap">
+          <!-- Nút ĐẶT LẠI BỘ LỌC ĐỂ LỌC LẠI -->
+          <button type="button" id="resetAllFiltersBtn"
+            class="h-[32.5px] px-4 rounded-full border border-[#D7D7D7] bg-white text-[#818181] hover:text-[#FE0000] hover:border-[#FE0000]/60 hover:bg-red-50/40 transition-all text-[11px] font-bold tracking-wide flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+            title="Xóa toàn bộ các điều kiện và mã cổ phiếu đã chọn để bắt đầu lọc lại từ đầu">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>ĐẶT LẠI BỘ LỌC</span>
+          </button>
+
           <button type="button" id="toggleDetailsBtn"
-            class="w-[142.5px] h-[32.5px] rounded-full border border-[#051650] text-[#051650] hover:bg-[#051650] hover:text-white transition-colors text-[11px] font-bold tracking-wide flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+            class="w-[142.5px] h-[32.5px] rounded-full border border-[#051650] text-[#051650] hover:bg-[#051650] hover:text-white transition-colors text-[11px] font-bold tracking-wide flex items-center justify-center gap-1.5 shadow-sm cursor-pointer active:scale-95">
             <span>XEM CHI TIẾT</span>
             <svg class="w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -603,7 +663,7 @@
           </button>
 
           <button type="button" id="applyComparisonBtn"
-            class="w-[80px] h-[28px] rounded-full bg-[#051650] text-white hover:bg-[#0E2168] transition-colors text-[11px] font-bold flex items-center justify-center shadow-sm">
+            class="w-[80px] h-[32.5px] rounded-full bg-[#051650] text-white hover:bg-[#0E2168] transition-colors text-[11px] font-bold flex items-center justify-center shadow-sm cursor-pointer active:scale-95">
             ÁP DỤNG
           </button>
         </div>

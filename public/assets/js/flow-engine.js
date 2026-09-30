@@ -141,6 +141,9 @@ function initFrame1Flow() {
   // 2. Khởi tạo Khối Thẻ Xám Drop Zone + Drag-Out-to-Remove
   initStockDropzone();
 
+  // 2.5 Khởi tạo Thanh Trượt Mốc Thời Gian (Timeline Dual Range Slider)
+  initTimelineRangeSlider();
+
   // 3. Khởi tạo Bộ Lọc 15 Tiêu Chí Tài Chính & Thanh Active Criteria
   initCriteriaFiltering();
 
@@ -203,6 +206,15 @@ function initFrame1Flow() {
       }
 
       window.location.href = `/so-sanh?tickers=${encodeURIComponent(tickers.join(','))}&mode=latest`;
+    });
+  }
+
+  // 7. Nút Đặt lại toàn bộ bộ lọc
+  const resetAllFiltersBtn = document.getElementById('resetAllFiltersBtn');
+  if (resetAllFiltersBtn) {
+    resetAllFiltersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetAllFilters();
     });
   }
 
@@ -592,6 +604,101 @@ function renderSelectedStockChips() {
 }
 
 
+// ============================================================================
+// COMPONENT 2.5: TIMELINE DUAL RANGE SLIDER (MỐC THỜI GIAN LỌC TOÀN HỆ THỐNG)
+// ============================================================================
+
+/**
+ * Lấy khoảng năm đang được chọn từ Timeline Slider
+ */
+function getTimelineRange() {
+  const minInput = document.getElementById('timelineRangeMin');
+  const maxInput = document.getElementById('timelineRangeMax');
+  const fromYear = minInput ? parseInt(minInput.value, 10) : 2018;
+  const toYear = maxInput ? parseInt(maxInput.value, 10) : 2025;
+  return {
+    fromYear: Math.min(fromYear, toYear),
+    toYear: Math.max(fromYear, toYear)
+  };
+}
+
+/**
+ * Khởi tạo Component Dual Range Slider cho mốc năm (Timeline Range)
+ */
+function initTimelineRangeSlider() {
+  const minInput = document.getElementById('timelineRangeMin');
+  const maxInput = document.getElementById('timelineRangeMax');
+  const labelFrom = document.getElementById('timelineRangeLabelFrom');
+  const labelTo = document.getElementById('timelineRangeLabelTo');
+  const highlight = document.getElementById('timelineRangeHighlight');
+
+  if (!minInput || !maxInput) return;
+
+  function updateSlider(e) {
+    let minVal = parseInt(minInput.value, 10);
+    let maxVal = parseInt(maxInput.value, 10);
+    const minLimit = parseInt(minInput.min, 10) || 2018;
+    const maxLimit = parseInt(maxInput.max, 10) || 2025;
+    const range = maxLimit - minLimit || 1;
+
+    // Ngăn chặn nút min vượt quá max và ngược lại
+    if (minVal > maxVal) {
+      if (e && e.target === minInput) {
+        minInput.value = maxVal;
+        minVal = maxVal;
+      } else {
+        maxInput.value = minVal;
+        maxVal = minVal;
+      }
+    }
+
+    // Đảo z-index khi hai thumb chạm nhau để dễ kéo tách ra
+    if (minVal >= maxVal - 1) {
+      if (e && e.target === minInput) {
+        minInput.style.zIndex = '35';
+        maxInput.style.zIndex = '30';
+      } else {
+        maxInput.style.zIndex = '35';
+        minInput.style.zIndex = '30';
+      }
+    } else {
+      minInput.style.zIndex = '20';
+      maxInput.style.zIndex = '30';
+    }
+
+    if (labelFrom) labelFrom.textContent = minVal;
+    if (labelTo) labelTo.textContent = maxVal;
+
+    if (highlight) {
+      const pMin = ((minVal - minLimit) / range) * 100;
+      const pMax = ((maxVal - minLimit) / range) * 100;
+      highlight.style.left = `${pMin}%`;
+      highlight.style.right = `${100 - pMax}%`;
+    }
+
+    // Cập nhật lại nhãn tiêu chí tài chính & thanh Pills nếu có tiêu chí dùng mốc năm
+    refreshCriteriaLabelsWithRange(minVal, maxVal);
+    runFilterLogic();
+  }
+
+  minInput.addEventListener('input', updateSlider);
+  maxInput.addEventListener('input', updateSlider);
+
+  // Render khởi tạo ban đầu
+  updateSlider();
+}
+
+/**
+ * Cập nhật lại text của các button dropdown và thanh pills khi thay đổi mốc năm
+ */
+function refreshCriteriaLabelsWithRange(minVal, maxVal) {
+  document.querySelectorAll('[data-criteria-container]').forEach(container => {
+    const metric = container.getAttribute('data-criteria-container');
+    updateCriteriaButtonState(metric);
+  });
+  updateActiveCriteriaBar();
+}
+
 // Helper lấy tất cả các điều kiện đang được chọn của một tiêu chí (gồm standalone checkbox và parent checkbox + sub checkboxes / radios)
 function getActiveConditionsForMetric(metric) {
   const container = document.querySelector(`[data-criteria-container="${metric}"]`);
@@ -601,11 +708,16 @@ function getActiveConditionsForMetric(metric) {
   // 1. Standalone checkboxes
   const standaloneChecked = container.querySelectorAll(`input[data-criteria-cb="${metric}"]:checked`);
   standaloneChecked.forEach(cb => {
+    let label = cb.getAttribute('data-label') || cb.parentElement.textContent.trim();
+    if (cb.value === 'under_avg_range' || cb.value === 'above_avg_range') {
+      const { fromYear, toYear } = getTimelineRange();
+      label = `${label} (${fromYear} - ${toYear})`;
+    }
     conditions.push({
       type: 'standalone',
       metric: metric,
       condition: cb.value,
-      label: cb.getAttribute('data-label') || cb.parentElement.textContent.trim(),
+      label: label,
       element: cb
     });
   });
@@ -863,6 +975,114 @@ function resetAllCriteria() {
   closeAllCriteriaMenus();
   updateActiveCriteriaBar();
   runFilterLogic();
+  showFilterResetToast('Đã xóa tất cả tiêu chí điều kiện lọc.');
+}
+
+/**
+ * Đặt lại toàn bộ bộ lọc và dữ liệu về trạng thái ban đầu để người dùng lọc lại từ đầu
+ */
+function resetAllFilters() {
+  // 1. Xóa toàn bộ 15 tiêu chí điều kiện
+  document.querySelectorAll('input[data-criteria-cb]').forEach(cb => {
+    cb.checked = false;
+  });
+  document.querySelectorAll('input[data-criteria-parent]').forEach(parentCb => {
+    parentCb.checked = false;
+  });
+  document.querySelectorAll('[data-criteria-sub] input[type="checkbox"]').forEach(subCb => {
+    subCb.checked = false;
+  });
+  document.querySelectorAll('[data-criteria-sub] input[type="radio"]').forEach(radio => {
+    if (radio.defaultChecked) radio.checked = true;
+  });
+  document.querySelectorAll('[data-criteria-sub]').forEach(subDiv => {
+    subDiv.classList.add('hidden');
+  });
+  document.querySelectorAll('[data-criteria-container]').forEach(container => {
+    const metric = container.getAttribute('data-criteria-container');
+    updateCriteriaButtonState(metric);
+  });
+  closeAllCriteriaMenus();
+
+  // 1.5 Đặt lại thanh trượt mốc thời gian về mặc định
+  const timelineMin = document.getElementById('timelineRangeMin');
+  const timelineMax = document.getElementById('timelineRangeMax');
+  if (timelineMin && timelineMax) {
+    timelineMin.value = timelineMin.min || '2018';
+    timelineMax.value = timelineMax.max || '2025';
+    const labelFrom = document.getElementById('timelineRangeLabelFrom');
+    const labelTo = document.getElementById('timelineRangeLabelTo');
+    const highlight = document.getElementById('timelineRangeHighlight');
+    if (labelFrom) labelFrom.textContent = timelineMin.value;
+    if (labelTo) labelTo.textContent = timelineMax.value;
+    if (highlight) {
+      highlight.style.left = '0%';
+      highlight.style.right = '0%';
+    }
+  }
+
+  // 2. Xóa danh sách mã cổ phiếu đã chọn trong Dropzone
+  selectedStocks = [];
+  saveSelectedStocksToStorage();
+  renderSelectedStockChips();
+  renderStockDropdownMenu();
+
+  // 3. Xóa ô tìm kiếm mã CP và đóng dropdown
+  const searchInput = document.getElementById('stockSearchInput');
+  const clearInputBtn = document.getElementById('clearStockSearchInputBtn');
+  const dropdownMenu = document.getElementById('stockDropdownMenu');
+  const chevronIcon = document.getElementById('stockChevronIcon');
+  if (searchInput) searchInput.value = '';
+  if (clearInputBtn) clearInputBtn.classList.add('hidden');
+  if (dropdownMenu) dropdownMenu.classList.add('hidden');
+  if (chevronIcon) chevronIcon.classList.remove('rotate-180');
+
+  // 4. Reset radio ngành hàng về ngành đầu tiên nếu có
+  const industryRadios = document.querySelectorAll('[data-industry-radio]');
+  if (industryRadios.length > 0 && !industryRadios[0].checked) {
+    industryRadios[0].checked = true;
+  }
+
+  // 5. Đóng bảng chi tiết nếu đang mở
+  const detailsPanel = document.getElementById('detailsPanel');
+  const toggleBtn = document.getElementById('toggleDetailsBtn');
+  if (detailsPanel && !detailsPanel.classList.contains('hidden')) {
+    detailsPanel.classList.add('hidden');
+    if (toggleBtn) {
+      const textSpan = toggleBtn.querySelector('span');
+      if (textSpan) textSpan.textContent = 'XEM CHI TIẾT';
+      const svg = toggleBtn.querySelector('svg');
+      if (svg) svg.classList.remove('rotate-180');
+    }
+  }
+
+  // 6. Cập nhật và chạy lại logic bộ lọc
+  updateActiveCriteriaBar();
+  runFilterLogic();
+
+  // 7. Hiển thị thông báo nhẹ nhàng
+  showFilterResetToast('Đã đặt lại toàn bộ bộ lọc. Bạn có thể chọn dữ liệu để lọc lại.');
+}
+window.resetAllFilters = resetAllFilters;
+
+function showFilterResetToast(message) {
+  let toast = document.getElementById('filterResetToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'filterResetToast';
+    toast.className = 'fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-[#051650] text-white text-xs font-semibold shadow-xl border border-white/10 transition-all duration-300 opacity-0 translate-y-3 pointer-events-none';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `
+    <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+    <span>${escapeHtml(message)}</span>
+  `;
+  toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+  setTimeout(() => {
+    toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+  }, 2500);
 }
 
 /**
@@ -954,9 +1174,10 @@ window.uncheckCriteriaSubCheckbox = function (groupId, value) {
 };
 
 /**
- * Tính mức trung bình từ toàn bộ dữ liệu (fill) 8 năm của danh sách ngân hàng được chọn
+ * Tính mức trung bình từ toàn bộ dữ liệu của danh sách ngân hàng được chọn theo khoảng năm
  */
 function calculate10YearAverages(banks) {
+  const { fromYear, toYear } = getTimelineRange();
   const targetBanks = (banks && banks.length > 0) ? banks : getBanksList();
   const metricKeys = ['cir', 'cpkh_toi', 'blvh', 'blntt', 'blnst', 'ttlr', 'roa', 'debt_equity', 'roe', 'cfo', 'casa', 'npl', 'nim', 'car', 'llr'];
   const result = {};
@@ -966,8 +1187,10 @@ function calculate10YearAverages(banks) {
     targetBanks.forEach(b => {
       const hList = b.history || [];
       hList.forEach(h => {
-        if (h[key] !== null && h[key] !== undefined && typeof h[key] === 'number' && !isNaN(h[key])) {
-          vals.push(h[key]);
+        if (h.year >= fromYear && h.year <= toYear) {
+          if (h[key] !== null && h[key] !== undefined && typeof h[key] === 'number' && !isNaN(h[key])) {
+            vals.push(h[key]);
+          }
         }
       });
     });
@@ -996,11 +1219,12 @@ function evaluateCondition(bank, metric, condition) {
   const key = metricKeyMap[metric] || metric;
   const history = bank.history || [];
 
-  // Năm hiện tại - 1 (năm tài chính gần nhất chuẩn hóa)
-  const targetYear = new Date().getFullYear() - 1;
+  // Xác định năm tài chính gần nhất từ dữ liệu lịch sử
+  const allYears = history.map(h => h.year).filter(y => typeof y === 'number');
+  const targetYear = allYears.length > 0 ? Math.max(...allYears) : (new Date().getFullYear() - 1);
   const targetHistory = history.find(h => h.year === targetYear);
 
-  // Lấy giá trị của ngân hàng ở năm (năm hiện tại - 1), fallback về bank[key] nếu không tìm thấy trong history
+  // Lấy giá trị của ngân hàng ở năm gần nhất, fallback về bank[key]
   const getLatestVal = (field) => {
     if (targetHistory && targetHistory[field] !== undefined && targetHistory[field] !== null) {
       return targetHistory[field];
@@ -1008,50 +1232,61 @@ function evaluateCondition(bank, metric, condition) {
     return (bank[field] !== undefined && bank[field] !== null) ? bank[field] : null;
   };
 
-  // Trung bình ngành: Ưu tiên lấy từ toàn bộ dữ liệu 8 năm của các ngân hàng đã chọn
+  // Trung bình ngành: Ưu tiên lấy từ toàn bộ dữ liệu của các ngân hàng đã chọn
   const sectorAvg = (window.SELECTED_10Y_AVERAGES && window.SELECTED_10Y_AVERAGES[key] !== undefined && window.SELECTED_10Y_AVERAGES[key] !== null)
     ? window.SELECTED_10Y_AVERAGES[key]
     : ((window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][key] !== undefined)
       ? window.ANNUAL_AVERAGES[targetYear][key]
       : ((window.SECTOR_AVERAGES && window.SECTOR_AVERAGES[key] !== undefined) ? window.SECTOR_AVERAGES[key] : null));
 
-  // Debug: log giá trị đang được đánh giá
-  if (!window._evalDebugShown) window._evalDebugShown = {};
-  const debugKey = `${bank.ticker}_${metric}_${condition}`;
-  if (!window._evalDebugShown[debugKey]) {
-    const fieldVal = getLatestVal(key);
-    const countSample = window.SELECTED_10Y_AVERAGES ? window.SELECTED_10Y_AVERAGES[`${key}_count`] : null;
-    console.log(
-      `    [EVAL] ${bank.ticker} | ${metric}:${condition}`,
-      `| year=${targetYear} val=${fieldVal}`,
-      sectorAvg !== null ? `| TB 8 năm(${countSample ? countSample + ' mẫu' : 'nhóm'})=${sectorAvg}` : '',
-      `| history=${history.length}yr`
-    );
-    window._evalDebugShown[debugKey] = true;
-  }
+  // Helper kiểm tra so sánh với Trung bình ngành cho năm gần nhất
+  const checkLatestVsAvg = (field, isUnder) => {
+    const val = getLatestVal(field);
+    if (val === null || typeof val !== 'number') return false;
+    let latestAvg = null;
+    if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[targetYear] && window.ANNUAL_AVERAGES[targetYear][field] !== undefined && window.ANNUAL_AVERAGES[targetYear][field] !== null) {
+      latestAvg = window.ANNUAL_AVERAGES[targetYear][field];
+    } else if (sectorAvg !== null) {
+      latestAvg = sectorAvg;
+    }
+    if (latestAvg === null) return false;
+    return isUnder ? val < latestAvg : val > latestAvg;
+  };
 
-  // Helper kiểm tra bóc từng năm trong lịch sử so với số trung bình đã tính (thỏa hết tất cả các năm mới đạt)
-  const check10yVsAvg = (field, isUnder) => {
-    if (history.length === 0 || sectorAvg === null) return false;
-    return history.every(h => {
+  // Helper kiểm tra các năm nằm trong khoảng timeline slider [fromYear, toYear]
+  const checkRangeVsAvg = (field, isUnder) => {
+    const { fromYear, toYear } = getTimelineRange();
+    const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear);
+    if (relevantYears.length === 0) return false;
+    if (relevantYears.length < (toYear - fromYear + 1)) return false;
+
+    return relevantYears.every(h => {
       const val = h[field];
       if (val === null || val === undefined || typeof val !== 'number') return false;
-      return isUnder ? val < sectorAvg : val > sectorAvg;
+
+      let yearAvg = null;
+      if (window.ANNUAL_AVERAGES && window.ANNUAL_AVERAGES[h.year] && window.ANNUAL_AVERAGES[h.year][field] !== undefined && window.ANNUAL_AVERAGES[h.year][field] !== null) {
+        yearAvg = window.ANNUAL_AVERAGES[h.year][field];
+      } else if (sectorAvg !== null) {
+        yearAvg = sectorAvg;
+      }
+
+      if (yearAvg === null) return false;
+      return isUnder ? val < yearAvg : val > yearAvg;
     });
   };
 
   switch (metric) {
     case 'cir':
+      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
+        return checkRangeVsAvg('cir', true);
+      }
+      if (condition === 'under_avg_latest') {
+        return checkLatestVsAvg('cir', true);
+      }
       if (condition === 'under_60_latest') {
         const val = getLatestVal('cir');
         return val !== null && val < 60;
-      }
-      if (condition === 'under_avg_latest') {
-        const val = getLatestVal('cir');
-        return val !== null && sectorAvg !== null && val < sectorAvg;
-      }
-      if (condition === 'under_avg_10y') {
-        return check10yVsAvg('cir', true);
       }
       break;
 
@@ -1063,42 +1298,47 @@ function evaluateCondition(bank, metric, condition) {
       break;
 
     case 'blvh':
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('blvh', false);
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('blvh', false);
+      }
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('blvh', false);
       }
       break;
 
     case 'blntt':
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('blntt', false);
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('blntt', false);
+      }
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('blntt', false);
       }
       break;
 
     case 'blnst':
-      if (condition === 'above_avg_latest') {
-        const val = getLatestVal('blnst');
-        return val !== null && sectorAvg !== null && val > sectorAvg;
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('blnst', false);
       }
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('blnst', false);
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('blnst', false);
       }
       break;
 
     case 'ttlr':
       if (condition === 'positive_10y') {
-        const validYears = history.filter(h => h.ttlr !== null && h.ttlr !== undefined && typeof h.ttlr === 'number');
-        if (validYears.length === 0) return false;
-        return validYears.every(h => h.ttlr > 0);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.ttlr !== null && typeof h.ttlr === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.ttlr > 0);
       }
       break;
 
     case 'roa':
-      if (condition === 'above_avg_latest') {
-        const val = getLatestVal('roa');
-        return val !== null && sectorAvg !== null && val > sectorAvg;
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('roa', false);
       }
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('roa', false);
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('roa', false);
       }
       if (condition === 'from_1pct') {
         const val = getLatestVal('roa');
@@ -1107,70 +1347,73 @@ function evaluateCondition(bank, metric, condition) {
       break;
 
     case 'de':
+      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
+        return checkRangeVsAvg('debt_equity', true);
+      }
+      if (condition === 'under_avg_latest') {
+        return checkLatestVsAvg('debt_equity', true);
+      }
       if (condition === 'under_10' || condition === 'under_10_latest') {
         const val = getLatestVal('debt_equity');
         return val !== null && val < 10;
       }
       if (condition === 'under_10_10y') {
-        const validYears = history.filter(h => h.debt_equity !== null && h.debt_equity !== undefined && typeof h.debt_equity === 'number');
-        if (validYears.length === 0) return false;
-        return validYears.every(h => h.debt_equity < 10);
-      }
-      if (condition === 'under_avg_latest') {
-        const val = getLatestVal('debt_equity');
-        return val !== null && sectorAvg !== null && val < sectorAvg;
-      }
-      if (condition === 'under_avg_10y') {
-        return check10yVsAvg('debt_equity', true);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.debt_equity !== null && typeof h.debt_equity === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.debt_equity < 10);
       }
       break;
 
     case 'roe':
-      if (condition === 'above_avg_latest') {
-        const val = getLatestVal('roe');
-        return val !== null && sectorAvg !== null && val > sectorAvg;
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('roe', false);
       }
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('roe', false);
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('roe', false);
       }
       if (condition === 'from_15pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.roe !== null && h.roe >= 15);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.roe !== null && typeof h.roe === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.roe >= 15);
       }
       if (condition === 'from_20pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.roe !== null && h.roe >= 20);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.roe !== null && typeof h.roe === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.roe >= 20);
       }
       break;
 
     case 'cfo':
       if (condition === 'greater_than_parent_npat_10y') {
-        const validYears = history.filter(h =>
-          h.cfo !== null && h.cfo !== undefined && typeof h.cfo === 'number' &&
-          h.parent_npat !== null && h.parent_npat !== undefined && typeof h.parent_npat === 'number'
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h =>
+          h.year >= fromYear && h.year <= toYear &&
+          h.cfo !== null && typeof h.cfo === 'number' &&
+          h.parent_npat !== null && typeof h.parent_npat === 'number'
         );
-        if (validYears.length === 0) return false;
-        return validYears.every(h => h.cfo > h.parent_npat);
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.cfo > h.parent_npat);
       }
       break;
 
     case 'casa':
-      if (condition === 'above_avg_latest') {
-        const val = getLatestVal('casa');
-        return val !== null && sectorAvg !== null && val > sectorAvg;
+      if (condition === 'above_avg_range' || condition === 'above_avg_10y') {
+        return checkRangeVsAvg('casa', false);
       }
-      if (condition === 'above_avg_10y') {
-        return check10yVsAvg('casa', false);
+      if (condition === 'above_avg_latest') {
+        return checkLatestVsAvg('casa', false);
       }
       break;
 
     case 'npl':
-      if (condition === 'under_avg_latest') {
-        const val = getLatestVal('npl');
-        return val !== null && sectorAvg !== null && val < sectorAvg;
+      if (condition === 'under_avg_range' || condition === 'under_avg_10y') {
+        return checkRangeVsAvg('npl', true);
       }
-      if (condition === 'under_avg_10y') {
-        return check10yVsAvg('npl', true);
+      if (condition === 'under_avg_latest') {
+        return checkLatestVsAvg('npl', true);
       }
       break;
 
@@ -1180,8 +1423,10 @@ function evaluateCondition(bank, metric, condition) {
         return val !== null && val > 3.0;
       }
       if (condition === 'above_3pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.nim !== null && h.nim > 3.0);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.nim !== null && typeof h.nim === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.nim > 3.0);
       }
       break;
 
@@ -1191,16 +1436,20 @@ function evaluateCondition(bank, metric, condition) {
         return val !== null && val > 10.0;
       }
       if (condition === 'above_10pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.car !== null && h.car > 10.0);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.car !== null && typeof h.car === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.car > 10.0);
       }
       if (condition === 'above_12pct_latest') {
         const val = getLatestVal('car');
         return val !== null && val > 12.0;
       }
       if (condition === 'above_12pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.car !== null && h.car > 12.0);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.car !== null && typeof h.car === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.car > 12.0);
       }
       break;
 
@@ -1210,8 +1459,10 @@ function evaluateCondition(bank, metric, condition) {
         return val !== null && val > 50.0;
       }
       if (condition === 'above_50pct_10y') {
-        if (history.length === 0) return false;
-        return history.every(h => h.llr !== null && h.llr > 50.0);
+        const { fromYear, toYear } = getTimelineRange();
+        const relevantYears = history.filter(h => h.year >= fromYear && h.year <= toYear && h.llr !== null && typeof h.llr === 'number');
+        if (relevantYears.length < (toYear - fromYear + 1)) return false;
+        return relevantYears.every(h => h.llr > 50.0);
       }
       break;
   }

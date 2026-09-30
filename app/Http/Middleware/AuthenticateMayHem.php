@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,7 +13,8 @@ class AuthenticateMayHem
 {
     /**
      * Handle an incoming request.
-     * Validates Bearer Token against Server-Side Cache or Database.
+     * Validates Bearer Token against Server-Side Cache or Database,
+     * or leverages existing authenticated web session.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,9 +29,25 @@ class AuthenticateMayHem
             $token = $request->query('token');
         } elseif ($request->cookie('mayhem_token')) {
             $token = $request->cookie('mayhem_token');
+        } elseif (session('mayhem_token')) {
+            $token = session('mayhem_token');
         }
 
         if (empty($token)) {
+            // Support session authentication for web requests
+            if (Auth::check()) {
+                $user = Auth::user();
+                $userData = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'permissions' => $user->permissions,
+                ];
+                $request->attributes->set('auth_user', $userData);
+                return $next($request);
+            }
+
             if (!$request->expectsJson() && !$request->is('api/*')) {
                 return redirect()->guest(route('login'));
             }
@@ -76,6 +94,18 @@ class AuthenticateMayHem
                     ] : ['id' => 3, 'name' => 'Staff', 'email' => 'staff@mayhem.vn', 'role' => 'staff'];
                 }
             }
+        }
+
+        // Fallback to Auth::check() if token was in cookie/header but Cache expired
+        if (!$userData && Auth::check()) {
+            $user = Auth::user();
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'permissions' => $user->permissions,
+            ];
         }
 
         if (!$userData) {

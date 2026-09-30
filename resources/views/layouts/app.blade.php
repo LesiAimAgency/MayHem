@@ -7,10 +7,10 @@
   <meta name="description" content="@yield('meta_description', 'MAYHEM Financial Platform - Nền tảng phân tích BCTC và sàng lọc cổ phiếu ngân hàng chuyên sâu.')">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!-- Google Fonts: Be Vietnam Pro & Inter -->
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +33,7 @@
             }
           },
           fontFamily: {
-            sans: ['"Be Vietnam Pro"', '"Inter"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
             inter: ['"Inter"', 'sans-serif']
           }
         }
@@ -41,7 +41,7 @@
     }
   </script>
   <style>
-    body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
+    body, input, button, select, textarea { font-family: 'Inter', sans-serif; }
     .font-inter { font-family: 'Inter', sans-serif !important; }
     .tabular-nums {
       font-variant-numeric: tabular-nums;

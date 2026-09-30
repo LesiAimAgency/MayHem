@@ -1,34 +1,5 @@
 <div class="bg-white rounded-xl shadow-sm border border-[#D7D7D7]/70 overflow-hidden">
-  
-  <!-- Table Filter & Search Controls Header -->
-    <!-- Filter Buttons (Tất cả / FILL / TÍNH) -->
-  <!-- <div class="px-6 py-3.5 bg-[#FAFBFD] border-b border-[#E9ECEF] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-    <div class="flex items-center gap-2 w-full sm:w-auto">
-      <div class="relative w-full sm:w-[260px]">
-        <input type="text" id="metricSearchInput"
-               placeholder="Tìm chỉ tiêu tài chính..."
-               class="w-full h-[32px] bg-white border border-[#D7D7D7] rounded-lg pl-8 pr-3 text-xs text-[#051650] placeholder-[#818181] focus:outline-none focus:border-[#051650] focus:ring-1 focus:ring-[#051650]">
-        <svg class="w-3.5 h-3.5 text-[#818181] absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-    </div>
 
-   
-    <div class="flex items-center gap-1.5 self-end sm:self-center">
-      <button type="button" class="metric-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#051650] text-white cursor-pointer" data-filter="ALL">
-        Tất cả ({{ count($factsheet['all_metrics']) }})
-      </button> 
-       <button type="button" class="metric-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#EBFBEE] text-[#2F9E44] hover:opacity-90 cursor-pointer" data-filter="FILL">
-        FILL (30)
-      </button>
-      <button type="button" class="metric-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#E7F0FD] text-[#1971C2] hover:opacity-90 cursor-pointer" data-filter="TÍNH">
-        TÍNH (17)
-      </button>
-    </div>
-  </div> -->
-
-  <!-- Table Body -->
   <div class="overflow-x-auto custom-scrollbar">
     <table class="w-full text-left text-xs border-collapse min-w-[1020px]" id="liveFinancialTable">
       <thead class="bg-[#F8F9FA] text-[#051650] font-bold text-[11px] uppercase tracking-wider border-b border-[#D7D7D7] sticky top-0 z-10">

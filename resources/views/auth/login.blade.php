@@ -7,10 +7,10 @@
   <meta name="description" content="Cổng đăng nhập hệ thống phân tích BCTC và sàng lọc cổ phiếu ngân hàng MayHem.">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!-- Google Fonts: Be Vietnam Pro & Inter -->
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -33,14 +33,15 @@
             }
           },
           fontFamily: {
-            sans: ['"Be Vietnam Pro"', '"Inter"', 'sans-serif']
+            sans: ['"Inter"', 'sans-serif'],
+            inter: ['"Inter"', 'sans-serif']
           }
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Be Vietnam Pro', 'Inter', sans-serif; }
+    body, input, button, select, textarea { font-family: 'Inter', sans-serif; }
   </style>
 </head>
 <body class="bg-[#F2F2F2] text-[#323232] min-h-screen flex flex-col justify-between font-sans antialiased">
